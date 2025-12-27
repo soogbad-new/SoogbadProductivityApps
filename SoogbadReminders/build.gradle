@@ -1,0 +1,36 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+android {
+    namespace = 'com.soogbad.soogbadreminders'
+    compileSdkVersion = 36
+    defaultConfig {
+        applicationId "com.soogbad.soogbadreminders"
+        minSdkVersion 33
+        targetSdkVersion 36
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+dependencies {
+    implementation project(":CommonModule")
+    implementation libs.appcompat
+    implementation libs.material
+}

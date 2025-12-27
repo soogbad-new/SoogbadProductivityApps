@@ -1,0 +1,31 @@
+plugins {
+    alias(libs.plugins.android.library)
+}
+
+android {
+    namespace = 'com.soogbad.commonmodule'
+    compileSdkVersion = 36
+    defaultConfig {
+        minSdkVersion 33
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+dependencies {
+    implementation libs.appcompat
+    implementation libs.material
+}
