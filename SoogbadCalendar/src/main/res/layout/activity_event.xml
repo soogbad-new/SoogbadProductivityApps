@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="false"
+    tools:context=".EventActivity">
+
+    <include layout="@layout/toolbar"
+        android:id="@+id/toolbar">
+    </include>
+
+    <com.soogbad.soogbadcalendar.EventLayout
+        android:id="@+id/eventLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <EditText
+            android:tag="eventEditText"
+            android:id="@+id/eventEditText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/almostBlack"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/eventToolbar"
+            app:layout_constraintLeft_toLeftOf="parent">
+        </EditText>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/eventToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent">
+
+            <ImageButton
+                android:id="@+id/boldButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/bold"
+                android:scaleType="centerCrop"
+                android:onClick="onBoldButtonClick"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent">
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/italicButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/italic"
+                android:scaleType="centerCrop"
+                android:onClick="onItalicButtonClick"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/boldButton">
+            </ImageButton>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.soogbad.soogbadcalendar.EventLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
