@@ -1,5 +1,7 @@
 package com.soogbad.sharedmodule;
 
+import android.text.Html;
+
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -33,6 +35,11 @@ public class StorageManager {
         try { Files.createFile(directory.resolve(filename)); }
         catch(IOException e) { throw new RuntimeException(e); }
         files.add(filename);
+    }
+
+    private void test() {
+        //html = Html.fromHtml(spannedText, Html.FROM_HTML_MODE_COMPACT);
+        //spannedText = Html.toHtml(html, Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.soogbad.sharedmodule;
 
 import android.graphics.Color;
+import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;

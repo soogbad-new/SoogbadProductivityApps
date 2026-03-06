@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -13,13 +14,14 @@ import com.soogbad.sharedmodule.Utility;
 public class NoteActivity extends AppCompatActivity {
 
     private NoteLayout noteLayout;
+    private ConstraintLayout noteToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.activity_note, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
-        noteLayout = findViewById(R.id.noteLayout);
+        noteLayout = findViewById(R.id.noteLayout); noteToolbar = findViewById(R.id.noteToolbar);
         noteLayout.setEditText(findViewById(R.id.noteEditText));
     }
 
@@ -30,6 +32,8 @@ public class NoteActivity extends AppCompatActivity {
         Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
         view.getRootView().findViewById(R.id.toolbar).setPadding(0, systemBars.top, 0, 0);
         view.setPadding(0, 0, 0, systemBars.bottom);
+        Insets keyboard = insets.getInsets(WindowInsetsCompat.Type.ime());
+        noteToolbar.setPadding(0, 0, 0, keyboard.bottom - systemBars.bottom);
         return insets;
     }
 

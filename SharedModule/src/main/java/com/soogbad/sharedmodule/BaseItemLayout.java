@@ -14,11 +14,7 @@ public abstract class BaseItemLayout extends ConstraintLayout {
 
     protected BaseItemLayout(Context context, AttributeSet attrs) { super(context, attrs); }
 
-    public void onBoldButtonClick() {
-        editText.setSpan(new StyleSpan(Typeface.BOLD));
-    }
-    public void onItalicButtonClick() {
-
-    }
+    public void onBoldButtonClick() { editText.toggleStyle(new StyleSpan(Typeface.BOLD)); }
+    public void onItalicButtonClick() { editText.toggleStyle(new StyleSpan(Typeface.ITALIC)); }
 
 }
