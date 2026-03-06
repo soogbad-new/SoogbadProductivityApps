@@ -3,7 +3,7 @@ package com.soogbad.soogbadcalendar;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.soogbad.commonmodule.BaseItemLayout;
+import com.soogbad.sharedmodule.BaseItemLayout;
 
 public class EventLayout extends BaseItemLayout {
 

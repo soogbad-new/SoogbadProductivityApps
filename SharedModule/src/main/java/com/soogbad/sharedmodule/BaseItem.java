@@ -1,4 +1,4 @@
-package com.soogbad.commonmodule;
+package com.soogbad.sharedmodule;
 
 public class BaseItem {
 

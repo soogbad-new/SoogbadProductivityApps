@@ -1,6 +1,6 @@
 package com.soogbad.soogbadnotes;
 
-import com.soogbad.commonmodule.BaseItem;
+import com.soogbad.sharedmodule.BaseItem;
 
 public class Note extends BaseItem {
 

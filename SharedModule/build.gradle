@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = 'com.soogbad.commonmodule'
+    namespace = 'com.soogbad.sharedmodule'
     compileSdkVersion = 36
     defaultConfig {
         minSdkVersion 33

@@ -1,7 +1,7 @@
 package com.soogbad.soogbadreminders;
 
-import com.soogbad.commonmodule.BaseItem;
-import com.soogbad.commonmodule.Schedule;
+import com.soogbad.sharedmodule.BaseItem;
+import com.soogbad.sharedmodule.Schedule;
 
 import java.util.Date;
 

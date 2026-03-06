@@ -3,7 +3,7 @@ package com.soogbad.soogbadnotes;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.soogbad.commonmodule.BaseItemLayout;
+import com.soogbad.sharedmodule.BaseItemLayout;
 
 public class NoteLayout extends BaseItemLayout {
 

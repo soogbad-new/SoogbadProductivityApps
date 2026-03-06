@@ -1,4 +1,4 @@
-package com.soogbad.commonmodule;
+package com.soogbad.sharedmodule;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;

@@ -1,9 +1,8 @@
-package com.soogbad.commonmodule;
+package com.soogbad.sharedmodule;
 
 import android.graphics.Color;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.WindowCompat;
 
 public class Utility {
