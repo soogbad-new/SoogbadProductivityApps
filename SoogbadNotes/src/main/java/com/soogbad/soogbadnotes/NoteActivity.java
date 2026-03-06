@@ -21,7 +21,6 @@ public class NoteActivity extends AppCompatActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         noteLayout = findViewById(R.id.noteLayout);
         noteLayout.setEditText(findViewById(R.id.noteEditText));
-        noteLayout.setExampleText();
     }
 
     public void onBoldButtonClick(View view) { noteLayout.onBoldButtonClick(); }

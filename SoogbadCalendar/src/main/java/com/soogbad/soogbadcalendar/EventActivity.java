@@ -21,7 +21,6 @@ public class EventActivity extends AppCompatActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         eventLayout = findViewById(R.id.eventLayout);
         eventLayout.setEditText(findViewById(R.id.eventEditText));
-        eventLayout.setExampleText();
     }
 
     public void onBoldButtonClick(View view) { eventLayout.onBoldButtonClick(); }

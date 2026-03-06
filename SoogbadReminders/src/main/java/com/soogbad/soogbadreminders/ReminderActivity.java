@@ -21,7 +21,6 @@ public class ReminderActivity extends AppCompatActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         reminderLayout = findViewById(R.id.reminderLayout);
         reminderLayout.setEditText(findViewById(R.id.reminderEditText));
-        reminderLayout.setExampleText();
     }
 
     public void onBoldButtonClick(View view) { reminderLayout.onBoldButtonClick(); }
