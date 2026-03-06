@@ -10,7 +10,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/CommonModule" />
+            <option value="$PROJECT_DIR$/SharedModule" />
             <option value="$PROJECT_DIR$/SoogbadCalendar" />
             <option value="$PROJECT_DIR$/SoogbadNotes" />
             <option value="$PROJECT_DIR$/SoogbadReminders" />

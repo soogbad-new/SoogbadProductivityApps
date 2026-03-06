@@ -25,7 +25,7 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "SoogbadProductivityApps"
-include ':CommonModule'
+include ':SharedModule'
 include ':SoogbadCalendar'
 include ':SoogbadNotes'
 include ':SoogbadReminders'
