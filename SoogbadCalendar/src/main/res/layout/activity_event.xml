@@ -19,7 +19,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent">
 
-        <EditText
+        <com.soogbad.sharedmodule.RichEditText
             android:tag="eventEditText"
             android:id="@+id/eventEditText"
             android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/eventToolbar"
             app:layout_constraintLeft_toLeftOf="parent">
-        </EditText>
+        </com.soogbad.sharedmodule.RichEditText>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/eventToolbar"
