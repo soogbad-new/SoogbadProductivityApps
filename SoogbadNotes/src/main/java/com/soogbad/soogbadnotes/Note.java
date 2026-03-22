@@ -1,11 +1,11 @@
 package com.soogbad.soogbadnotes;
 
-import com.soogbad.sharedmodule.BaseItem;
+import com.soogbad.sharedmodule.Item;
 
-public class Note extends BaseItem {
+public class Note extends Item {
 
-    public Note(String UUID, String Title, String Content) {
-        super(UUID, Title, Content);
+    public Note(String UUID, String Title) {
+        super(UUID, Title);
     }
 
 }

@@ -2,6 +2,7 @@ package com.soogbad.sharedmodule;
 
 import android.content.Context;
 import android.text.Editable;
+import android.text.style.CharacterStyle;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 
@@ -9,34 +10,41 @@ import androidx.appcompat.widget.AppCompatEditText;
 
 public class RichEditText extends AppCompatEditText {
 
-    public RichEditText(Context context, AttributeSet attrs) { super(context, attrs);
-        setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur et purus tempor, mollis ex vitae, pretium magna. Vestibulum hendrerit velit id orci blandit eleifend. Nam quis dolor a dui tristique consequat a et nibh. Phasellus convallis lacus id feugiat viverra. Nam tempor laoreet lorem, id luctus metus elementum vitae. Phasellus viverra justo ac eros porta tristique. Vivamus consequat ligula purus, vitae pellentesque justo rhoncus sit amet. Aenean imperdiet, neque nec scelerisque porta, sapien felis malesuada justo, in venenatis leo mi in lorem. Nunc iaculis condimentum sapien, vitae cursus velit mattis non. Integer finibus arcu lacus, quis dictum ipsum aliquam nec. Nunc in mollis sapien, et pharetra ligula. Mauris ipsum magna, posuere eget vulputate a, finibus ac metus. Aenean lectus metus, elementum ut risus sit amet, egestas lobortis mauris. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.");
-    }
+    public RichEditText(Context context, AttributeSet attrs) { super(context, attrs); }
 
-    public void toggleStyle(StyleSpan style) {
+    public <T extends CharacterStyle> void toggleStyle(Class<T> spanType, int val) {
         Editable editable = getText();
+        if(editable == null) return;
         int selectionStart = getSelectionStart(); int selectionEnd = getSelectionEnd();
-        assert editable != null;
-        StyleSpan[] spans = editable.getSpans(selectionStart, selectionEnd, StyleSpan.class);
+        T[] currentSpans = editable.getSpans(selectionStart, selectionEnd, spanType);
         if(selectionStart != selectionEnd) {
             int min = selectionEnd, max = selectionStart;
-            for(StyleSpan span : spans) {
-                if(span.getStyle() == style.getStyle()) {
+            for(T span : currentSpans) {
+                if(compareSpansValue(span, val)) {
                     int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
-                    editable.removeSpan(span);
-                    if(spanStart < selectionStart)
-                        editable.setSpan(style, spanStart, selectionStart, Editable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    if(spanEnd > selectionEnd)
-                        editable.setSpan(style, selectionEnd, spanEnd, Editable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    editable.removeSpan(span); // remove the current spans of the same type and value
+                    if(spanStart < selectionStart) // if it stretches beyond the selection, create a new one just for that part
+                        editable.setSpan(instantiateSpan(spanType, val), spanStart, selectionStart, Editable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    if(spanEnd > selectionEnd) // if it stretches beyond the selection, create a new one just for that part
+                        editable.setSpan(instantiateSpan(spanType, val), selectionEnd, spanEnd, Editable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     if(spanStart < min)
                         min = spanStart;
                     if(spanEnd > max)
                         max = spanEnd;
                 }
             }
-            if(!(min <= selectionStart && max >= selectionEnd))
-                editable.setSpan(style, selectionStart, selectionEnd, Editable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if(!(min <= selectionStart && max >= selectionEnd)) // if the entire selection isn't covered by spans of the same type and value, then create a span that does (toggling the style on for the entire selection). however, if the entire selection was already covered, then the style needs to be turned off, and as the current spans were already removed, nothing needs to be done.
+                editable.setSpan(instantiateSpan(spanType, val), selectionStart, selectionEnd, Editable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
+    }
+    private <T extends CharacterStyle> boolean compareSpansValue(T span, int val) {
+        if(span == null) return false;
+        if(span instanceof StyleSpan) return ((StyleSpan)span).getStyle() == val;
+        return false;
+    }
+    private <T extends CharacterStyle> T instantiateSpan(Class<T> spanType, int val) {
+        if(spanType.equals(StyleSpan.class)) return spanType.cast(new StyleSpan(val));
+        return null;
     }
 
 }
