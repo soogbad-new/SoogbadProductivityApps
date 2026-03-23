@@ -27,13 +27,13 @@ public class MainActivity extends AppCompatActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         eventList = findViewById(R.id.eventList);
         StorageManager.setDirectory(getFilesDir().toPath());
-        StorageManager.loadItems();
+        StorageManager.loadItems(Event::create);
         eventList.setLayoutManager(new LinearLayoutManager(this));
         eventList.setAdapter(new ItemListAdapter(StorageManager.getItems(), R.layout.event_list_item, R.id.itemTitleTextView));
     }
 
     public void onAddButtonClick(View view) {
-        String uuid = StorageManager.createItem();
+        String uuid = StorageManager.createItem(Event::create);
         if(eventList.getAdapter() != null)
             eventList.getAdapter().notifyItemInserted(0);
         startActivity(new Intent(this, EventActivity.class).putExtra("item_uuid", uuid));

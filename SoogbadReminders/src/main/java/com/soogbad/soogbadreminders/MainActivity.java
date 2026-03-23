@@ -27,13 +27,13 @@ public class MainActivity extends AppCompatActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         reminderList = findViewById(R.id.reminderList);
         StorageManager.setDirectory(getFilesDir().toPath());
-        StorageManager.loadItems();
+        StorageManager.loadItems(Reminder::create);
         reminderList.setLayoutManager(new LinearLayoutManager(this));
         reminderList.setAdapter(new ItemListAdapter(StorageManager.getItems(), R.layout.reminder_list_item, R.id.itemTitleTextView));
     }
 
     public void onAddButtonClick(View view) {
-        String uuid = StorageManager.createItem();
+        String uuid = StorageManager.createItem(Reminder::create);
         if(reminderList.getAdapter() != null)
             reminderList.getAdapter().notifyItemInserted(0);
         startActivity(new Intent(this, ReminderActivity.class).putExtra("item_uuid", uuid));

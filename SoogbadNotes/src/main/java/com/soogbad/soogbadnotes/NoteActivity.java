@@ -9,7 +9,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.soogbad.sharedmodule.Item;
 import com.soogbad.sharedmodule.ItemLayout;
 import com.soogbad.sharedmodule.StorageManager;
 import com.soogbad.sharedmodule.Utility;
@@ -25,7 +24,7 @@ public class NoteActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_note, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         noteLayout = findViewById(R.id.noteLayout); noteToolbar = findViewById(R.id.noteToolbar);
-        Note note = StorageManager.getItem(getIntent().getStringExtra("item_uuid"));
+        Note note = (Note)StorageManager.getItem(getIntent().getStringExtra("item_uuid"));
         noteLayout.init(findViewById(R.id.noteEditText), note);
     }
 

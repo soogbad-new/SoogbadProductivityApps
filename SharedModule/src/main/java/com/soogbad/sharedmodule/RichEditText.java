@@ -37,14 +37,15 @@ public class RichEditText extends AppCompatEditText {
                 editable.setSpan(instantiateSpan(spanType, val), selectionStart, selectionEnd, Editable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
+
+    private <T extends CharacterStyle> T instantiateSpan(Class<T> spanType, int val) {
+        if(spanType.equals(StyleSpan.class)) return spanType.cast(new StyleSpan(val));
+        return null;
+    }
     private <T extends CharacterStyle> boolean compareSpansValue(T span, int val) {
         if(span == null) return false;
         if(span instanceof StyleSpan) return ((StyleSpan)span).getStyle() == val;
         return false;
-    }
-    private <T extends CharacterStyle> T instantiateSpan(Class<T> spanType, int val) {
-        if(spanType.equals(StyleSpan.class)) return spanType.cast(new StyleSpan(val));
-        return null;
     }
 
 }
