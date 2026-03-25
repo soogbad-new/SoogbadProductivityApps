@@ -4,16 +4,20 @@ import com.soogbad.sharedmodule.Item;
 import com.soogbad.sharedmodule.Schedule;
 
 import java.util.Date;
-import java.util.Map;
 
-public class Reminder extends Item {
+public class Reminder extends Item<Reminder.ReminderOptions> {
 
-    public Reminder(String uuid, String title) {
-        UUID = uuid; Title = title;
+    public Reminder(String uuid, String title, ReminderOptions options) {
+        UUID = uuid; Title = title; Options = options;
     }
 
-    public static Reminder create(String uuid, String title) {
-        return new Reminder(uuid, title);
+    public static Reminder create(String uuid, String title, ReminderOptions options) {
+        return new Reminder(uuid, title, options);
+    }
+
+    public static class ReminderOptions extends ItemOptions {
+        public Date Time;
+        public Schedule RepeatSchedule;
     }
 
 }

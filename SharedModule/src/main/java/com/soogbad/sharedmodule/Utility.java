@@ -18,7 +18,7 @@ public class Utility {
         WindowCompat.setDecorFitsSystemWindows(activity.getWindow(), false);
     }
 
-    public static <T extends Item> String generateUniqueUUID(ArrayList<T> items) {
+    public static <T extends Item<?>> String generateUniqueUUID(ArrayList<T> items) {
         String uuid = UUID.randomUUID().toString();
         if(items.stream().anyMatch((item) -> item.UUID.equals(uuid)))
             return generateUniqueUUID(items);

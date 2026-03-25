@@ -15,15 +15,15 @@ import java.util.ArrayList;
 @SuppressWarnings("ReadWriteStringCanBeUsed")
 public class StorageManager {
 
-    // TODO: json file to store additional data of each note like title
+    // TODO: json file to store additional data of each item like title and options
 
     private static Path directory;
-    private static final ArrayList<Item> items = new ArrayList<>();
+    private static final ArrayList<Item<?>> items = new ArrayList<>();
 
-    public static ArrayList<Item> getItems() { return items; }
+    public static ArrayList<Item<?>> getItems() { return items; }
 
-    public static Item getItem(String uuid) {
-        for(Item item : items)
+    public static Item<?> getItem(String uuid) {
+        for(Item<?> item : items)
             if(item.UUID.equals(uuid))
                 return item;
         return null;
@@ -37,28 +37,27 @@ public class StorageManager {
         }
     }
 
-    public static <T extends Item> void loadItems(Item.Creator<T> itemCreator) {
+    public static <T extends Item<O>, O extends Item.ItemOptions> void loadItems(Item.Creator<T, O> itemCreator) {
         try(DirectoryStream<Path> stream = Files.newDirectoryStream(directory, "*.html")) {
-            stream.forEach(path -> {
-                items.add(itemCreator.create(path.getFileName().toString().replace(".html", ""), "Example Title"));
-            });
+            stream.forEach(path ->
+                    items.add(itemCreator.create(path.getFileName().toString().replace(".html", ""), "Example Title", null)));
         } catch(IOException e) { throw new RuntimeException(e); }
     }
 
-    public static <T extends Item> String createItem(Item.Creator<T> itemCreator) {
+    public static <T extends Item<O>, O extends Item.ItemOptions> String createItem(Item.Creator<T, O> itemCreator) {
         String uuid = Utility.generateUniqueUUID(items);
-        items.add(itemCreator.create(uuid, "Example Title"));
+        items.add(itemCreator.create(uuid, "Example Title", null));
         saveTextToHtmlFile(new SpannableString(""), directory.resolve(uuid + ".html"));
         return uuid;
     }
 
-    public static void deleteItem(Item item) {
+    public static void deleteItem(Item<?> item) {
         items.remove(item);
         try { Files.delete(directory.resolve(item.UUID + ".html")); }
         catch(IOException e) { throw new RuntimeException(e); }
     }
 
-    public static void saveItem(Item item) {
+    public static void saveItem(Item<?> item) {
         saveTextToHtmlFile(item.Content, directory.resolve(item.UUID + ".html"));
     }
     private static void saveTextToHtmlFile(Spanned spannedText, Path filePath) {

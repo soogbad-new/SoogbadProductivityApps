@@ -12,13 +12,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 public class ItemLayout extends ConstraintLayout {
 
     private RichEditText editText;
-    private Item item;
+    private Item<?> item;
 
     private boolean itemDeleted = false;
 
     public ItemLayout(Context context, AttributeSet attrs) { super(context, attrs); }
 
-    public void init(RichEditText editText, @Nullable Item item) {
+    public void init(RichEditText editText, @Nullable Item<?> item) {
         this.editText = editText; this.item = item;
         if(item == null)
             return;

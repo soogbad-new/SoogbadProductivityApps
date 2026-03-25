@@ -5,17 +5,19 @@ import com.soogbad.sharedmodule.Schedule;
 
 import java.util.Date;
 
-public class Event extends Item {
+public class Event extends Item<Event.EventOptions> {
 
-    public Event(String uuid, String title, Date time, Schedule repeatSchedule) {
-        UUID = uuid; Title = title; Time = time; RepeatSchedule = repeatSchedule;
+    public Event(String uuid, String title, EventOptions options) {
+        UUID = uuid; Title = title; Options = options;
     }
 
-    public Date Time;
-    public Schedule RepeatSchedule;
+    public static Event create(String uuid, String title, EventOptions options) {
+        return new Event(uuid, title, options);
+    }
 
-    public static Event create(String uuid, String title) {
-        return new Event(uuid, title);
+    public static class EventOptions extends ItemOptions {
+        public Date Time;
+        public Schedule RepeatSchedule;
     }
 
 }
