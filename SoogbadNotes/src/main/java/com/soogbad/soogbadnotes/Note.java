@@ -2,6 +2,8 @@ package com.soogbad.soogbadnotes;
 
 import com.soogbad.sharedmodule.Item;
 
+import org.json.JSONObject;
+
 public class Note extends Item<Note.NoteOptions> {
 
     public Note(String uuid, String title, NoteOptions options) {
@@ -13,7 +15,9 @@ public class Note extends Item<Note.NoteOptions> {
     }
 
     public static class NoteOptions extends ItemOptions {
-
+        public static NoteOptions fromJson(JSONObject ignoredJson) {
+            return new NoteOptions();
+        }
     }
 
 }

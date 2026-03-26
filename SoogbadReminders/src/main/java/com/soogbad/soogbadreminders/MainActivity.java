@@ -13,8 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.soogbad.sharedmodule.ItemListAdapter;
+import com.soogbad.sharedmodule.Schedule;
 import com.soogbad.sharedmodule.StorageManager;
 import com.soogbad.sharedmodule.Utility;
+
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,13 +30,13 @@ public class MainActivity extends AppCompatActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         reminderList = findViewById(R.id.reminderList);
         StorageManager.setDirectory(getFilesDir().toPath());
-        StorageManager.loadItems(Reminder::create);
+        StorageManager.loadItems(Reminder::create, Reminder.ReminderOptions::fromJson);
         reminderList.setLayoutManager(new LinearLayoutManager(this));
         reminderList.setAdapter(new ItemListAdapter(StorageManager.getItems(), R.layout.reminder_list_item, R.id.itemTitleTextView));
     }
 
     public void onAddButtonClick(View view) {
-        String uuid = StorageManager.createItem(Reminder::create);
+        String uuid = StorageManager.createItem(Reminder::create, new Reminder.ReminderOptions(new Date(), Schedule.NONE));
         if(reminderList.getAdapter() != null)
             reminderList.getAdapter().notifyItemInserted(0);
         startActivity(new Intent(this, ReminderActivity.class).putExtra("item_uuid", uuid));

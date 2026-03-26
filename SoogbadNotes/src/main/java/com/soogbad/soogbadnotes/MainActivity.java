@@ -27,13 +27,13 @@ public class MainActivity extends AppCompatActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         noteList = findViewById(R.id.noteList);
         StorageManager.setDirectory(getFilesDir().toPath());
-        StorageManager.loadItems(Note::create);
+        StorageManager.loadItems(Note::create, Note.NoteOptions::fromJson);
         noteList.setLayoutManager(new LinearLayoutManager(this));
         noteList.setAdapter(new ItemListAdapter(StorageManager.getItems(), R.layout.note_list_item, R.id.itemTitleTextView));
     }
 
     public void onAddButtonClick(View view) {
-        String uuid = StorageManager.createItem(Note::create);
+        String uuid = StorageManager.createItem(Note::create, new Note.NoteOptions());
         if(noteList.getAdapter() != null)
             noteList.getAdapter().notifyItemInserted(0);
         startActivity(new Intent(this, NoteActivity.class).putExtra("item_uuid", uuid));
