@@ -2,6 +2,7 @@ package com.soogbad.soogbadnotes;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -10,34 +11,40 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.soogbad.sharedmodule.ItemLayout;
+import com.soogbad.sharedmodule.ItemsManager;
 import com.soogbad.sharedmodule.Utility;
 
 public class NoteActivity extends AppCompatActivity {
 
+    private Note note;
+
     private ItemLayout noteLayout;
     private ConstraintLayout noteToolbar;
+    private EditText titleEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.activity_note, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
-        noteLayout = findViewById(R.id.noteLayout); noteToolbar = findViewById(R.id.noteToolbar);
-        noteLayout.init(findViewById(R.id.noteEditText), getIntent().getStringExtra("item_uuid"));
+        noteLayout = findViewById(R.id.noteLayout); noteToolbar = findViewById(R.id.noteToolbar); titleEditText = findViewById(R.id.titleEditText);
+        note = (Note) ItemsManager.getInstance().getItem(getIntent().getStringExtra("item_uuid"));
+        titleEditText.setText(note.Title);
+        noteLayout.init(findViewById(R.id.noteEditText), note);
     }
 
     public void onBoldButtonClick(View view) { noteLayout.onBoldButtonClick(); }
     public void onItalicButtonClick(View view) { noteLayout.onItalicButtonClick(); }
 
     public void onDeleteButtonClick(View view) {
-        noteLayout.deleteItem();
+        noteLayout.delete();
         finish();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        noteLayout.saveItem();
+        noteLayout.save();
     }
 
     public WindowInsetsCompat onApplyWindowInsetsListener(View view, WindowInsetsCompat insets) {

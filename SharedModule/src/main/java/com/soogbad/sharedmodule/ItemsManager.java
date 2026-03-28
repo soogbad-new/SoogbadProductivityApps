@@ -52,15 +52,22 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
 
     public String createItem(O defaultOptions) {
         String uuid = Utility.generateUniqueUUID(items);
-        items.add(itemCreator.create(uuid, "Example Title", defaultOptions));
+        items.add(itemCreator.create(uuid, "", defaultOptions));
         storageManager.saveContentToHtmlFile(uuid, new SpannableString(""));
-        storageManager.saveMetadataToJsonFile(uuid, "Example Title", defaultOptions);
+        storageManager.saveMetadataToJsonFile(uuid, "", defaultOptions);
         return uuid;
     }
 
     public void deleteItem(Item<?> item) {
-        items.removeIf((i) -> i.UUID.equals(item.UUID));
+        items.removeIf(i -> i.UUID.equals(item.UUID));
         storageManager.deleteItemFiles(item.UUID);
+    }
+
+    public T getItem(String uuid) {
+        for(T item : items)
+            if(item.UUID.equals(uuid))
+                return item;
+        throw new RuntimeException("Item not found");
     }
 
 }

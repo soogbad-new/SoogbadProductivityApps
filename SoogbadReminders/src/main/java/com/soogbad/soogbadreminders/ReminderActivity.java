@@ -2,6 +2,7 @@ package com.soogbad.soogbadreminders;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -10,34 +11,40 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.soogbad.sharedmodule.ItemLayout;
+import com.soogbad.sharedmodule.ItemsManager;
 import com.soogbad.sharedmodule.Utility;
 
 public class ReminderActivity extends AppCompatActivity {
 
+    private Reminder reminder;
+
     private ItemLayout reminderLayout;
     private ConstraintLayout reminderToolbar;
+    private EditText titleEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.activity_reminder, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
-        reminderLayout = findViewById(R.id.reminderLayout); reminderToolbar = findViewById(R.id.reminderToolbar);
-        reminderLayout.init(findViewById(R.id.reminderEditText), getIntent().getStringExtra("item_uuid"));
+        reminderLayout = findViewById(R.id.reminderLayout); reminderToolbar = findViewById(R.id.reminderToolbar); titleEditText = findViewById(R.id.titleEditText);
+        reminder = (Reminder) ItemsManager.getInstance().getItem(getIntent().getStringExtra("item_uuid"));
+        titleEditText.setText(reminder.Title);
+        reminderLayout.init(findViewById(R.id.reminderEditText), reminder);
     }
 
     public void onBoldButtonClick(View view) { reminderLayout.onBoldButtonClick(); }
     public void onItalicButtonClick(View view) { reminderLayout.onItalicButtonClick(); }
 
     public void onDeleteButtonClick(View view) {
-        reminderLayout.deleteItem();
+        reminderLayout.delete();
         finish();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        reminderLayout.saveItem();
+        reminderLayout.save();
     }
 
     public WindowInsetsCompat onApplyWindowInsetsListener(View view, WindowInsetsCompat insets) {

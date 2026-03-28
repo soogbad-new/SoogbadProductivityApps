@@ -17,22 +17,19 @@ public class ItemLayout extends ConstraintLayout {
 
     public ItemLayout(Context context, AttributeSet attrs) { super(context, attrs); }
 
-    public void init(RichEditText editText, String itemUuid) {
-        this.editText = editText;
-        for(Item<?> item : ItemsManager.getInstance().getItems())
-            if(item.UUID.equals(itemUuid))
-                this.item = item;
+    public void init(RichEditText editText, Item<?> item) {
+        this.editText = editText; this.item = item;
         ItemsManager.getInstance().loadItemContent(item);
         editText.setText(item.Content);
     }
 
-    public void saveItem() {
+    public void save() {
         if(itemDeleted)
             return;
         ItemsManager.getInstance().saveItemContent(item, new SpannedString(editText.getText()));
     }
 
-    public void deleteItem() {
+    public void delete() {
         itemDeleted = true;
         ItemsManager.getInstance().deleteItem(item);
     }
