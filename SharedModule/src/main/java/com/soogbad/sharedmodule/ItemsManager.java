@@ -36,11 +36,11 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
         }
     }
 
-    public void loadItemContent(T item) {
+    public void loadItemContent(Item<?> item) {
         item.Content = storageManager.loadContentFromHtmlFile(item.UUID);
     }
 
-    public void saveItemContent(T item, SpannedString content) {
+    public void saveItemContent(Item<?> item, SpannedString content) {
         item.Content = content;
         storageManager.saveContentToHtmlFile(item.UUID, item.Content);
     }
@@ -58,8 +58,8 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
         return uuid;
     }
 
-    public void deleteItem(T item) {
-        items.remove(item);
+    public void deleteItem(Item<?> item) {
+        items.removeIf((i) -> i.UUID.equals(item.UUID));
         storageManager.deleteItemFiles(item.UUID);
     }
 
