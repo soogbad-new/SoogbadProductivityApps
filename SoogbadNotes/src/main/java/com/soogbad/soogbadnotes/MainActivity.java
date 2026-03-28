@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.soogbad.sharedmodule.ItemListAdapter;
 import com.soogbad.sharedmodule.ItemsManager;
-import com.soogbad.sharedmodule.StorageManager;
 import com.soogbad.sharedmodule.Utility;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,8 +27,7 @@ public class MainActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_main, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         noteList = findViewById(R.id.noteList);
-        notesManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Note::create, Note.NoteOptions::fromJson);
-        notesManager.loadItems();
+        notesManager = ((SoogbadNotesApplication)getApplication()).getNotesManager();
         noteList.setLayoutManager(new LinearLayoutManager(this));
         noteList.setAdapter(new ItemListAdapter(notesManager.getItems(), R.layout.note_list_item, R.id.itemTitleTextView));
     }

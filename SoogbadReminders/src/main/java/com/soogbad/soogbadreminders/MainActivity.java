@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.soogbad.sharedmodule.ItemListAdapter;
 import com.soogbad.sharedmodule.ItemsManager;
 import com.soogbad.sharedmodule.Schedule;
-import com.soogbad.sharedmodule.StorageManager;
 import com.soogbad.sharedmodule.Utility;
 
 import java.util.Date;
@@ -31,8 +30,7 @@ public class MainActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_main, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         reminderList = findViewById(R.id.reminderList);
-        remindersManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Reminder::create, Reminder.ReminderOptions::fromJson);
-        remindersManager.loadItems();
+        remindersManager = ((SoogbadRemindersApplication)getApplication()).getRemindersManager();
         reminderList.setLayoutManager(new LinearLayoutManager(this));
         reminderList.setAdapter(new ItemListAdapter(remindersManager.getItems(), R.layout.reminder_list_item, R.id.itemTitleTextView));
     }

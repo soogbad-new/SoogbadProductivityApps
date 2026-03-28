@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.soogbad.sharedmodule.ItemListAdapter;
 import com.soogbad.sharedmodule.ItemsManager;
 import com.soogbad.sharedmodule.Schedule;
-import com.soogbad.sharedmodule.StorageManager;
 import com.soogbad.sharedmodule.Utility;
 
 import java.util.Date;
@@ -31,8 +30,7 @@ public class MainActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_main, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         eventList = findViewById(R.id.eventList);
-        eventsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Event::create, Event.EventOptions::fromJson);
-        eventsManager.loadItems();
+        eventsManager = ((SoogbadCalendarApplication)getApplication()).getEventsManager();
         eventList.setLayoutManager(new LinearLayoutManager(this));
         eventList.setAdapter(new ItemListAdapter(eventsManager.getItems(), R.layout.event_list_item, R.id.itemTitleTextView));
     }
