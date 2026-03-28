@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.soogbad.sharedmodule.ItemListAdapter;
+import com.soogbad.sharedmodule.ItemsManager;
 import com.soogbad.sharedmodule.Schedule;
 import com.soogbad.sharedmodule.StorageManager;
 import com.soogbad.sharedmodule.Utility;
@@ -22,6 +23,7 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView reminderList;
+    private ItemsManager<Reminder, Reminder.ReminderOptions> remindersManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +31,14 @@ public class MainActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_main, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         reminderList = findViewById(R.id.reminderList);
-        StorageManager.setDirectory(getFilesDir().toPath());
-        StorageManager.loadItems(Reminder::create, Reminder.ReminderOptions::fromJson);
+        remindersManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Reminder::create, Reminder.ReminderOptions::fromJson);
+        remindersManager.loadItems();
         reminderList.setLayoutManager(new LinearLayoutManager(this));
-        reminderList.setAdapter(new ItemListAdapter(StorageManager.getItems(), R.layout.reminder_list_item, R.id.itemTitleTextView));
+        reminderList.setAdapter(new ItemListAdapter(remindersManager.getItems(), R.layout.reminder_list_item, R.id.itemTitleTextView));
     }
 
     public void onAddButtonClick(View view) {
-        String uuid = StorageManager.createItem(Reminder::create, new Reminder.ReminderOptions(new Date(), Schedule.NONE));
+        String uuid = remindersManager.createItem(new Reminder.ReminderOptions(new Date(), Schedule.NONE));
         if(reminderList.getAdapter() != null)
             reminderList.getAdapter().notifyItemInserted(0);
         startActivity(new Intent(this, ReminderActivity.class).putExtra("item_uuid", uuid));

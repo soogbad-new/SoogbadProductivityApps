@@ -6,7 +6,6 @@ import android.text.SpannedString;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 
-import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class ItemLayout extends ConstraintLayout {
@@ -18,24 +17,24 @@ public class ItemLayout extends ConstraintLayout {
 
     public ItemLayout(Context context, AttributeSet attrs) { super(context, attrs); }
 
-    public void init(RichEditText editText, @Nullable Item<?> item) {
-        this.editText = editText; this.item = item;
-        if(item == null)
-            return;
-        item.loadContent();
+    public void init(RichEditText editText, String itemUuid) {
+        this.editText = editText;
+        for(Item<?> item : ItemsManager.getInstance().getItems())
+            if(item.UUID.equals(itemUuid))
+                this.item = item;
+        ItemsManager.getInstance().loadItemContent(item);
         editText.setText(item.Content);
     }
 
     public void saveItem() {
         if(itemDeleted)
             return;
-        item.Content = new SpannedString(editText.getText());
-        item.save();
+        ItemsManager.getInstance().saveItemContent(item, new SpannedString(editText.getText()));
     }
 
     public void deleteItem() {
         itemDeleted = true;
-        item.delete();
+        ItemsManager.getInstance().deleteItem(item);
     }
 
     public void onBoldButtonClick() { editText.toggleStyle(StyleSpan.class, Typeface.BOLD); }

@@ -10,7 +10,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.soogbad.sharedmodule.ItemLayout;
-import com.soogbad.sharedmodule.StorageManager;
 import com.soogbad.sharedmodule.Utility;
 
 public class ReminderActivity extends AppCompatActivity {
@@ -24,8 +23,7 @@ public class ReminderActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_reminder, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         reminderLayout = findViewById(R.id.reminderLayout); reminderToolbar = findViewById(R.id.reminderToolbar);
-        Reminder reminder = (Reminder)StorageManager.getItem(getIntent().getStringExtra("item_uuid"));
-        reminderLayout.init(findViewById(R.id.reminderEditText), reminder);
+        reminderLayout.init(findViewById(R.id.reminderEditText), getIntent().getStringExtra("item_uuid"));
     }
 
     public void onBoldButtonClick(View view) { reminderLayout.onBoldButtonClick(); }

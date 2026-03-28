@@ -10,7 +10,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.soogbad.sharedmodule.ItemLayout;
-import com.soogbad.sharedmodule.StorageManager;
 import com.soogbad.sharedmodule.Utility;
 
 public class EventActivity extends AppCompatActivity {
@@ -24,8 +23,7 @@ public class EventActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_event, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         eventLayout = findViewById(R.id.eventLayout); eventToolbar = findViewById(R.id.eventToolbar);
-        Event event = (Event)StorageManager.getItem(getIntent().getStringExtra("item_uuid"));
-        eventLayout.init(findViewById(R.id.eventEditText), event);
+        eventLayout.init(findViewById(R.id.eventEditText), getIntent().getStringExtra("item_uuid"));
     }
 
     public void onBoldButtonClick(View view) { eventLayout.onBoldButtonClick(); }

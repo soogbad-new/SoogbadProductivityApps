@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.soogbad.sharedmodule.ItemListAdapter;
+import com.soogbad.sharedmodule.ItemsManager;
 import com.soogbad.sharedmodule.Schedule;
 import com.soogbad.sharedmodule.StorageManager;
 import com.soogbad.sharedmodule.Utility;
@@ -22,6 +23,7 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView eventList;
+    private ItemsManager<Event, Event.EventOptions> eventsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +31,14 @@ public class MainActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_main, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         eventList = findViewById(R.id.eventList);
-        StorageManager.setDirectory(getFilesDir().toPath());
-        StorageManager.loadItems(Event::create, Event.EventOptions::fromJson);
+        eventsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Event::create, Event.EventOptions::fromJson);
+        eventsManager.loadItems();
         eventList.setLayoutManager(new LinearLayoutManager(this));
-        eventList.setAdapter(new ItemListAdapter(StorageManager.getItems(), R.layout.event_list_item, R.id.itemTitleTextView));
+        eventList.setAdapter(new ItemListAdapter(eventsManager.getItems(), R.layout.event_list_item, R.id.itemTitleTextView));
     }
 
     public void onAddButtonClick(View view) {
-        String uuid = StorageManager.createItem(Event::create, new Event.EventOptions(new Date(), Schedule.NONE));
+        String uuid = eventsManager.createItem(new Event.EventOptions(new Date(), Schedule.NONE));
         if(eventList.getAdapter() != null)
             eventList.getAdapter().notifyItemInserted(0);
         startActivity(new Intent(this, EventActivity.class).putExtra("item_uuid", uuid));

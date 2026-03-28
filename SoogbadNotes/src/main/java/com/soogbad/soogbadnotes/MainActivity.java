@@ -13,12 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.soogbad.sharedmodule.ItemListAdapter;
+import com.soogbad.sharedmodule.ItemsManager;
 import com.soogbad.sharedmodule.StorageManager;
 import com.soogbad.sharedmodule.Utility;
 
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView noteList;
+    private ItemsManager<Note, Note.NoteOptions> notesManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +28,14 @@ public class MainActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_main, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         noteList = findViewById(R.id.noteList);
-        StorageManager.setDirectory(getFilesDir().toPath());
-        StorageManager.loadItems(Note::create, Note.NoteOptions::fromJson);
+        notesManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Note::create, Note.NoteOptions::fromJson);
+        notesManager.loadItems();
         noteList.setLayoutManager(new LinearLayoutManager(this));
-        noteList.setAdapter(new ItemListAdapter(StorageManager.getItems(), R.layout.note_list_item, R.id.itemTitleTextView));
+        noteList.setAdapter(new ItemListAdapter(notesManager.getItems(), R.layout.note_list_item, R.id.itemTitleTextView));
     }
 
     public void onAddButtonClick(View view) {
-        String uuid = StorageManager.createItem(Note::create, new Note.NoteOptions());
+        String uuid = notesManager.createItem(new Note.NoteOptions());
         if(noteList.getAdapter() != null)
             noteList.getAdapter().notifyItemInserted(0);
         startActivity(new Intent(this, NoteActivity.class).putExtra("item_uuid", uuid));

@@ -1,7 +1,6 @@
 package com.soogbad.sharedmodule;
 
 import android.text.Html;
-import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
 
@@ -18,77 +17,38 @@ import java.util.ArrayList;
 @SuppressWarnings("ReadWriteStringCanBeUsed")
 public class StorageManager {
 
-    private static Path directory;
-    private static final ArrayList<Item<?>> items = new ArrayList<>();
+    private final Path directory;
 
-    public static ArrayList<Item<?>> getItems() { return items; }
-
-    public static Item<?> getItem(String uuid) {
-        for(Item<?> item : items)
-            if(item.UUID.equals(uuid))
-                return item;
-        return null;
-    }
-
-    public static void setDirectory(Path directory) {
-        StorageManager.directory = directory;
+    public StorageManager(Path directory) {
+        this.directory = directory;
         if(!Files.exists(directory)) {
             try { Files.createDirectory(directory); }
             catch(IOException e) { throw new RuntimeException(e); }
         }
     }
 
-    public static <T extends Item<O>, O extends Item.ItemOptions> void loadItems(Item.Creator<T, O> itemCreator, Item.OptionsParser<O> optionsParser) {
-        try(DirectoryStream<Path> dirStream = Files.newDirectoryStream(directory, "*.html")) {
-            for(Path path : dirStream) {
-                String uuid = path.getFileName().toString().replace(".html", "");
-                JSONObject metadata = loadMetadata(uuid);
-                String title = metadata.getString("title");
-                O options = optionsParser.parse(metadata.getJSONObject("options"));
-                items.add(itemCreator.create(uuid, title, options));
-            }
-        } catch(JSONException | IOException e) { throw new RuntimeException(e); }
-    }
-
-    public static <T extends Item<O>, O extends Item.ItemOptions> String createItem(Item.Creator<T, O> itemCreator, O defaultOptions) {
-        String uuid = Utility.generateUniqueUUID(items);
-        items.add(itemCreator.create(uuid, "Example Title", defaultOptions));
-        saveTextToHtmlFile(new SpannableString(""), directory.resolve(uuid + ".html"));
-        saveMetadata(uuid, "Example Title", defaultOptions);
-        return uuid;
-    }
-
-    public static void deleteItem(Item<?> item) {
-        items.remove(item);
-        try {
-            Files.delete(directory.resolve(item.UUID + ".html"));
-            Files.delete(directory.resolve(item.UUID + ".json"));
+    public ArrayList<String> loadItemUUIDs() {
+        ArrayList<String> uuids = new ArrayList<>();
+        try(DirectoryStream<Path> stream = Files.newDirectoryStream(directory, "*.html")) {
+            stream.forEach(path -> uuids.add(path.getFileName().toString().replace(".html", "")));
         } catch(IOException e) { throw new RuntimeException(e); }
+        return uuids;
     }
 
-    public static void saveItem(Item<?> item) {
-        saveTextToHtmlFile(item.Content, directory.resolve(item.UUID + ".html"));
-        saveMetadata(item.UUID, item.Title, item.Options);
-    }
-
-    public static SpannedString getItemContent(String itemUUID) {
-        return loadTextFromHtmlFile(directory.resolve(itemUUID + ".html"));
-    }
-
-    private static void saveTextToHtmlFile(Spanned spannedText, Path filePath) {
+    public void saveContentToHtmlFile(String uuid, Spanned spannedText) {
         String html = Html.toHtml(spannedText, Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
-        try { Files.write(filePath, html.getBytes(StandardCharsets.UTF_16)); }
+        try { Files.write(directory.resolve(uuid + ".html"), html.getBytes(StandardCharsets.UTF_16)); }
         catch(IOException e) { throw new RuntimeException(e); }
     }
 
-    private static SpannedString loadTextFromHtmlFile(Path filePath) {
+    public SpannedString loadContentFromHtmlFile(String uuid) {
         String html;
-        try { html = new String(Files.readAllBytes(filePath), StandardCharsets.UTF_16); }
+        try { html = new String(Files.readAllBytes(directory.resolve(uuid + ".html")), StandardCharsets.UTF_16); }
         catch(IOException e) { throw new RuntimeException(e); }
         return new SpannedString(Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT));
     }
 
-    private static void saveMetadata(String uuid, String title, Item.ItemOptions options) {
+    public void saveMetadataToJsonFile(String uuid, String title, Item.ItemOptions options) {
         try {
             JSONObject metadata = new JSONObject();
             metadata.put("title", title);
@@ -97,11 +57,18 @@ public class StorageManager {
         } catch(JSONException | IOException e) { throw new RuntimeException(e); }
     }
 
-    private static JSONObject loadMetadata(String uuid) {
+    public JSONObject loadMetadataFromJsonFile(String uuid) {
         try {
             String json = new String(Files.readAllBytes(directory.resolve(uuid + ".json")), StandardCharsets.UTF_16);
             return new JSONObject(json);
         } catch(JSONException | IOException e) { throw new RuntimeException(e); }
+    }
+
+    public void deleteItemFiles(String uuid) {
+        try {
+            Files.delete(directory.resolve(uuid + ".html"));
+            Files.delete(directory.resolve(uuid + ".json"));
+        } catch(IOException e) { throw new RuntimeException(e); }
     }
 
 }

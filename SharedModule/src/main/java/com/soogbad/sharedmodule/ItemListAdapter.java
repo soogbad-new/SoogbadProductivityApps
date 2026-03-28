@@ -14,10 +14,10 @@ import java.util.ArrayList;
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHolder> {
 
-    private final ArrayList<Item<?>> items;
+    private final ArrayList<? extends Item<?>> items;
     private final int item_resource, item_title_id;
 
-    public ItemListAdapter(ArrayList<Item<?>> items, @LayoutRes int item_resource, @IdRes int item_title_id) {
+    public ItemListAdapter(ArrayList<? extends Item<?>> items, @LayoutRes int item_resource, @IdRes int item_title_id) {
         this.items = items; this.item_resource = item_resource; this.item_title_id = item_title_id;
     }
 
