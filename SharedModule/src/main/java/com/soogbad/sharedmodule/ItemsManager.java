@@ -41,8 +41,15 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
         storageManager.saveContentToHtmlFile(item.UUID, item.Content);
     }
 
-    public void saveItemMetadata(T item, String title, O options) {
-        item.Title = title; item.Options = options;
+
+    public void saveItemTitle(Item<?> item, String title) {
+        if(title.equals(item.Title))
+            return;
+        item.Title = title;
+        storageManager.saveMetadataToJsonFile(item.UUID, item.Title, item.Options);
+    }
+    public void saveItemOptions(T item, O options) {
+        item.Options = options;
         storageManager.saveMetadataToJsonFile(item.UUID, item.Title, item.Options);
     }
 

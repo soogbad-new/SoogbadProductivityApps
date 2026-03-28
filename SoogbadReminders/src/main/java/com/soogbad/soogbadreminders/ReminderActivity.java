@@ -2,7 +2,6 @@ package com.soogbad.soogbadreminders;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -16,23 +15,18 @@ import com.soogbad.sharedmodule.Utility;
 
 public class ReminderActivity extends AppCompatActivity {
 
-    private ItemsManager<Reminder, Reminder.ReminderOptions> remindersManager;
-    private Reminder reminder;
-
     private ItemLayout reminderLayout;
     private ConstraintLayout reminderToolbar;
-    private EditText titleEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.activity_reminder, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
-        reminderLayout = findViewById(R.id.reminderLayout); reminderToolbar = findViewById(R.id.reminderToolbar); titleEditText = findViewById(R.id.titleEditText);
-        remindersManager = ((SoogbadRemindersApplication)getApplication()).getRemindersManager();
-        reminder = remindersManager.getItem(getIntent().getStringExtra("item_uuid"));
-        titleEditText.setText(reminder.Title);
-        reminderLayout.init(findViewById(R.id.reminderEditText), remindersManager, reminder);
+        reminderLayout = findViewById(R.id.reminderLayout); reminderToolbar = findViewById(R.id.reminderToolbar);
+        ItemsManager<Reminder, Reminder.ReminderOptions> remindersManager = ((SoogbadRemindersApplication)getApplication()).getRemindersManager();
+        Reminder reminder = remindersManager.getItem(getIntent().getStringExtra("item_uuid"));
+        reminderLayout.init(remindersManager, reminder, findViewById(R.id.reminderEditText), findViewById(R.id.titleEditText));
     }
 
     public void onBoldButtonClick(View view) { reminderLayout.onBoldButtonClick(); }
