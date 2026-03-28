@@ -16,6 +16,7 @@ import com.soogbad.sharedmodule.Utility;
 
 public class ReminderActivity extends AppCompatActivity {
 
+    private ItemsManager<Reminder, Reminder.ReminderOptions> remindersManager;
     private Reminder reminder;
 
     private ItemLayout reminderLayout;
@@ -28,9 +29,10 @@ public class ReminderActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_reminder, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         reminderLayout = findViewById(R.id.reminderLayout); reminderToolbar = findViewById(R.id.reminderToolbar); titleEditText = findViewById(R.id.titleEditText);
-        reminder = (Reminder) ItemsManager.getInstance().getItem(getIntent().getStringExtra("item_uuid"));
+        remindersManager = ((SoogbadRemindersApplication)getApplication()).getRemindersManager();
+        reminder = remindersManager.getItem(getIntent().getStringExtra("item_uuid"));
         titleEditText.setText(reminder.Title);
-        reminderLayout.init(findViewById(R.id.reminderEditText), reminder);
+        reminderLayout.init(findViewById(R.id.reminderEditText), remindersManager, reminder);
     }
 
     public void onBoldButtonClick(View view) { reminderLayout.onBoldButtonClick(); }

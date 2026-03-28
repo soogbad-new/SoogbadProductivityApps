@@ -11,27 +11,27 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 public class ItemLayout extends ConstraintLayout {
 
     private RichEditText editText;
+    private ItemsManager<?, ?> itemsManager;
     private Item<?> item;
-
     private boolean itemDeleted = false;
 
     public ItemLayout(Context context, AttributeSet attrs) { super(context, attrs); }
 
-    public void init(RichEditText editText, Item<?> item) {
-        this.editText = editText; this.item = item;
-        ItemsManager.getInstance().loadItemContent(item);
+    public void init(RichEditText editText, ItemsManager<?, ?> itemsManager,Item<?> item) {
+        this.editText = editText; this.itemsManager = itemsManager; this.item = item;
+        itemsManager.loadItemContent(item);
         editText.setText(item.Content);
     }
 
     public void save() {
         if(itemDeleted)
             return;
-        ItemsManager.getInstance().saveItemContent(item, new SpannedString(editText.getText()));
+        itemsManager.saveItemContent(item, new SpannedString(editText.getText()));
     }
 
     public void delete() {
         itemDeleted = true;
-        ItemsManager.getInstance().deleteItem(item);
+        itemsManager.deleteItem(item);
     }
 
     public void onBoldButtonClick() { editText.toggleStyle(StyleSpan.class, Typeface.BOLD); }

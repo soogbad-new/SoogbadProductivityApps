@@ -17,12 +17,8 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
     private final Item.Creator<T, O> itemCreator;
     private final Item.OptionsParser<O> optionsParser;
 
-    private static ItemsManager<?, ?> instance;
-    public static ItemsManager<?, ?> getInstance() { return instance; }
-
     public ItemsManager(StorageManager storageManager, Item.Creator<T, O> itemCreator, Item.OptionsParser<O> optionsParser) {
         this.storageManager = storageManager; this.itemCreator = itemCreator; this.optionsParser = optionsParser;
-        instance = this;
     }
 
     public void loadItems() {

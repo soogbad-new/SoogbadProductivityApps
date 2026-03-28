@@ -16,6 +16,7 @@ import com.soogbad.sharedmodule.Utility;
 
 public class NoteActivity extends AppCompatActivity {
 
+    private ItemsManager<Note, Note.NoteOptions> notesManager;
     private Note note;
 
     private ItemLayout noteLayout;
@@ -28,9 +29,10 @@ public class NoteActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_note, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         noteLayout = findViewById(R.id.noteLayout); noteToolbar = findViewById(R.id.noteToolbar); titleEditText = findViewById(R.id.titleEditText);
-        note = (Note) ItemsManager.getInstance().getItem(getIntent().getStringExtra("item_uuid"));
+        notesManager = ((SoogbadNotesApplication)getApplication()).getNotesManager();
+        note = notesManager.getItem(getIntent().getStringExtra("item_uuid"));
         titleEditText.setText(note.Title);
-        noteLayout.init(findViewById(R.id.noteEditText), note);
+        noteLayout.init(findViewById(R.id.noteEditText), notesManager, note);
     }
 
     public void onBoldButtonClick(View view) { noteLayout.onBoldButtonClick(); }
