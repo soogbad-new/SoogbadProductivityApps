@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.text.SpannedString;
 import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
@@ -40,5 +41,6 @@ public class ItemLayout extends ConstraintLayout {
 
     public void onBoldButtonClick() { contentEditText.toggleStyle(StyleSpan.class, Typeface.BOLD); }
     public void onItalicButtonClick() { contentEditText.toggleStyle(StyleSpan.class, Typeface.ITALIC); }
+    public void onUnderlineButtonClick() { contentEditText.toggleStyle(UnderlineSpan.class, 0); }
 
 }

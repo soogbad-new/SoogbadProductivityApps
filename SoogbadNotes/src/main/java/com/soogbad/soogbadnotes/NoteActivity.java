@@ -31,6 +31,7 @@ public class NoteActivity extends AppCompatActivity {
 
     public void onBoldButtonClick(View view) { noteLayout.onBoldButtonClick(); }
     public void onItalicButtonClick(View view) { noteLayout.onItalicButtonClick(); }
+    public void onUnderlineButtonClick(View view) { noteLayout.onUnderlineButtonClick(); }
 
     public void onDeleteButtonClick(View view) {
         noteLayout.delete();

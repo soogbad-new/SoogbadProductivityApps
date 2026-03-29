@@ -31,6 +31,7 @@ public class ReminderActivity extends AppCompatActivity {
 
     public void onBoldButtonClick(View view) { reminderLayout.onBoldButtonClick(); }
     public void onItalicButtonClick(View view) { reminderLayout.onItalicButtonClick(); }
+    public void onUnderlineButtonClick(View view) { reminderLayout.onUnderlineButtonClick(); }
 
     public void onDeleteButtonClick(View view) {
         reminderLayout.delete();

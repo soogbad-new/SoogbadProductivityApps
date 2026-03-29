@@ -92,6 +92,17 @@
                 app:layout_constraintLeft_toRightOf="@id/boldButton">
             </ImageButton>
 
+            <ImageButton
+                android:id="@+id/underlineButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/underline"
+                android:scaleType="centerCrop"
+                android:onClick="onUnderlineButtonClick"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/italicButton">
+            </ImageButton>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.soogbad.sharedmodule.ItemLayout>
 
