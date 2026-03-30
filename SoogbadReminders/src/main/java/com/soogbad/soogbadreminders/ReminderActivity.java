@@ -29,9 +29,9 @@ public class ReminderActivity extends AppCompatActivity {
         reminderLayout.init(remindersManager, reminder, findViewById(R.id.reminderEditText), findViewById(R.id.titleEditText));
     }
 
-    public void onBoldButtonClick(View view) { reminderLayout.onBoldButtonClick(); }
-    public void onItalicButtonClick(View view) { reminderLayout.onItalicButtonClick(); }
-    public void onUnderlineButtonClick(View view) { reminderLayout.onUnderlineButtonClick(); }
+    public void onBoldButtonClick(View view) { reminderLayout.onBoldButtonClick(view); }
+    public void onItalicButtonClick(View view) { reminderLayout.onItalicButtonClick(view); }
+    public void onUnderlineButtonClick(View view) { reminderLayout.onUnderlineButtonClick(view); }
 
     public void onDeleteButtonClick(View view) {
         reminderLayout.delete();

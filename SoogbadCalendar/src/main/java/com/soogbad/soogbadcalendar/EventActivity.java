@@ -29,9 +29,9 @@ public class EventActivity extends AppCompatActivity {
         eventLayout.init(eventsManager, event, findViewById(R.id.eventEditText), findViewById(R.id.titleEditText));
     }
 
-    public void onBoldButtonClick(View view) { eventLayout.onBoldButtonClick(); }
-    public void onItalicButtonClick(View view) { eventLayout.onItalicButtonClick(); }
-    public void onUnderlineButtonClick(View view) { eventLayout.onUnderlineButtonClick(); }
+    public void onBoldButtonClick(View view) { eventLayout.onBoldButtonClick(view); }
+    public void onItalicButtonClick(View view) { eventLayout.onItalicButtonClick(view); }
+    public void onUnderlineButtonClick(View view) { eventLayout.onUnderlineButtonClick(view); }
 
     public void onDeleteButtonClick(View view) {
         eventLayout.delete();

@@ -29,9 +29,9 @@ public class NoteActivity extends AppCompatActivity {
         noteLayout.init(notesManager, note, findViewById(R.id.noteEditText), findViewById(R.id.titleEditText));
     }
 
-    public void onBoldButtonClick(View view) { noteLayout.onBoldButtonClick(); }
-    public void onItalicButtonClick(View view) { noteLayout.onItalicButtonClick(); }
-    public void onUnderlineButtonClick(View view) { noteLayout.onUnderlineButtonClick(); }
+    public void onBoldButtonClick(View view) { noteLayout.onBoldButtonClick(view); }
+    public void onItalicButtonClick(View view) { noteLayout.onItalicButtonClick(view); }
+    public void onUnderlineButtonClick(View view) { noteLayout.onUnderlineButtonClick(view); }
 
     public void onDeleteButtonClick(View view) {
         noteLayout.delete();
