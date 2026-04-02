@@ -32,6 +32,18 @@ public class RichEditText extends AppCompatEditText {
         });
     }
 
+    @Override
+    protected void onSelectionChanged(int selectionStart, int selectionEnd) {
+        super.onSelectionChanged(selectionStart, selectionEnd);
+        if(textChanging) {
+            textChanging = false;
+            return;
+        }
+        if(!hasFocus())
+            return;
+        updateCurrentActiveStyles(selectionStart, selectionEnd);
+    }
+
     @SuppressWarnings("FieldCanBeLocal")
     private final TextWatcher textChangedListener = new TextWatcher() {
         @Override
@@ -49,17 +61,16 @@ public class RichEditText extends AppCompatEditText {
             textChanging = true;
         }
     };
-
-    @Override
-    protected void onSelectionChanged(int selectionStart, int selectionEnd) {
-        super.onSelectionChanged(selectionStart, selectionEnd);
-        if(textChanging) {
-            textChanging = false;
-            return;
-        }
-        if(!hasFocus())
-            return;
-        updateCurrentActiveStyles(selectionStart, selectionEnd);
+    private void applyActiveStyles(Editable editable, int position) {
+        applyActiveStyle(editable, position, StyleSpan.class, Typeface.BOLD, bold);
+        applyActiveStyle(editable, position, StyleSpan.class, Typeface.ITALIC, italic);
+        applyActiveStyle(editable, position, UnderlineSpan.class, 0, underline);
+    }
+    private static <T extends CharacterStyle> void applyActiveStyle(Editable editable, int position, Class<T> spanType, int value, boolean isActive) {
+        if(isActive)
+            editable.setSpan(instantiateSpan(spanType, value), position, position + 1, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        else
+            removeSpansInRange(editable, position, position + 1, spanType, value);
     }
 
     public <T extends CharacterStyle> void toggleStyle(Class<T> spanType, int value) {
@@ -75,14 +86,12 @@ public class RichEditText extends AppCompatEditText {
             notifyListener();
         }
     }
-
     private static <T extends CharacterStyle> void applyStyleToSelection(Editable editable, int selectionStart, int selectionEnd, Class<T> spanType, int value) {
         boolean wasCovered = isEntireRangeCovered(editable, selectionStart, selectionEnd, spanType, value);
         removeSpansInRange(editable, selectionStart, selectionEnd, spanType, value);
         if(!wasCovered)
             editable.setSpan(instantiateSpan(spanType, value), selectionStart, selectionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
-
     private void toggleActiveStyleFlag(Class<? extends CharacterStyle> spanType, int value) {
         if(spanType.equals(StyleSpan.class)) {
             if(value == Typeface.BOLD) bold = !bold;
@@ -108,47 +117,6 @@ public class RichEditText extends AppCompatEditText {
         notifyListener();
     }
 
-    private void applyActiveStyles(Editable editable, int position) {
-        applyActiveStyle(editable, position, StyleSpan.class, Typeface.BOLD, bold);
-        applyActiveStyle(editable, position, StyleSpan.class, Typeface.ITALIC, italic);
-        applyActiveStyle(editable, position, UnderlineSpan.class, 0, underline);
-    }
-    private static <T extends CharacterStyle> void applyActiveStyle(Editable editable, int position, Class<T> spanType, int value, boolean isActive) {
-        if(isActive)
-            editable.setSpan(instantiateSpan(spanType, value), position, position + 1, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-        else
-            removeSpansInRange(editable, position, position + 1, spanType, value);
-    }
-
-    private static <T extends CharacterStyle> boolean isStyleActiveAtCursor(Editable editable, int cursor, Class<T> spanType, int value) {
-        if(editable.toString().isEmpty()) return false;
-        if(cursor > 0 && editable.charAt(cursor - 1) != '\n')
-            return hasStyleAt(editable, cursor - 1, spanType, value);
-        else if(cursor < editable.length())
-            return hasStyleAt(editable, cursor, spanType, value);
-        return false;
-    }
-
-    private static <T extends CharacterStyle> boolean hasStyleAt(Editable editable, int position, Class<T> spanType, int value) {
-        T[] spans = editable.getSpans(position, position + 1, spanType);
-        for(T span : spans) {
-            if(compareSpansValue(span, value)) {
-                int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
-                if(spanStart <= position && spanEnd > position)
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    private static <T extends CharacterStyle> boolean isEntireRangeCovered(Editable editable, int start, int end, Class<T> spanType, int value) {
-        if(start >= end) return false;
-        for(int i = start; i < end; i++)
-            if(!hasStyleAt(editable, i, spanType, value))
-                return false;
-        return true;
-    }
-
     private static <T extends CharacterStyle> void removeSpansInRange(Editable editable, int start, int end, Class<T> spanType, int value) {
         T[] spans = editable.getSpans(start, end, spanType);
         for(T span : spans) {
@@ -161,6 +129,33 @@ public class RichEditText extends AppCompatEditText {
             if(spanEnd > end)
                 editable.setSpan(instantiateSpan(spanType, value), end, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
+    }
+
+    private static <T extends CharacterStyle> boolean isStyleActiveAtCursor(Editable editable, int cursor, Class<T> spanType, int value) {
+        if(editable.toString().isEmpty()) return false;
+        if(cursor > 0 && editable.charAt(cursor - 1) != '\n')
+            return hasStyleAt(editable, cursor - 1, spanType, value);
+        else if(cursor < editable.length())
+            return hasStyleAt(editable, cursor, spanType, value);
+        return false;
+    }
+    private static <T extends CharacterStyle> boolean hasStyleAt(Editable editable, int position, Class<T> spanType, int value) {
+        T[] spans = editable.getSpans(position, position + 1, spanType);
+        for(T span : spans) {
+            if(compareSpansValue(span, value)) {
+                int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
+                if(spanStart <= position && spanEnd > position)
+                    return true;
+            }
+        }
+        return false;
+    }
+    private static <T extends CharacterStyle> boolean isEntireRangeCovered(Editable editable, int start, int end, Class<T> spanType, int value) {
+        if(start >= end) return false;
+        for(int i = start; i < end; i++)
+            if(!hasStyleAt(editable, i, spanType, value))
+                return false;
+        return true;
     }
 
     public static <T extends CharacterStyle> T instantiateSpan(Class<T> spanType, int value) {
