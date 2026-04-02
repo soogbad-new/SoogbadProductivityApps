@@ -1,16 +1,15 @@
 package com.soogbad.sharedmodule;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.text.SpannedString;
-import android.text.style.StyleSpan;
-import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+
+import java.util.EnumSet;
 
 public class ItemLayout extends ConstraintLayout implements RichEditText.StyleStateListener {
 
@@ -43,13 +42,15 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         itemsManager.deleteItem(item);
     }
 
-    public void onBoldButtonClick() { contentEditText.toggleStyle(StyleSpan.class, Typeface.BOLD); }
-    public void onItalicButtonClick() { contentEditText.toggleStyle(StyleSpan.class, Typeface.ITALIC); }
-    public void onUnderlineButtonClick() { contentEditText.toggleStyle(UnderlineSpan.class, 0); }
+    public void onBoldButtonClick() { contentEditText.toggleStyle(RichTextStyle.BOLD); }
+    public void onItalicButtonClick() { contentEditText.toggleStyle(RichTextStyle.ITALIC); }
+    public void onUnderlineButtonClick() { contentEditText.toggleStyle(RichTextStyle.UNDERLINE); }
 
     @Override
-    public void onStyleStateChanged(boolean bold, boolean italic, boolean underline) {
-        toggleButton(boldButton, bold); toggleButton(italicButton, italic); toggleButton(underlineButton, underline);
+    public void onStyleStateChanged(EnumSet<RichTextStyle> activeStyles) {
+        toggleButton(boldButton, activeStyles.contains(RichTextStyle.BOLD));
+        toggleButton(italicButton, activeStyles.contains(RichTextStyle.ITALIC));
+        toggleButton(underlineButton, activeStyles.contains(RichTextStyle.UNDERLINE));
     }
 
     private void toggleButton(Button button, boolean state) {
