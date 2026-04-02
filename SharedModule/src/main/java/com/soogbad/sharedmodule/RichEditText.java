@@ -1,6 +1,7 @@
 package com.soogbad.sharedmodule;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.text.Editable;
 import android.text.Spanned;
 import android.text.TextWatcher;
@@ -22,12 +23,15 @@ public class RichEditText extends AppCompatEditText {
     public RichEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         addTextChangedListener(textChangedListener);
-        setOnFocusChangeListener((view, hasFocus) -> {
-            if(!hasFocus) {
-                activeStyles.clear();
-                notifyListener();
-            }
-        });
+    }
+
+    @Override
+    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
+        super.onFocusChanged(focused, direction, previouslyFocusedRect);
+        if(!focused) {
+            activeStyles.clear();
+            notifyListener();
+        }
     }
 
     @Override
@@ -54,17 +58,21 @@ public class RichEditText extends AppCompatEditText {
         @Override
         public void afterTextChanged(Editable editable) {
             if(ignoreTextChanges) return;
-            if(changeCount == 1)
+            if(changeCount > 0)
                 for(RichTextStyle style : RichTextStyle.values())
-                    applyActiveStyle(editable, changeStart, style, activeStyles.contains(style));
+                    applyActiveStyle(editable, changeStart, changeCount, style, activeStyles.contains(style));
             textChanging = true;
         }
     };
-    private static void applyActiveStyle(Editable editable, int position, RichTextStyle style, boolean isActive) {
-        if(isActive)
-            editable.setSpan(style.createSpan(), position, position + 1, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+    private static void applyActiveStyle(Editable editable, int changeStart, int changeCount, RichTextStyle style, boolean isActive) {
+        if(isActive) {
+            if(!isEntireRangeCovered(editable, changeStart, changeStart + changeCount, style)) {
+                removeSpansInRange(editable, changeStart, changeStart + changeCount, style);
+                editable.setSpan(style.createSpan(), changeStart, changeStart + changeCount, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            }
+        }
         else
-            removeSpansInRange(editable, position, position + 1, style);
+            removeSpansInRange(editable, changeStart, changeStart + changeCount, style);
     }
 
     public void toggleStyle(RichTextStyle style) {
