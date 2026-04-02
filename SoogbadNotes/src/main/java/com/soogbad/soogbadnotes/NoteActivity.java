@@ -26,12 +26,12 @@ public class NoteActivity extends AppCompatActivity {
         noteLayout = findViewById(R.id.noteLayout); noteToolbar = findViewById(R.id.noteToolbar);
         ItemsManager<Note, Note.NoteOptions> notesManager = ((SoogbadNotesApplication)getApplication()).getNotesManager();
         Note note = notesManager.getItem(getIntent().getStringExtra("item_uuid"));
-        noteLayout.init(notesManager, note, findViewById(R.id.noteEditText), findViewById(R.id.titleEditText));
+        noteLayout.init(notesManager, note, findViewById(R.id.noteEditText), findViewById(R.id.titleEditText), findViewById(R.id.boldButton), findViewById(R.id.italicButton), findViewById(R.id.underlineButton));
     }
 
-    public void onBoldButtonClick(View view) { noteLayout.onBoldButtonClick(view); }
-    public void onItalicButtonClick(View view) { noteLayout.onItalicButtonClick(view); }
-    public void onUnderlineButtonClick(View view) { noteLayout.onUnderlineButtonClick(view); }
+    public void onBoldButtonClick(View view) { noteLayout.onBoldButtonClick(); }
+    public void onItalicButtonClick(View view) { noteLayout.onItalicButtonClick(); }
+    public void onUnderlineButtonClick(View view) { noteLayout.onUnderlineButtonClick(); }
 
     public void onDeleteButtonClick(View view) {
         noteLayout.delete();

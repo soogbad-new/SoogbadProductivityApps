@@ -1,7 +1,10 @@
 package com.soogbad.sharedmodule;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Editable;
+import android.text.Spanned;
+import android.text.TextWatcher;
 import android.text.style.CharacterStyle;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
@@ -12,31 +15,199 @@ import androidx.appcompat.widget.AppCompatEditText;
 @SuppressWarnings("RedundantIfStatement")
 public class RichEditText extends AppCompatEditText {
 
-    public RichEditText(Context context, AttributeSet attrs) { super(context, attrs); }
+    private boolean ignoreTextChanges = false;
+    public void setIgnoreTextChanges(boolean ignoreTextChanges) { this.ignoreTextChanges = ignoreTextChanges; }
+    private boolean bold, italic, underline;
+    private boolean textChanging;
+    private int changeStart, changeCount;
 
-    public <T extends CharacterStyle> void toggleStyle(Class<T> spanType, int val) {
+    public RichEditText(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        addTextChangedListener(textChangedListener);
+        setOnFocusChangeListener((view, hasFocus) -> {
+            if(!hasFocus) {
+                bold = false; italic = false; underline = false;
+                notifyListener();
+            }
+        });
+    }
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private final TextWatcher textChangedListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if(ignoreTextChanges) return;
+            changeStart = start; changeCount = count;
+        }
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if(ignoreTextChanges) return;
+            if(changeCount == 1)
+                applyActiveStyles(editable, changeStart, changeStart + changeCount);
+            textChanging = true;
+        }
+    };
+
+    @Override
+    protected void onSelectionChanged(int selectionStart, int selectionEnd) {
+        super.onSelectionChanged(selectionStart, selectionEnd);
+        if(textChanging) {
+            textChanging = false;
+            return;
+        }
+        if(!hasFocus())
+            return;
+        updateCurrentActiveStyles(selectionStart, selectionEnd);
+    }
+
+    public <T extends CharacterStyle> void toggleStyle(Class<T> spanType, int value) {
         Editable editable = getText();
         if(editable == null) return;
         int selectionStart = getSelectionStart(); int selectionEnd = getSelectionEnd();
-        T[] currentSpans = editable.getSpans(selectionStart, selectionEnd, spanType);
         if(selectionStart != selectionEnd) {
-
+            applyStyleToSelection(editable, selectionStart, selectionEnd, spanType, value);
+            updateCurrentActiveStyles(selectionStart, selectionEnd);
         }
         else {
-
+            toggleActiveStyleFlag(spanType, value);
+            notifyListener();
         }
     }
 
-    private <T extends CharacterStyle> T instantiateSpan(Class<T> spanType, int val) {
-        if(spanType.equals(StyleSpan.class)) return spanType.cast(new StyleSpan(val));
+    private <T extends CharacterStyle> void applyStyleToSelection(Editable editable, int selectionStart, int selectionEnd, Class<T> spanType, int value) {
+        boolean wasCovered = isEntireRangeCovered(editable, selectionStart, selectionEnd, spanType, value);
+        T[] currentSpans = editable.getSpans(selectionStart, selectionEnd, spanType);
+        for(T span : currentSpans) {
+            if(compareSpansValue(span, value)) {
+                int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
+                editable.removeSpan(span);
+                if(spanStart < selectionStart)
+                    editable.setSpan(instantiateSpan(spanType, value), spanStart, selectionStart, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if(spanEnd > selectionEnd)
+                    editable.setSpan(instantiateSpan(spanType, value), selectionEnd, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+        if(!wasCovered)
+            editable.setSpan(instantiateSpan(spanType, value), selectionStart, selectionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    private void toggleActiveStyleFlag(Class<? extends CharacterStyle> spanType, int value) {
+        if(spanType.equals(StyleSpan.class)) {
+            if(value == Typeface.BOLD) bold = !bold;
+            else if(value == Typeface.ITALIC) italic = !italic;
+        }
+        else if(spanType.equals(UnderlineSpan.class))
+            underline = !underline;
+    }
+
+    private void updateCurrentActiveStyles(int selectionStart, int selectionEnd) {
+        Editable editable = getText();
+        if(editable == null) return;
+        if(selectionStart != selectionEnd) {
+            bold = isEntireRangeCovered(editable, selectionStart, selectionEnd, StyleSpan.class, Typeface.BOLD);
+            italic = isEntireRangeCovered(editable, selectionStart, selectionEnd, StyleSpan.class, Typeface.ITALIC);
+            underline = isEntireRangeCovered(editable, selectionStart, selectionEnd, UnderlineSpan.class, 0);
+        }
+        else {
+            bold = isStyleActiveAtCursor(editable, selectionStart, StyleSpan.class, Typeface.BOLD);
+            italic = isStyleActiveAtCursor(editable, selectionStart, StyleSpan.class, Typeface.ITALIC);
+            underline = isStyleActiveAtCursor(editable, selectionStart, UnderlineSpan.class, 0);
+        }
+        notifyListener();
+    }
+
+    private void applyActiveStyles(Editable editable, int start, int end) {
+        applyActiveStyle(editable, start, end, StyleSpan.class, Typeface.BOLD, bold);
+        applyActiveStyle(editable, start, end, StyleSpan.class, Typeface.ITALIC, italic);
+        applyActiveStyle(editable, start, end, UnderlineSpan.class, 0, underline);
+    }
+    private static <T extends CharacterStyle> void applyActiveStyle(Editable editable, int start, int end, Class<T> spanType, int value, boolean isActive) {
+        if(isActive)
+            editable.setSpan(instantiateSpan(spanType, value), start, end, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        else
+            removeStyleFromRange(editable, start, end, spanType, value);
+    }
+
+    private static <T extends CharacterStyle> boolean isStyleActiveAtCursor(Editable editable, int cursor, Class<T> spanType, int value) {
+        if(editable.toString().isEmpty()) return false;
+        if(cursor > 0 && editable.charAt(cursor - 1) != '\n')
+            return hasStyleAt(editable, cursor - 1, spanType, value);
+        if(cursor < editable.length())
+            return hasStyleAt(editable, cursor, spanType, value);
+        return false;
+    }
+
+    private static <T extends CharacterStyle> boolean hasStyleAt(Editable editable, int position, Class<T> spanType, int value) {
+        T[] spans = editable.getSpans(position, position + 1, spanType);
+        for(T span : spans) {
+            if(compareSpansValue(span, value)) {
+                int spanStart = editable.getSpanStart(span);
+                int spanEnd = editable.getSpanEnd(span);
+                if(spanStart <= position && spanEnd > position) return true;
+            }
+        }
+        return false;
+    }
+
+    private static <T extends CharacterStyle> boolean isEntireRangeCovered(Editable editable, int start, int end, Class<T> spanType, int value) {
+        if(start >= end) return false;
+        T[] spans = editable.getSpans(start, end, spanType);
+        for(int i = start; i < end; i++) {
+            boolean covered = false;
+            for(T span : spans) {
+                if(compareSpansValue(span, value)) {
+                    int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
+                    if(spanStart <= i && spanEnd > i) {
+                        covered = true;
+                        break;
+                    }
+                }
+            }
+            if(!covered)
+                return false;
+        }
+        return true;
+    }
+
+    private static <T extends CharacterStyle> void removeStyleFromRange(Editable editable, int start, int end, Class<T> spanType, int value) {
+        T[] spans = editable.getSpans(start, end, spanType);
+        for(T span : spans) {
+            if(!compareSpansValue(span, value))
+                continue;
+            int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
+            int flags = editable.getSpanFlags(span);
+            editable.removeSpan(span);
+            if(spanStart < start)
+                editable.setSpan(instantiateSpan(spanType, value), spanStart, start, flags);
+            if(spanEnd > end)
+                editable.setSpan(instantiateSpan(spanType, value), end, spanEnd, flags);
+        }
+    }
+
+    private static <T extends CharacterStyle> T instantiateSpan(Class<T> spanType, int value) {
+        if(spanType.equals(StyleSpan.class)) return spanType.cast(new StyleSpan(value));
         else if(spanType.equals(UnderlineSpan.class)) return spanType.cast(new UnderlineSpan());
         return null;
     }
-    private <T extends CharacterStyle> boolean compareSpansValue(T span, int val) {
+    private static <T extends CharacterStyle> boolean compareSpansValue(T span, int value) {
         if(span == null) return false;
-        if(span instanceof StyleSpan) return ((StyleSpan)span).getStyle() == val;
+        if(span instanceof StyleSpan) return ((StyleSpan)span).getStyle() == value;
         else if(span instanceof UnderlineSpan) return true;
         return false;
+    }
+
+    public interface StyleStateListener {
+        void onStyleStateChanged(boolean bold, boolean italic, boolean underline);
+    }
+
+    private StyleStateListener styleStateListener;
+    public void setStyleStateListener(StyleStateListener listener) { this.styleStateListener = listener; }
+
+    private void notifyListener() {
+        if(styleStateListener != null)
+            styleStateListener.onStyleStateChanged(bold, italic, underline);
     }
 
 }

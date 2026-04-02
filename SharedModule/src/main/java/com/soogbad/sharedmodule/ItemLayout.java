@@ -6,27 +6,29 @@ import android.text.SpannedString;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
-import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
-public class ItemLayout extends ConstraintLayout {
+public class ItemLayout extends ConstraintLayout implements RichEditText.StyleStateListener {
 
     private ItemsManager<?, ?> itemsManager;
     private Item<?> item;
     private RichEditText contentEditText;
     private EditText titleEditText;
     private boolean itemDeleted = false;
+    private Button boldButton, italicButton, underlineButton;
 
     public ItemLayout(Context context, AttributeSet attrs) { super(context, attrs); }
 
-    public void init(ItemsManager<?, ?> itemsManager, Item<?> item, RichEditText contentEditText, EditText titleEditText) {
-        this.itemsManager = itemsManager; this.item = item; this.contentEditText = contentEditText; this.titleEditText = titleEditText;
+    public void init(ItemsManager<?, ?> itemsManager, Item<?> item, RichEditText contentEditText, EditText titleEditText, Button boldButton, Button italicButton, Button underlineButton) {
+        this.itemsManager = itemsManager; this.item = item; this.contentEditText = contentEditText; this.titleEditText = titleEditText; this.boldButton = boldButton; this.italicButton = italicButton; this.underlineButton = underlineButton;
+        contentEditText.setStyleStateListener(this);
         titleEditText.setText(item.Title);
         itemsManager.loadItemContent(item);
-        contentEditText.setText(item.Content);
+        contentEditText.setIgnoreTextChanges(true); contentEditText.setText(item.Content); contentEditText.setIgnoreTextChanges(false);
     }
 
     public void save() {
@@ -41,12 +43,16 @@ public class ItemLayout extends ConstraintLayout {
         itemsManager.deleteItem(item);
     }
 
-    private boolean bold = false, italic = false, underline = false;
-    public void onBoldButtonClick(View view) { bold = !bold; toggleButton(view, bold); contentEditText.toggleStyle(StyleSpan.class, Typeface.BOLD); }
-    public void onItalicButtonClick(View view) { italic = !italic; toggleButton(view, italic); contentEditText.toggleStyle(StyleSpan.class, Typeface.ITALIC); }
-    public void onUnderlineButtonClick(View view) { underline = !underline; toggleButton(view, underline); contentEditText.toggleStyle(UnderlineSpan.class, 0); }
+    public void onBoldButtonClick() { contentEditText.toggleStyle(StyleSpan.class, Typeface.BOLD); }
+    public void onItalicButtonClick() { contentEditText.toggleStyle(StyleSpan.class, Typeface.ITALIC); }
+    public void onUnderlineButtonClick() { contentEditText.toggleStyle(UnderlineSpan.class, 0); }
 
-    private void toggleButton(View button, boolean state) {
+    @Override
+    public void onStyleStateChanged(boolean bold, boolean italic, boolean underline) {
+        toggleButton(boldButton, bold); toggleButton(italicButton, italic); toggleButton(underlineButton, underline);
+    }
+
+    private void toggleButton(Button button, boolean state) {
         if(state)
             button.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.lightGreen));
         else

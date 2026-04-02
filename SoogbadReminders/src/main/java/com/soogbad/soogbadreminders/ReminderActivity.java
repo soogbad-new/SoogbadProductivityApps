@@ -26,12 +26,12 @@ public class ReminderActivity extends AppCompatActivity {
         reminderLayout = findViewById(R.id.reminderLayout); reminderToolbar = findViewById(R.id.reminderToolbar);
         ItemsManager<Reminder, Reminder.ReminderOptions> remindersManager = ((SoogbadRemindersApplication)getApplication()).getRemindersManager();
         Reminder reminder = remindersManager.getItem(getIntent().getStringExtra("item_uuid"));
-        reminderLayout.init(remindersManager, reminder, findViewById(R.id.reminderEditText), findViewById(R.id.titleEditText));
+        reminderLayout.init(remindersManager, reminder, findViewById(R.id.reminderEditText), findViewById(R.id.titleEditText), findViewById(R.id.boldButton), findViewById(R.id.italicButton), findViewById(R.id.underlineButton));
     }
 
-    public void onBoldButtonClick(View view) { reminderLayout.onBoldButtonClick(view); }
-    public void onItalicButtonClick(View view) { reminderLayout.onItalicButtonClick(view); }
-    public void onUnderlineButtonClick(View view) { reminderLayout.onUnderlineButtonClick(view); }
+    public void onBoldButtonClick(View view) { reminderLayout.onBoldButtonClick(); }
+    public void onItalicButtonClick(View view) { reminderLayout.onItalicButtonClick(); }
+    public void onUnderlineButtonClick(View view) { reminderLayout.onUnderlineButtonClick(); }
 
     public void onDeleteButtonClick(View view) {
         reminderLayout.delete();
