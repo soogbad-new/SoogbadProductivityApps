@@ -78,17 +78,7 @@ public class RichEditText extends AppCompatEditText {
 
     private static <T extends CharacterStyle> void applyStyleToSelection(Editable editable, int selectionStart, int selectionEnd, Class<T> spanType, int value) {
         boolean wasCovered = isEntireRangeCovered(editable, selectionStart, selectionEnd, spanType, value);
-        T[] currentSpans = editable.getSpans(selectionStart, selectionEnd, spanType);
-        for(T span : currentSpans) {
-            if(compareSpansValue(span, value)) {
-                int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
-                editable.removeSpan(span);
-                if(spanStart < selectionStart)
-                    editable.setSpan(instantiateSpan(spanType, value), spanStart, selectionStart, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                if(spanEnd > selectionEnd)
-                    editable.setSpan(instantiateSpan(spanType, value), selectionEnd, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-        }
+        removeSpansInRange(editable, selectionStart, selectionEnd, spanType, value);
         if(!wasCovered)
             editable.setSpan(instantiateSpan(spanType, value), selectionStart, selectionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
@@ -127,7 +117,7 @@ public class RichEditText extends AppCompatEditText {
         if(isActive)
             editable.setSpan(instantiateSpan(spanType, value), position, position + 1, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
         else
-            stopActiveStyle(editable, position, spanType, value);
+            removeSpansInRange(editable, position, position + 1, spanType, value);
     }
 
     private static <T extends CharacterStyle> boolean isStyleActiveAtCursor(Editable editable, int cursor, Class<T> spanType, int value) {
@@ -142,9 +132,10 @@ public class RichEditText extends AppCompatEditText {
     private static <T extends CharacterStyle> boolean hasStyleAt(Editable editable, int position, Class<T> spanType, int value) {
         T[] spans = editable.getSpans(position, position + 1, spanType);
         for(T span : spans) {
-            if(RichEditText.compareSpansValue(span, value)) {
+            if(compareSpansValue(span, value)) {
                 int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
-                if(spanStart <= position && spanEnd > position) return true;
+                if(spanStart <= position && spanEnd > position)
+                    return true;
             }
         }
         return false;
@@ -152,37 +143,23 @@ public class RichEditText extends AppCompatEditText {
 
     private static <T extends CharacterStyle> boolean isEntireRangeCovered(Editable editable, int start, int end, Class<T> spanType, int value) {
         if(start >= end) return false;
-        T[] spans = editable.getSpans(start, end, spanType);
-        for(int i = start; i < end; i++) {
-            boolean covered = false;
-            for(T span : spans) {
-                if(RichEditText.compareSpansValue(span, value)) {
-                    int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
-                    if(spanStart <= i && spanEnd > i) {
-                        covered = true;
-                        break;
-                    }
-                }
-            }
-            if(!covered)
+        for(int i = start; i < end; i++)
+            if(!hasStyleAt(editable, i, spanType, value))
                 return false;
-        }
         return true;
     }
 
-    private static <T extends CharacterStyle> void stopActiveStyle(Editable editable, int position, Class<T> spanType, int value) {
-        int start = position; int end = position + 1;
+    private static <T extends CharacterStyle> void removeSpansInRange(Editable editable, int start, int end, Class<T> spanType, int value) {
         T[] spans = editable.getSpans(start, end, spanType);
         for(T span : spans) {
-            if(!RichEditText.compareSpansValue(span, value))
+            if(!compareSpansValue(span, value))
                 continue;
             int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
-            int flags = editable.getSpanFlags(span);
             editable.removeSpan(span);
             if(spanStart < start)
-                editable.setSpan(RichEditText.instantiateSpan(spanType, value), spanStart, start, flags);
+                editable.setSpan(instantiateSpan(spanType, value), spanStart, start, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             if(spanEnd > end)
-                editable.setSpan(RichEditText.instantiateSpan(spanType, value), end, spanEnd, flags);
+                editable.setSpan(instantiateSpan(spanType, value), end, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
 
