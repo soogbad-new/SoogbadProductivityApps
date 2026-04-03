@@ -1,35 +1,41 @@
 package com.soogbad.sharedmodule;
 
 import android.graphics.Typeface;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.CharacterStyle;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 
-public enum RichTextStyle {
+public class RichTextStyle<T extends CharacterStyle> {
 
-    BOLD(StyleSpan.class, Typeface.BOLD),
-    ITALIC(StyleSpan.class, Typeface.ITALIC),
-    UNDERLINE(UnderlineSpan.class, 0);
-
-    RichTextStyle(Class<? extends CharacterStyle> spanClass, int value) {
+    RichTextStyle(Class<T> spanClass, int value) {
         this.spanClass = spanClass; this.value = value;
     }
 
-    public final Class<? extends CharacterStyle> spanClass;
+    public final Class<T> spanClass;
     public final int value;
 
+    // TODO: this can be simplified using T
     public CharacterStyle createSpan() {
-        if(this == BOLD) return new StyleSpan(Typeface.BOLD);
-        else if(this == ITALIC) return new StyleSpan(Typeface.ITALIC);
-        else if(this == UNDERLINE) return new UnderlineSpan();
+        if(spanClass == StyleSpan.class) return new StyleSpan(value);
+        else if(spanClass == UnderlineSpan.class) return new UnderlineSpan();
+        else if(spanClass == AbsoluteSizeSpan.class) return new AbsoluteSizeSpan(value);
+        else if(spanClass == ForegroundColorSpan.class) return new ForegroundColorSpan(value);
         return null;
     }
 
+    // TODO: this can be simplified using method reference
     public boolean matchesSpan(CharacterStyle span) {
-        if(this == BOLD) return span instanceof StyleSpan && ((StyleSpan)span).getStyle() == Typeface.BOLD;
-        else if(this == ITALIC) return span instanceof StyleSpan && ((StyleSpan)span).getStyle() == Typeface.ITALIC;
-        else if(this == UNDERLINE) return span instanceof UnderlineSpan;
+        if(span instanceof StyleSpan) return ((StyleSpan)span).getStyle() == value;
+        else if(span instanceof UnderlineSpan) return true;
+        else if(span instanceof AbsoluteSizeSpan) return ((AbsoluteSizeSpan)span).getSize() == value;
+        else if(span instanceof ForegroundColorSpan) return ((ForegroundColorSpan)span).getForegroundColor() == value;
         return false;
     }
+
+    public final static RichTextStyle<StyleSpan> BOLD = new RichTextStyle<>(StyleSpan.class, Typeface.BOLD);
+    public final static RichTextStyle<StyleSpan> ITALIC = new RichTextStyle<>(StyleSpan.class, Typeface.ITALIC);
+    public final static RichTextStyle<UnderlineSpan> UNDERLINE = new RichTextStyle<>(UnderlineSpan.class, 0);
 
 }
