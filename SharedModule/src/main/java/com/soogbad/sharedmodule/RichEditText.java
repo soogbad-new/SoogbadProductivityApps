@@ -10,6 +10,8 @@ import android.util.AttributeSet;
 
 import androidx.appcompat.widget.AppCompatEditText;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.EnumSet;
 
 public class RichEditText extends AppCompatEditText {
@@ -116,20 +118,6 @@ public class RichEditText extends AppCompatEditText {
         notifyListener();
     }
 
-    private static void removeSpansInRange(Editable editable, int start, int end, RichTextStyle style) {
-        CharacterStyle[] spans = editable.getSpans(start, end, style.spanClass);
-        for(CharacterStyle span : spans) {
-            if(style.matchesSpan(span)) {
-                int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
-                editable.removeSpan(span);
-                if(spanStart < start)
-                    editable.setSpan(style.createSpan(), spanStart, start, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                if(spanEnd > end)
-                    editable.setSpan(style.createSpan(), end, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-        }
-    }
-
     private static boolean isStyleActiveAtCursorPosition(Editable editable, int cursorPosition, RichTextStyle style) {
         if(editable.toString().isEmpty()) return false;
         if(cursorPosition > 0 && editable.charAt(cursorPosition - 1) != '\n')
@@ -149,12 +137,37 @@ public class RichEditText extends AppCompatEditText {
         }
         return false;
     }
-    private static boolean isEntireRangeCovered(Editable editable, int start, int end, RichTextStyle style) {
-        if(start >= end) return false;
-        for(int i = start; i < end; i++)
-            if(!hasStyleAt(editable, i, style))
-                return false;
-        return true;
+
+    private static void removeSpansInRange(Editable editable, int rangeStart, int rangeEnd, RichTextStyle style) {
+        CharacterStyle[] spans = editable.getSpans(rangeStart, rangeEnd, style.spanClass);
+        for(CharacterStyle span : spans) {
+            if(style.matchesSpan(span)) {
+                int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
+                editable.removeSpan(span);
+                if(spanStart < rangeStart)
+                    editable.setSpan(style.createSpan(), spanStart, rangeStart, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if(spanEnd > rangeEnd)
+                    editable.setSpan(style.createSpan(), rangeEnd, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+    }
+
+    private static boolean isEntireRangeCovered(Editable editable, int rangeStart, int rangeEnd, RichTextStyle style) {
+        if(rangeStart >= rangeEnd) return false;
+        CharacterStyle[] spans = editable.getSpans(rangeStart, rangeEnd, style.spanClass);
+        Arrays.sort(spans, Comparator.comparingInt(editable::getSpanStart));
+        int coveredUntil = rangeStart;
+        for(CharacterStyle span : spans) {
+            if(style.matchesSpan(span)) {
+                int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
+                if(spanStart > coveredUntil)
+                    return false;
+                coveredUntil = Math.max(coveredUntil, spanEnd);
+                if(coveredUntil >= rangeEnd)
+                    return true;
+            }
+        }
+        return false;
     }
 
     public interface StyleStateListener {
