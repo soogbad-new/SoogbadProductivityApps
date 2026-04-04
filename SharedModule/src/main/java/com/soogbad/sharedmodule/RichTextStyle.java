@@ -9,6 +9,7 @@ import android.text.style.UnderlineSpan;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class RichTextStyle<T extends CharacterStyle> {
 
@@ -35,6 +36,19 @@ public class RichTextStyle<T extends CharacterStyle> {
         return false;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        RichTextStyle<?> that = (RichTextStyle<?>)o;
+        return value == that.value && spanClass.equals(that.spanClass);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(spanClass, value);
+    }
+
     public static RichTextStyle<?>[] values() {
         ArrayList<RichTextStyle<?>> list = new ArrayList<>(Arrays.asList(BOLD, ITALIC, UNDERLINE));
         for(TextSize size : TextSize.values()) list.add(TEXT_SIZE(size));
@@ -42,9 +56,9 @@ public class RichTextStyle<T extends CharacterStyle> {
         return list.toArray(new RichTextStyle<?>[0]);
     }
 
-    public final static RichTextStyle<StyleSpan> BOLD = new RichTextStyle<>(StyleSpan.class, Typeface.BOLD);
-    public final static RichTextStyle<StyleSpan> ITALIC = new RichTextStyle<>(StyleSpan.class, Typeface.ITALIC);
-    public final static RichTextStyle<UnderlineSpan> UNDERLINE = new RichTextStyle<>(UnderlineSpan.class, 0);
+    public static final RichTextStyle<StyleSpan> BOLD = new RichTextStyle<>(StyleSpan.class, Typeface.BOLD);
+    public static final RichTextStyle<StyleSpan> ITALIC = new RichTextStyle<>(StyleSpan.class, Typeface.ITALIC);
+    public static final RichTextStyle<UnderlineSpan> UNDERLINE = new RichTextStyle<>(UnderlineSpan.class, 0);
     public static RichTextStyle<AbsoluteSizeSpan> TEXT_SIZE(TextSize size) { return new RichTextStyle<>(AbsoluteSizeSpan.class, size.size); }
     public static RichTextStyle<ForegroundColorSpan> TEXT_COLOR(TextColor color) { return new RichTextStyle<>(ForegroundColorSpan.class, color.color); }
 
