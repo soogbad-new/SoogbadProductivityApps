@@ -7,6 +7,9 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class RichTextStyle<T extends CharacterStyle> {
 
     private RichTextStyle(Class<T> spanClass, int value) {
@@ -33,7 +36,10 @@ public class RichTextStyle<T extends CharacterStyle> {
     }
 
     public static RichTextStyle<?>[] values() {
-        return new RichTextStyle[] { BOLD, ITALIC, UNDERLINE };
+        ArrayList<RichTextStyle<?>> list = new ArrayList<>(Arrays.asList(BOLD, ITALIC, UNDERLINE));
+        for(TextSize size : TextSize.values()) list.add(TEXT_SIZE(size));
+        for(TextColor color : TextColor.values()) list.add(TEXT_COLOR(color));
+        return list.toArray(new RichTextStyle<?>[0]);
     }
 
     public final static RichTextStyle<StyleSpan> BOLD = new RichTextStyle<>(StyleSpan.class, Typeface.BOLD);
