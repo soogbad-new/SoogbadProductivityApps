@@ -61,7 +61,7 @@ public class RichEditText extends AppCompatEditText {
         public void afterTextChanged(Editable editable) {
             if(ignoreTextChanges) return;
             if(changeCount > 0)
-                for(RichTextStyle<?> style : RichTextStyle.values()) // TODO: it is no longer an enum. what should I do?
+                for(RichTextStyle<?> style : RichTextStyle.values())
                     applyActiveStyle(editable, changeStart, changeCount, style, activeStyles.contains(style));
             textChanging = true;
         }
@@ -106,7 +106,7 @@ public class RichEditText extends AppCompatEditText {
     private void updateCurrentActiveStyles(int selectionStart, int selectionEnd) {
         Editable editable = getText();
         if(editable == null) return;
-        for(RichTextStyle<?> style : RichTextStyle.values()) { // TODO: it is no longer an enum. what should I do?
+        for(RichTextStyle<?> style : RichTextStyle.values()) {
             boolean active = (selectionStart != selectionEnd)
                     ? isEntireRangeCovered(editable, selectionStart, selectionEnd, style)
                     : isStyleActiveAtCursorPosition(editable, selectionStart, style);
