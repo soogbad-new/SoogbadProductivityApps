@@ -20,6 +20,10 @@ public class RichTextStyle<T extends CharacterStyle> {
     public final Class<T> spanClass;
     public final int value;
 
+    public boolean isFlagStyle() {
+        return spanClass == StyleSpan.class || spanClass == UnderlineSpan.class;
+    }
+
     public CharacterStyle createSpan() {
         if(spanClass == StyleSpan.class) return new StyleSpan(value);
         else if(spanClass == UnderlineSpan.class) return new UnderlineSpan();
@@ -28,7 +32,15 @@ public class RichTextStyle<T extends CharacterStyle> {
         return null;
     }
 
-    public boolean matchesSpan(CharacterStyle span) {
+    public static CharacterStyle cloneSpan(CharacterStyle span) {
+        if(span instanceof StyleSpan) return new StyleSpan(((StyleSpan)span).getStyle());
+        else if(span instanceof UnderlineSpan) return new UnderlineSpan();
+        else if(span instanceof AbsoluteSizeSpan) return new AbsoluteSizeSpan(((AbsoluteSizeSpan)span).getSize());
+        else if(span instanceof ForegroundColorSpan) return new ForegroundColorSpan(((ForegroundColorSpan)span).getForegroundColor());
+        return null;
+    }
+
+    public boolean matchesSpanValue(CharacterStyle span) {
         if(span instanceof StyleSpan) return ((StyleSpan)span).getStyle() == value;
         else if(span instanceof UnderlineSpan) return true;
         else if(span instanceof AbsoluteSizeSpan) return ((AbsoluteSizeSpan)span).getSize() == value;

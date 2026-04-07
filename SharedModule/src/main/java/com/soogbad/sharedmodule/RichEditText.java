@@ -77,7 +77,7 @@ public class RichEditText extends AppCompatEditText {
             removeSpansInRange(editable, changeStart, changeStart + changeCount, style);
     }
 
-    public void toggleStyle(RichTextStyle<?> style) { // TODO: needs to support styles with multiple values, not just on/off
+    public void toggleStyle(RichTextStyle<?> style) {
         Editable editable = getText();
         if(editable == null) return;
         int selectionStart = getSelectionStart(); int selectionEnd = getSelectionEnd();
@@ -86,7 +86,10 @@ public class RichEditText extends AppCompatEditText {
             updateCurrentActiveStyles(selectionStart, selectionEnd);
         }
         else {
-            toggleActiveStyleFlag(style);
+            if(style.isFlagStyle())
+                toggleActiveStyleFlag(style);
+            else
+                setActiveStyle(style);
             notifyListener();
         }
     }
@@ -101,6 +104,10 @@ public class RichEditText extends AppCompatEditText {
             activeStyles.remove(style);
         else
             activeStyles.add(style);
+    }
+    private void setActiveStyle(RichTextStyle<?> style) {
+        activeStyles.removeIf(activeStyle -> activeStyle.spanClass == style.spanClass);
+        activeStyles.add(style);
     }
 
     private void updateCurrentActiveStyles(int selectionStart, int selectionEnd) {
@@ -129,7 +136,7 @@ public class RichEditText extends AppCompatEditText {
     private static boolean hasStyleAt(Editable editable, int position, RichTextStyle<?> style) {
         CharacterStyle[] spans = editable.getSpans(position, position + 1, style.spanClass);
         for(CharacterStyle span : spans) {
-            if(style.matchesSpan(span)) {
+            if(style.matchesSpanValue(span)) {
                 int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
                 if(spanStart <= position && spanEnd > position)
                     return true;
@@ -141,13 +148,13 @@ public class RichEditText extends AppCompatEditText {
     private static void removeSpansInRange(Editable editable, int rangeStart, int rangeEnd, RichTextStyle<?> style) {
         CharacterStyle[] spans = editable.getSpans(rangeStart, rangeEnd, style.spanClass);
         for(CharacterStyle span : spans) {
-            if(style.matchesSpan(span)) {
+            if(style.matchesSpanValue(span)) {
                 int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
                 editable.removeSpan(span);
                 if(spanStart < rangeStart)
-                    editable.setSpan(style.createSpan(), spanStart, rangeStart, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    editable.setSpan(RichTextStyle.cloneSpan(span), spanStart, rangeStart, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 if(spanEnd > rangeEnd)
-                    editable.setSpan(style.createSpan(), rangeEnd, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    editable.setSpan(RichTextStyle.cloneSpan(span), rangeEnd, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
     }
@@ -158,7 +165,7 @@ public class RichEditText extends AppCompatEditText {
         Arrays.sort(spans, Comparator.comparingInt(editable::getSpanStart));
         int coveredUntil = rangeStart;
         for(CharacterStyle span : spans) {
-            if(style.matchesSpan(span)) {
+            if(style.matchesSpanValue(span)) {
                 int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
                 if(spanStart > coveredUntil)
                     return false;
