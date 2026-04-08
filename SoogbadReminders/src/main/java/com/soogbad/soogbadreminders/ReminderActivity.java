@@ -26,12 +26,14 @@ public class ReminderActivity extends AppCompatActivity {
         reminderLayout = findViewById(R.id.reminderLayout); reminderToolbar = findViewById(R.id.reminderToolbar);
         ItemsManager<Reminder, Reminder.ReminderOptions> remindersManager = ((SoogbadRemindersApplication)getApplication()).getRemindersManager();
         Reminder reminder = remindersManager.getItem(getIntent().getStringExtra("item_uuid"));
-        reminderLayout.init(remindersManager, reminder, findViewById(R.id.reminderEditText), findViewById(R.id.titleEditText), findViewById(R.id.boldButton), findViewById(R.id.italicButton), findViewById(R.id.underlineButton));
+        reminderLayout.init(remindersManager, reminder, findViewById(R.id.reminderEditText), findViewById(R.id.titleEditText), findViewById(R.id.boldButton), findViewById(R.id.italicButton), findViewById(R.id.underlineButton), findViewById(R.id.textSizeButton), findViewById(R.id.textColorButton));
     }
 
     public void onBoldButtonClick(View view) { reminderLayout.onBoldButtonClick(); }
     public void onItalicButtonClick(View view) { reminderLayout.onItalicButtonClick(); }
     public void onUnderlineButtonClick(View view) { reminderLayout.onUnderlineButtonClick(); }
+    public void onTextSizeButtonClick(View view) { reminderLayout.onTextSizeButtonClick(); }
+    public void onTextColorButtonClick(View view) { reminderLayout.onTextColorButtonClick(); }
 
     public void onDeleteButtonClick(View view) {
         reminderLayout.delete();

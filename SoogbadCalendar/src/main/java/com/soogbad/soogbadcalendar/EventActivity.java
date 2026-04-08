@@ -26,12 +26,14 @@ public class EventActivity extends AppCompatActivity {
         eventLayout = findViewById(R.id.eventLayout); eventToolbar = findViewById(R.id.eventToolbar);
         ItemsManager<Event, Event.EventOptions> eventsManager = ((SoogbadCalendarApplication)getApplication()).getEventsManager();
         Event event = eventsManager.getItem(getIntent().getStringExtra("item_uuid"));
-        eventLayout.init(eventsManager, event, findViewById(R.id.eventEditText), findViewById(R.id.titleEditText), findViewById(R.id.boldButton), findViewById(R.id.italicButton), findViewById(R.id.underlineButton));
+        eventLayout.init(eventsManager, event, findViewById(R.id.eventEditText), findViewById(R.id.titleEditText), findViewById(R.id.boldButton), findViewById(R.id.italicButton), findViewById(R.id.underlineButton), findViewById(R.id.textSizeButton), findViewById(R.id.textColorButton));
     }
 
     public void onBoldButtonClick(View view) { eventLayout.onBoldButtonClick(); }
     public void onItalicButtonClick(View view) { eventLayout.onItalicButtonClick(); }
     public void onUnderlineButtonClick(View view) { eventLayout.onUnderlineButtonClick(); }
+    public void onTextSizeButtonClick(View view) { eventLayout.onTextSizeButtonClick(); }
+    public void onTextColorButtonClick(View view) { eventLayout.onTextColorButtonClick(); }
 
     public void onDeleteButtonClick(View view) {
         eventLayout.delete();

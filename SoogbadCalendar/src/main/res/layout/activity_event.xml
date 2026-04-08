@@ -109,6 +109,32 @@
                 app:layout_constraintLeft_toRightOf="@id/italicButton">
             </Button>
 
+            <Button
+                android:id="@+id/textSizeButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="Aa"
+                android:inputType="text"
+                android:textSize="20dp"
+                android:backgroundTint="@color/white"
+                android:onClick="onTextSizeButtonClick"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/underlineButton">
+            </Button>
+
+            <Button
+                android:id="@+id/textColorButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="A"
+                android:textColor="#A83232"
+                android:textSize="25dp"
+                android:backgroundTint="@color/white"
+                android:onClick="onTextColorButtonClick"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/textSizeButton">
+            </Button>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.soogbad.sharedmodule.ItemLayout>
 
