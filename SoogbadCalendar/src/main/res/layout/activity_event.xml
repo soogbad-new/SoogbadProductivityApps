@@ -59,10 +59,12 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/almostBlack"
+            android:textSize="18dp"
             android:textColor="@color/white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/eventToolbar"
-            app:layout_constraintLeft_toLeftOf="parent">
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:ignore="SpUsage">
         </com.soogbad.sharedmodule.RichEditText>
 
         <androidx.constraintlayout.widget.ConstraintLayout

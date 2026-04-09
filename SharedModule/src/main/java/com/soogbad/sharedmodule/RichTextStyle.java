@@ -27,7 +27,7 @@ public class RichTextStyle<T extends CharacterStyle> {
     public CharacterStyle createSpan() {
         if(spanClass == StyleSpan.class) return new StyleSpan(value);
         else if(spanClass == UnderlineSpan.class) return new UnderlineSpan();
-        else if(spanClass == AbsoluteSizeSpan.class) return new AbsoluteSizeSpan(value);
+        else if(spanClass == AbsoluteSizeSpan.class) return new AbsoluteSizeSpan(value, true);
         else if(spanClass == ForegroundColorSpan.class) return new ForegroundColorSpan(value);
         return null;
     }
@@ -35,7 +35,7 @@ public class RichTextStyle<T extends CharacterStyle> {
     public static CharacterStyle cloneSpan(CharacterStyle span) {
         if(span instanceof StyleSpan) return new StyleSpan(((StyleSpan)span).getStyle());
         else if(span instanceof UnderlineSpan) return new UnderlineSpan();
-        else if(span instanceof AbsoluteSizeSpan) return new AbsoluteSizeSpan(((AbsoluteSizeSpan)span).getSize());
+        else if(span instanceof AbsoluteSizeSpan) return new AbsoluteSizeSpan(((AbsoluteSizeSpan)span).getSize(), true);
         else if(span instanceof ForegroundColorSpan) return new ForegroundColorSpan(((ForegroundColorSpan)span).getForegroundColor());
         return null;
     }
@@ -74,7 +74,7 @@ public class RichTextStyle<T extends CharacterStyle> {
     public static RichTextStyle<AbsoluteSizeSpan> TEXT_SIZE(TextSize size) { return new RichTextStyle<>(AbsoluteSizeSpan.class, size.size); }
     public static RichTextStyle<ForegroundColorSpan> TEXT_COLOR(TextColor color) { return new RichTextStyle<>(ForegroundColorSpan.class, color.color); }
 
-    public static final TextSize DEFAULT_TEXT_SIZE = TextSize.SIZE_16;
+    public static final TextSize DEFAULT_TEXT_SIZE = TextSize.SIZE_18;
     public static final TextColor DEFAULT_TEXT_COLOR = TextColor.WHITE;
 
     public enum TextSize {
