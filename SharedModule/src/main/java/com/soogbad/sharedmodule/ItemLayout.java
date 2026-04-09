@@ -94,8 +94,10 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     private void showSelectionPopup(Button popupAnchor, int[] options, int selectedOption, java.util.function.IntConsumer onSelect) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         LinearLayout popupLayout = (LinearLayout)inflater.inflate(R.layout.selection_popup, this, false);
-        PopupWindow popup = new PopupWindow(popupLayout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        PopupWindow popup = new PopupWindow(popupLayout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, false);
+        popup.setOutsideTouchable(true);
         popup.setElevation(8);
+        popup.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.WHITE));
         for(int i = 0; i < options.length; i++) {
             TextView textView = (TextView)inflater.inflate(R.layout.selection_popup_option, popupLayout, false);
             textView.setText(String.valueOf(options[i]));
@@ -105,7 +107,8 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
             textView.setOnClickListener(view -> { popup.dismiss(); onSelect.accept(index); });
             popupLayout.addView(textView);
         }
-        popup.showAsDropDown(popupAnchor);
+        popupLayout.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+        popup.showAsDropDown(popupAnchor, 0, -(popupAnchor.getHeight() + popupLayout.getMeasuredHeight()));
     }
 
 }
