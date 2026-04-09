@@ -53,7 +53,7 @@ public class RichTextStyle<T extends CharacterStyle> {
         if(this == o) return true;
         if(o == null || getClass() != o.getClass()) return false;
         RichTextStyle<?> that = (RichTextStyle<?>)o;
-        return value == that.value && spanClass.equals(that.spanClass);
+        return value == that.value && spanClass == that.spanClass;
     }
 
     @Override
@@ -73,6 +73,9 @@ public class RichTextStyle<T extends CharacterStyle> {
     public static final RichTextStyle<UnderlineSpan> UNDERLINE = new RichTextStyle<>(UnderlineSpan.class, 0);
     public static RichTextStyle<AbsoluteSizeSpan> TEXT_SIZE(TextSize size) { return new RichTextStyle<>(AbsoluteSizeSpan.class, size.size); }
     public static RichTextStyle<ForegroundColorSpan> TEXT_COLOR(TextColor color) { return new RichTextStyle<>(ForegroundColorSpan.class, color.color); }
+
+    public static final TextSize DEFAULT_TEXT_SIZE = TextSize.SIZE_16;
+    public static final TextColor DEFAULT_TEXT_COLOR = TextColor.BLACK;
 
     public enum TextSize {
         SIZE_12(12), SIZE_14(14), SIZE_16(16), SIZE_18(18), SIZE_20(20), SIZE_24(24), SIZE_28(28), SIZE_32(32);

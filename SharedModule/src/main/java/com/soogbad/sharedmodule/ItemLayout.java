@@ -72,36 +72,34 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
 
     public void onTextSizeButtonClick() {
         RichTextStyle.TextSize[] sizes = RichTextStyle.TextSize.values();
-        String[] optionLabels = new String[sizes.length];
-        int selectedOptionIndex = -1;
-        for(int i = 0; i < sizes.length; i++) {
-            optionLabels[i] = String.valueOf(sizes[i].size);
-            if(activeStyles.contains(RichTextStyle.TEXT_SIZE(sizes[i])))
-                selectedOptionIndex = i;
-        }
-        showSelectionPopup(textSizeButton, optionLabels, selectedOptionIndex, i -> onTextSizeSelected(sizes[i]));
+        int[] sizeValues = new int[sizes.length];
+        for(int i = 0; i < sizes.length; i++) sizeValues[i] = sizes[i].size;
+        int selectedSize = RichTextStyle.DEFAULT_TEXT_SIZE.size;
+        for(RichTextStyle<?> style : activeStyles)
+            if(style.spanClass == AbsoluteSizeSpan.class)
+                selectedSize = style.value;
+        showSelectionPopup(textSizeButton, sizeValues, selectedSize, i -> onTextSizeSelected(sizes[i]));
     }
     public void onTextColorButtonClick() {
         RichTextStyle.TextColor[] colors = RichTextStyle.TextColor.values();
-        String[] optionLabels = new String[colors.length];
-        int selectedOptionIndex = -1;
-        for(int i = 0; i < colors.length; i++) {
-            optionLabels[i] = String.valueOf(colors[i].color);
-            if(activeStyles.contains(RichTextStyle.TEXT_COLOR(colors[i])))
-                selectedOptionIndex = i;
-        }
-        showSelectionPopup(textColorButton, optionLabels, selectedOptionIndex, i -> onTextColorSelected(colors[i]));
+        int[] colorValues = new int[colors.length];
+        for(int i = 0; i < colors.length; i++) colorValues[i] = colors[i].color;
+        int selectedColor = RichTextStyle.DEFAULT_TEXT_COLOR.color;
+        for(RichTextStyle<?> style : activeStyles)
+            if(style.spanClass == ForegroundColorSpan.class)
+                selectedColor = style.value;
+        showSelectionPopup(textColorButton, colorValues, selectedColor, i -> onTextColorSelected(colors[i]));
     }
 
-    private void showSelectionPopup(Button popupAnchor, String[] optionLabels, int selectedOptionIndex, java.util.function.IntConsumer onSelect) {
+    private void showSelectionPopup(Button popupAnchor, int[] options, int selectedOption, java.util.function.IntConsumer onSelect) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         LinearLayout popupLayout = (LinearLayout)inflater.inflate(R.layout.selection_popup, this, false);
         PopupWindow popup = new PopupWindow(popupLayout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
         popup.setElevation(8);
-        for(int i = 0; i < optionLabels.length; i++) {
+        for(int i = 0; i < options.length; i++) {
             TextView textView = (TextView)inflater.inflate(R.layout.selection_popup_option, popupLayout, false);
-            textView.setText(optionLabels[i]);
-            if(i == selectedOptionIndex)
+            textView.setText(String.valueOf(options[i]));
+            if(options[i] == selectedOption)
                 textView.setBackgroundResource(R.drawable.selected_popup_option_border);
             final int index = i;
             textView.setOnClickListener(view -> { popup.dismiss(); onSelect.accept(index); });

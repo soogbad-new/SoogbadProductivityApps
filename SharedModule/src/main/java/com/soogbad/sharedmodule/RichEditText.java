@@ -5,7 +5,9 @@ import android.graphics.Rect;
 import android.text.Editable;
 import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.CharacterStyle;
+import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 
 import androidx.appcompat.widget.AppCompatEditText;
@@ -113,6 +115,7 @@ public class RichEditText extends AppCompatEditText {
     private void updateCurrentActiveStyles(int selectionStart, int selectionEnd) {
         Editable editable = getText();
         if(editable == null) return;
+        boolean hasTextSize = false, hasTextColor = false;
         for(RichTextStyle<?> style : RichTextStyle.values()) {
             boolean active = (selectionStart != selectionEnd)
                     ? isEntireRangeCovered(editable, selectionStart, selectionEnd, style)
@@ -121,7 +124,13 @@ public class RichEditText extends AppCompatEditText {
                 activeStyles.add(style);
             else
                 activeStyles.remove(style);
+            if(style.spanClass == AbsoluteSizeSpan.class) hasTextSize = true;
+            if(style.spanClass == ForegroundColorSpan.class) hasTextColor = true;
         }
+        if(!hasTextSize)
+            activeStyles.add(RichTextStyle.TEXT_SIZE(RichTextStyle.DEFAULT_TEXT_SIZE));
+        if(!hasTextColor)
+            activeStyles.add(RichTextStyle.TEXT_COLOR(RichTextStyle.DEFAULT_TEXT_COLOR));
         notifyListener();
     }
 
