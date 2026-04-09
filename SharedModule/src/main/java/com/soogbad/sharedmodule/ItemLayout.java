@@ -2,10 +2,15 @@ package com.soogbad.sharedmodule;
 
 import android.content.Context;
 import android.text.SpannedString;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.PopupMenu;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -20,6 +25,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     private EditText titleEditText;
     private boolean itemDeleted = false;
     private Button boldButton, italicButton, underlineButton, textSizeButton, textColorButton;
+    private HashSet<RichTextStyle<?>> activeStyles = new HashSet<>();
 
     public ItemLayout(Context context, AttributeSet attrs) { super(context, attrs); }
 
@@ -49,15 +55,9 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     public void onTextSizeSelected(RichTextStyle.TextSize size) { contentEditText.toggleStyle(RichTextStyle.TEXT_SIZE(size)); }
     public void onTextColorSelected(RichTextStyle.TextColor color) { contentEditText.toggleStyle(RichTextStyle.TEXT_COLOR(color)); }
 
-    public void onTextSizeButtonClick() {
-        new PopupMenu(getContext(), textSizeButton).show();
-    }
-    public void onTextColorButtonClick() {
-        new PopupMenu(getContext(), textColorButton).show();
-    }
-
     @Override
     public void onStyleStateChanged(HashSet<RichTextStyle<?>> activeStyles) {
+        this.activeStyles = activeStyles;
         toggleButton(boldButton, activeStyles.contains(RichTextStyle.BOLD));
         toggleButton(italicButton, activeStyles.contains(RichTextStyle.ITALIC));
         toggleButton(underlineButton, activeStyles.contains(RichTextStyle.UNDERLINE));
@@ -68,6 +68,46 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
             button.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.lightGreen));
         else
             button.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.white));
+    }
+
+    public void onTextSizeButtonClick() {
+        RichTextStyle.TextSize[] sizes = RichTextStyle.TextSize.values();
+        String[] optionLabels = new String[sizes.length];
+        int selectedOptionIndex = -1;
+        for(int i = 0; i < sizes.length; i++) {
+            optionLabels[i] = String.valueOf(sizes[i].size);
+            if(activeStyles.contains(RichTextStyle.TEXT_SIZE(sizes[i])))
+                selectedOptionIndex = i;
+        }
+        showSelectionPopup(textSizeButton, optionLabels, selectedOptionIndex, i -> onTextSizeSelected(sizes[i]));
+    }
+    public void onTextColorButtonClick() {
+        RichTextStyle.TextColor[] colors = RichTextStyle.TextColor.values();
+        String[] optionLabels = new String[colors.length];
+        int selectedOptionIndex = -1;
+        for(int i = 0; i < colors.length; i++) {
+            optionLabels[i] = String.valueOf(colors[i].color);
+            if(activeStyles.contains(RichTextStyle.TEXT_COLOR(colors[i])))
+                selectedOptionIndex = i;
+        }
+        showSelectionPopup(textColorButton, optionLabels, selectedOptionIndex, i -> onTextColorSelected(colors[i]));
+    }
+
+    private void showSelectionPopup(Button popupAnchor, String[] optionLabels, int selectedOptionIndex, java.util.function.IntConsumer onSelect) {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        LinearLayout popupLayout = (LinearLayout)inflater.inflate(R.layout.selection_popup, this, false);
+        PopupWindow popup = new PopupWindow(popupLayout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        popup.setElevation(8);
+        for(int i = 0; i < optionLabels.length; i++) {
+            TextView textView = (TextView)inflater.inflate(R.layout.selection_popup_option, popupLayout, false);
+            textView.setText(optionLabels[i]);
+            if(i == selectedOptionIndex)
+                textView.setBackgroundResource(R.drawable.selected_popup_option_border);
+            final int index = i;
+            textView.setOnClickListener(view -> { popup.dismiss(); onSelect.accept(index); });
+            popupLayout.addView(textView);
+        }
+        popup.showAsDropDown(popupAnchor);
     }
 
 }
