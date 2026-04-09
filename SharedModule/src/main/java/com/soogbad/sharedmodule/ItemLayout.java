@@ -1,6 +1,10 @@
 package com.soogbad.sharedmodule;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.text.SpannedString;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
@@ -16,6 +20,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import java.util.HashSet;
+import java.util.function.IntConsumer;
 
 public class ItemLayout extends ConstraintLayout implements RichEditText.StyleStateListener {
 
@@ -78,7 +83,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         for(RichTextStyle<?> style : activeStyles)
             if(style.spanClass == AbsoluteSizeSpan.class)
                 selectedSize = style.value;
-        showSelectionPopup(textSizeButton, sizeValues, selectedSize, i -> onTextSizeSelected(sizes[i]));
+        showSelectionPopup(textSizeButton, sizeValues, selectedSize, false, i -> onTextSizeSelected(sizes[i]));
     }
     public void onTextColorButtonClick() {
         RichTextStyle.TextColor[] colors = RichTextStyle.TextColor.values();
@@ -88,27 +93,40 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         for(RichTextStyle<?> style : activeStyles)
             if(style.spanClass == ForegroundColorSpan.class)
                 selectedColor = style.value;
-        showSelectionPopup(textColorButton, colorValues, selectedColor, i -> onTextColorSelected(colors[i]));
+        showSelectionPopup(textColorButton, colorValues, selectedColor, true, i -> onTextColorSelected(colors[i]));
     }
 
-    private void showSelectionPopup(Button popupAnchor, int[] options, int selectedOption, java.util.function.IntConsumer onSelect) {
+    private void showSelectionPopup(Button popupAnchor, int[] options, int selectedOption, boolean showAsColor, IntConsumer onSelect) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         LinearLayout popupLayout = (LinearLayout)inflater.inflate(R.layout.selection_popup, this, false);
         PopupWindow popup = new PopupWindow(popupLayout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, false);
         popup.setOutsideTouchable(true);
         popup.setElevation(8);
-        popup.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.WHITE));
+        popup.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         for(int i = 0; i < options.length; i++) {
-            TextView textView = (TextView)inflater.inflate(R.layout.selection_popup_option, popupLayout, false);
-            textView.setText(String.valueOf(options[i]));
-            if(options[i] == selectedOption)
-                textView.setBackgroundResource(R.drawable.selected_popup_option_border);
+            TextView textView = (TextView)inflater.inflate(showAsColor ? R.layout.selection_popup_color_option : R.layout.selection_popup_option, popupLayout, false);
+            adjustOptionTextView(textView, options[i], options[i] == selectedOption, showAsColor);
             final int index = i;
             textView.setOnClickListener(view -> { popup.dismiss(); onSelect.accept(index); });
             popupLayout.addView(textView);
         }
         popupLayout.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
         popup.showAsDropDown(popupAnchor, 0, -(popupAnchor.getHeight() + popupLayout.getMeasuredHeight()));
+    }
+    private void adjustOptionTextView(TextView textView, int value, boolean selected, boolean showAsColor) {
+        if(!showAsColor) {
+            textView.setText(String.valueOf(value));
+            if(selected)
+                textView.setBackgroundResource(R.drawable.selected_popup_option_border);
+        }
+        else {
+           textView.setBackgroundColor(value);
+            if(selected) {
+                Drawable colorDrawable = new ColorDrawable(value);
+                Drawable borderDrawable = ContextCompat.getDrawable(getContext(), R.drawable.selected_popup_option_border);
+                textView.setBackground(new LayerDrawable(new Drawable[]{colorDrawable, borderDrawable}));
+            } 
+        }
     }
 
 }
