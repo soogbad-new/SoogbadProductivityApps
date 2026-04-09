@@ -120,12 +120,13 @@ public class RichEditText extends AppCompatEditText {
             boolean active = (selectionStart != selectionEnd)
                     ? isEntireRangeCovered(editable, selectionStart, selectionEnd, style)
                     : isStyleActiveAtCursorPosition(editable, selectionStart, style);
-            if(active)
+            if(active) {
                 activeStyles.add(style);
+                if(style.spanClass == AbsoluteSizeSpan.class) hasTextSize = true;
+                if(style.spanClass == ForegroundColorSpan.class) hasTextColor = true;
+            }
             else
                 activeStyles.remove(style);
-            if(style.spanClass == AbsoluteSizeSpan.class) hasTextSize = true;
-            if(style.spanClass == ForegroundColorSpan.class) hasTextColor = true;
         }
         if(!hasTextSize)
             activeStyles.add(RichTextStyle.TEXT_SIZE(RichTextStyle.DEFAULT_TEXT_SIZE));
@@ -157,7 +158,7 @@ public class RichEditText extends AppCompatEditText {
     private static void removeSpansInRange(Editable editable, int rangeStart, int rangeEnd, RichTextStyle<?> style) {
         CharacterStyle[] spans = editable.getSpans(rangeStart, rangeEnd, style.spanClass);
         for(CharacterStyle span : spans) {
-            if(style.matchesSpanValue(span)) {
+            if(!style.isFlagStyle() || style.matchesSpanValue(span)) {
                 int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
                 editable.removeSpan(span);
                 if(spanStart < rangeStart)
