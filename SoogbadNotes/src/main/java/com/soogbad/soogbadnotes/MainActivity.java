@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onAddButtonClick(View view) {
-        String uuid = notesManager.createItem(new Note.NoteOptions());
+        String uuid = notesManager.createItem(new Note.NoteOptions(System.currentTimeMillis()));
         if(noteList.getAdapter() != null)
             noteList.getAdapter().notifyItemInserted(0);
         startActivity(new Intent(this, NoteActivity.class).putExtra("item_uuid", uuid));
@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        notesManager.getItems().sort((a, b) -> Long.compare(b.Options.LastViewed, a.Options.LastViewed));
         if(noteList != null && noteList.getAdapter() != null)
             noteList.getAdapter().notifyDataSetChanged();
     }

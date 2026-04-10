@@ -26,6 +26,8 @@ public class NoteActivity extends AppCompatActivity {
         noteLayout = findViewById(R.id.noteLayout); noteToolbar = findViewById(R.id.noteToolbar);
         ItemsManager<Note, Note.NoteOptions> notesManager = ((SoogbadNotesApplication)getApplication()).getNotesManager();
         Note note = notesManager.getItem(getIntent().getStringExtra("item_uuid"));
+        note.Options.LastViewed = System.currentTimeMillis();
+        notesManager.saveItemOptions(note);
         noteLayout.init(notesManager, note, findViewById(R.id.noteEditText), findViewById(R.id.titleEditText), findViewById(R.id.boldButton), findViewById(R.id.italicButton), findViewById(R.id.underlineButton), findViewById(R.id.textSizeButton), findViewById(R.id.textColorButton));
     }
 
