@@ -36,6 +36,8 @@ public class NoteActivity extends AppCompatActivity {
     public void onUnderlineButtonClick(View view) { noteLayout.onUnderlineButtonClick(); }
     public void onTextSizeButtonClick(View view) { noteLayout.onTextSizeButtonClick(); }
     public void onTextColorButtonClick(View view) { noteLayout.onTextColorButtonClick(); }
+    public void onBulletListButtonClick(View view) { noteLayout.onBulletListButtonClick(); }
+    public void onHyperlinkButtonClick(View view) { noteLayout.onHyperlinkButtonClick(); }
 
     public void onDeleteButtonClick(View view) {
         noteLayout.delete();

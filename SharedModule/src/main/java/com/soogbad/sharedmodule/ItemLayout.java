@@ -1,5 +1,6 @@
 package com.soogbad.sharedmodule;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -64,19 +65,15 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     public void onTextSizeSelected(RichTextStyle.TextSize size) { contentEditText.toggleStyle(RichTextStyle.TEXT_SIZE(size)); }
     public void onTextColorSelected(RichTextStyle.TextColor color) { contentEditText.toggleStyle(RichTextStyle.TEXT_COLOR(color)); }
 
-    @Override
-    public void onStyleStateChanged(HashSet<RichTextStyle<?>> activeStyles) {
-        this.activeStyles = activeStyles;
-        toggleButton(boldButton, activeStyles.contains(RichTextStyle.BOLD));
-        toggleButton(italicButton, activeStyles.contains(RichTextStyle.ITALIC));
-        toggleButton(underlineButton, activeStyles.contains(RichTextStyle.UNDERLINE));
-    }
-
-    private void toggleButton(Button button, boolean state) {
-        if(state)
-            button.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.lightGreen));
-        else
-            button.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.white));
+    public void onHyperlinkButtonClick() {
+        EditText urlEditText = new EditText(getContext());
+        urlEditText.setHint("https://");
+        String existingUrl = contentEditText.getHyperlinkUrlAtSelection();
+        if(existingUrl != null)
+            urlEditText.setText(existingUrl);
+        new AlertDialog.Builder(getContext()).setTitle("Hyperlink").setView(urlEditText)
+                .setPositiveButton("Apply", (dialog, which) -> contentEditText.applyHyperlink(urlEditText.getText().toString().trim()))
+                .setNegativeButton("Remove", (dialog, which) -> contentEditText.removeHyperlink()).setNeutralButton("Cancel", null).show();
     }
 
     public void onTextSizeButtonClick() {
@@ -98,6 +95,21 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
             if(style.spanClass == ForegroundColorSpan.class)
                 selectedColor = style.value;
         showSelectionPopup(textColorButton, colorValues, selectedColor, true, i -> onTextColorSelected(colors[i]));
+    }
+
+    @Override
+    public void onStyleStateChanged(HashSet<RichTextStyle<?>> activeStyles) {
+        this.activeStyles = activeStyles;
+        toggleButton(boldButton, activeStyles.contains(RichTextStyle.BOLD));
+        toggleButton(italicButton, activeStyles.contains(RichTextStyle.ITALIC));
+        toggleButton(underlineButton, activeStyles.contains(RichTextStyle.UNDERLINE));
+    }
+
+    private void toggleButton(Button button, boolean state) {
+        if(state)
+            button.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.lightGreen));
+        else
+            button.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.white));
     }
 
     private void showSelectionPopup(Button popupAnchor, int[] options, int selectedOption, boolean showAsColor, IntConsumer onSelect) {

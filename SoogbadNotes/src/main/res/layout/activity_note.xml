@@ -139,6 +139,30 @@
                 app:layout_constraintLeft_toRightOf="@id/textSizeButton">
             </Button>
 
+            <Button
+                android:id="@+id/bulletListButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="*"
+                android:textSize="24sp"
+                android:backgroundTint="@color/white"
+                android:onClick="onBulletListButtonClick"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/textColorButton">
+            </Button>
+
+            <Button
+                android:id="@+id/hyperlinkButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="🔗"
+                android:textSize="24sp"
+                android:backgroundTint="@color/white"
+                android:onClick="onHyperlinkButtonClick"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/bulletListButton">
+            </Button>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.soogbad.sharedmodule.ItemLayout>
 

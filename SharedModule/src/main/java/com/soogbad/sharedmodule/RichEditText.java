@@ -1,14 +1,18 @@
 package com.soogbad.sharedmodule;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.text.Editable;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.URLSpan;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 
 import androidx.appcompat.widget.AppCompatEditText;
 
@@ -190,13 +194,59 @@ public class RichEditText extends AppCompatEditText {
     public interface StyleStateListener {
         void onStyleStateChanged(HashSet<RichTextStyle<?>> activeStyles);
     }
-
     private StyleStateListener styleStateListener;
     public void setStyleStateListener(StyleStateListener listener) { this.styleStateListener = listener; }
-
     private void notifyListener() {
         if(styleStateListener != null)
             styleStateListener.onStyleStateChanged(activeStyles);
+    }
+
+    public void applyHyperlinkToSelection(String url) {
+        Editable editable = getText();
+        if(editable == null || url.isEmpty()) return;
+        removeHyperlinksFromSelection();
+        int selectionStart = getSelectionStart(); int selectionEnd = getSelectionEnd();
+        if(selectionStart != selectionEnd)
+            editable.setSpan(new URLSpan(url), selectionStart, selectionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+    private void removeHyperlinksFromSelection() {
+        Editable editable = getText();
+        if(editable == null) return;
+        int selectionStart = getSelectionStart(); int selectionEnd = getSelectionEnd();
+        URLSpan[] spans = editable.getSpans(selectionStart, selectionEnd, URLSpan.class);
+        for(URLSpan span : spans)
+            editable.removeSpan(span);
+    }
+    public String getHyperlinkUrlAtSelection() {
+        Editable editable = getText();
+        if(editable == null) return null;
+        int selectionStart = getSelectionStart(); int selectionEnd = getSelectionEnd();
+        int position = (selectionStart == selectionEnd && selectionStart > 0) ? selectionStart - 1 : selectionStart;
+        URLSpan[] spans = editable.getSpans(position, selectionEnd, URLSpan.class);
+        return spans.length > 0 ? spans[0].getURL() : null;
+    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_UP && getSelectionStart() == getSelectionEnd()) {
+            boolean handled = handleHyperlinkClick(event);
+            if(handled) return true;
+        }
+        return super.onTouchEvent(event);
+    }
+    private boolean handleHyperlinkClick(MotionEvent event) {
+        Editable editable = getText();
+        if(editable == null) return false;
+        int x = (int)event.getX() - getTotalPaddingLeft() + getScrollX(); int y = (int)event.getY() - getTotalPaddingTop() + getScrollY();
+        int line = getLayout().getLineForVertical(y); int offset = getLayout().getOffsetForHorizontal(line, x);
+        URLSpan[] spans = editable.getSpans(offset, offset, URLSpan.class);
+        if(spans.length > 0) {
+            String url = spans[0].getURL();
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(intent);
+            return true;
+        }
+        return false;
     }
 
 }

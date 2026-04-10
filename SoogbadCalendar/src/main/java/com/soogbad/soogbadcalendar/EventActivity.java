@@ -34,6 +34,8 @@ public class EventActivity extends AppCompatActivity {
     public void onUnderlineButtonClick(View view) { eventLayout.onUnderlineButtonClick(); }
     public void onTextSizeButtonClick(View view) { eventLayout.onTextSizeButtonClick(); }
     public void onTextColorButtonClick(View view) { eventLayout.onTextColorButtonClick(); }
+    public void onBulletListButtonClick(View view) { eventLayout.onBulletListButtonClick(); }
+    public void onHyperlinkButtonClick(View view) { eventLayout.onHyperlinkButtonClick(); }
 
     public void onDeleteButtonClick(View view) {
         eventLayout.delete();

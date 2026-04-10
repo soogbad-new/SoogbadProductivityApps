@@ -34,6 +34,8 @@ public class ReminderActivity extends AppCompatActivity {
     public void onUnderlineButtonClick(View view) { reminderLayout.onUnderlineButtonClick(); }
     public void onTextSizeButtonClick(View view) { reminderLayout.onTextSizeButtonClick(); }
     public void onTextColorButtonClick(View view) { reminderLayout.onTextColorButtonClick(); }
+    public void onBulletListButtonClick(View view) { reminderLayout.onBulletListButtonClick(); }
+    public void onHyperlinkButtonClick(View view) { reminderLayout.onHyperlinkButtonClick(); }
 
     public void onDeleteButtonClick(View view) {
         reminderLayout.delete();
