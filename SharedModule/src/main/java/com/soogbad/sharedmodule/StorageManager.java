@@ -1,17 +1,21 @@
 package com.soogbad.sharedmodule;
 
+import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.SpannedString;
+import android.text.style.AbsoluteSizeSpan;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xml.sax.XMLReader;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 
 @SuppressWarnings("ReadWriteStringCanBeUsed")
@@ -45,7 +49,7 @@ public class StorageManager {
         String html;
         try { html = new String(Files.readAllBytes(directory.resolve(uuid + ".html")), StandardCharsets.UTF_16); }
         catch(IOException e) { throw new RuntimeException(e); }
-        return new SpannedString(Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT));
+        return new SpannedString(Html.fromHtml(replaceHtmlTextSizeTags(html), Html.FROM_HTML_MODE_COMPACT, null, SIZE_TAG_HANDLER));
     }
 
     public void saveMetadataToJsonFile(String uuid, String title, Item.ItemOptions options) {
@@ -70,5 +74,56 @@ public class StorageManager {
             Files.delete(directory.resolve(uuid + ".json"));
         } catch(IOException e) { throw new RuntimeException(e); }
     }
+
+    private static String replaceHtmlTextSizeTags(String html) {
+        StringBuilder htmlBuilder = new StringBuilder();
+        ArrayDeque<String> stack = new ArrayDeque<>();
+        int i = 0;
+        while(i < html.length()) {
+            if(html.startsWith("<span style=\"font-size:", i)) {
+                int start = i + "<span style=\"font-size:".length(); int end = html.indexOf("px", start); int close = html.indexOf(">", end);
+                String size = html.substring(start, end);
+                htmlBuilder.append("<mysize").append(size).append(">");
+                stack.push(size);
+                i = close + 1;
+            }
+            else if(html.startsWith("<span ", i) || html.startsWith("<span>", i)) {
+                int close = html.indexOf(">", i);
+                htmlBuilder.append(html, i, close + 1);
+                stack.push("");
+                i = close + 1;
+            }
+            else if(html.startsWith("</span>", i)) {
+                String size = !stack.isEmpty() ? stack.pop() : "";
+                if(!size.isEmpty())
+                    htmlBuilder.append("</mysize").append(size).append(">");
+                else
+                    htmlBuilder.append("</span>");
+                i += "</span>".length();
+            }
+            else {
+                htmlBuilder.append(html.charAt(i));
+                i++;
+            }
+        }
+        return htmlBuilder.toString();
+    }
+    private record MySizeMark(int size) { }
+    private static final Html.TagHandler SIZE_TAG_HANDLER = (boolean opening, String tag, Editable output, XMLReader xmlReader) -> {
+        if(!tag.startsWith("mysize")) return;
+        if(opening) {
+            int size = Integer.parseInt(tag.substring(6));
+            output.setSpan(new MySizeMark(size), output.length(), output.length(), Spanned.SPAN_MARK_MARK);
+        }
+        else {
+            MySizeMark[] marks = output.getSpans(0, output.length(), MySizeMark.class);
+            if(marks.length > 0) {
+                MySizeMark mark = marks[marks.length - 1];
+                int start = output.getSpanStart(mark); int end = output.length();
+                output.removeSpan(mark);
+                output.setSpan(new AbsoluteSizeSpan(mark.size, true), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+    };
 
 }
