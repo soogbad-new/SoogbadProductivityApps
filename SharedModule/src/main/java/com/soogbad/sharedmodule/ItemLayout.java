@@ -45,8 +45,12 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     public void save() {
         if(itemDeleted)
             return;
-        itemsManager.saveItemTitle(item, titleEditText.getText().toString());
-        itemsManager.saveItemContent(item, new SpannedString(contentEditText.getText()));
+        String oldTitle = item.Title;
+        item.Title = titleEditText.getText().toString();;
+        item.Content = new SpannedString(contentEditText.getText());
+        if(!item.Title.equals(oldTitle))
+            itemsManager.saveItemTitle(item);
+        itemsManager.saveItemContent(item);
     }
 
     public void delete() {

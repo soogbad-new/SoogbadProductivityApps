@@ -32,26 +32,10 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
         }
     }
 
-    public void loadItemContent(Item<?> item) {
-        item.Content = storageManager.loadContentFromHtmlFile(item.UUID);
-    }
-
-    public void saveItemContent(Item<?> item, SpannedString content) {
-        item.Content = content;
-        storageManager.saveContentToHtmlFile(item.UUID, item.Content);
-    }
-
-
-    public void saveItemTitle(Item<?> item, String title) {
-        if(title.equals(item.Title))
-            return;
-        item.Title = title;
-        storageManager.saveMetadataToJsonFile(item.UUID, item.Title, item.Options);
-    }
-    public void saveItemOptions(T item, O options) {
-        item.Options = options;
-        storageManager.saveMetadataToJsonFile(item.UUID, item.Title, item.Options);
-    }
+    public void loadItemContent(Item<?> item) { item.Content = storageManager.loadContentFromHtmlFile(item.UUID); }
+    public void saveItemContent(Item<?> item) { storageManager.saveContentToHtmlFile(item.UUID, item.Content); }
+    public void saveItemTitle(Item<?> item) { storageManager.saveMetadataToJsonFile(item.UUID, item.Title, item.Options); }
+    public void saveItemOptions(T item) { storageManager.saveMetadataToJsonFile(item.UUID, item.Title, item.Options); }
 
     public String createItem(O defaultOptions) {
         String uuid = Utility.generateUniqueUUID(items);
