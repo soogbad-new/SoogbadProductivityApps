@@ -1,7 +1,6 @@
 package com.soogbad.sharedmodule;
 
 import android.text.SpannableString;
-import android.text.SpannedString;
 
 import java.util.ArrayList;
 

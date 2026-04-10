@@ -46,7 +46,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         if(itemDeleted)
             return;
         String oldTitle = item.Title;
-        item.Title = titleEditText.getText().toString();;
+        item.Title = titleEditText.getText().toString();
         item.Content = new SpannedString(contentEditText.getText());
         if(!item.Title.equals(oldTitle))
             itemsManager.saveItemTitle(item);
