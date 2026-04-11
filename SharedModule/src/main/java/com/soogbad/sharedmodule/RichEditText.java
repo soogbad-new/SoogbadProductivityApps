@@ -80,7 +80,7 @@ public class RichEditText extends AppCompatEditText {
                 editable.setSpan(style.createSpan(), changeStart, changeStart + changeCount, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             }
         }
-        else
+        else if(style.isFlagStyle())
             removeSpansInRange(editable, changeStart, changeStart + changeCount, style);
     }
 
