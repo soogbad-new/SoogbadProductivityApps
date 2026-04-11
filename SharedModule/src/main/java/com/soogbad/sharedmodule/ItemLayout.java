@@ -26,10 +26,10 @@ import java.util.function.IntConsumer;
 public class ItemLayout extends ConstraintLayout implements RichEditText.StyleStateListener {
 
     private EditText titleEditText;
-    private RichEditText contentEditText;
-    private ConstraintLayout formattingToolbar;
+    private final RichEditText contentEditText;
+    private final ConstraintLayout formattingToolbar;
     public ConstraintLayout getFormattingToolbar() { return formattingToolbar; }
-    private Button boldButton, italicButton, underlineButton, textSizeButton, textColorButton, bulletListButton, hyperlinkButton;
+    private final Button boldButton, italicButton, underlineButton, textSizeButton, textColorButton, bulletListButton, hyperlinkButton;
 
     private ItemsManager<?, ?> itemsManager;
     private Item<?> item;
