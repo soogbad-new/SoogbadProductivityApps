@@ -1,5 +1,6 @@
 package com.soogbad.sharedmodule;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -209,7 +210,7 @@ public class RichEditText extends AppCompatEditText {
         if(selectionStart != selectionEnd)
             editable.setSpan(new URLSpan(url), selectionStart, selectionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
-    private void removeHyperlinksFromSelection() {
+    public void removeHyperlinksFromSelection() {
         Editable editable = getText();
         if(editable == null) return;
         int selectionStart = getSelectionStart(); int selectionEnd = getSelectionEnd();
@@ -225,6 +226,7 @@ public class RichEditText extends AppCompatEditText {
         URLSpan[] spans = editable.getSpans(position, selectionEnd, URLSpan.class);
         return spans.length > 0 ? spans[0].getURL() : null;
     }
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_UP && getSelectionStart() == getSelectionEnd()) {

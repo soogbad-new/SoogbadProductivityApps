@@ -72,8 +72,8 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         if(existingUrl != null)
             urlEditText.setText(existingUrl);
         new AlertDialog.Builder(getContext()).setTitle("Hyperlink").setView(urlEditText)
-                .setPositiveButton("Apply", (dialog, which) -> contentEditText.applyHyperlink(urlEditText.getText().toString().trim()))
-                .setNegativeButton("Remove", (dialog, which) -> contentEditText.removeHyperlink()).setNeutralButton("Cancel", null).show();
+                .setPositiveButton("Apply", (dialog, which) -> contentEditText.applyHyperlinkToSelection(urlEditText.getText().toString().trim()))
+                .setNegativeButton("Remove", (dialog, which) -> contentEditText.removeHyperlinksFromSelection()).setNeutralButton("Cancel", null).show();
     }
 
     public void onTextSizeButtonClick() {
