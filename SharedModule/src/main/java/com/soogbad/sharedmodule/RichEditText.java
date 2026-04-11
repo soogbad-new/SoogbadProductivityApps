@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 
 import androidx.appcompat.widget.AppCompatEditText;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -226,7 +227,7 @@ public class RichEditText extends AppCompatEditText {
             int paragraphEnd = getParagraphEnd(editable.toString(), position);
             if(paragraphEnd > end)
                 paragraphEnd = end;
-            BulletSpan[] spans = editable.getSpans(position, paragraphEnd, BulletSpan.class);
+            BulletSpan[] spans = getBulletSpansInParagraph(editable, position, paragraphEnd);
             if(spans.length == 0)
                 return false;
             position = paragraphEnd + 1;
@@ -234,12 +235,9 @@ public class RichEditText extends AppCompatEditText {
         return true;
     }
     private static void removeBulletsFromParagraphs(Editable editable, int start, int end) {
-        BulletSpan[] spans = editable.getSpans(start, end, BulletSpan.class);
-        for(BulletSpan span : spans) {
-            int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
-            if(spanStart >= start && spanEnd <= end + 1)
-                editable.removeSpan(span);
-        }
+        BulletSpan[] spans = getBulletSpansInParagraph(editable, start, end);
+        for(BulletSpan span : spans)
+            editable.removeSpan(span);
     }
     private static void addBulletsToParagraphs(Editable editable, int start, int end) {
         String text = editable.toString();
@@ -248,7 +246,7 @@ public class RichEditText extends AppCompatEditText {
             int paragraphEnd = getParagraphEnd(text, position);
             if(paragraphEnd > end)
                 paragraphEnd = end;
-            BulletSpan[] spans = editable.getSpans(position, paragraphEnd, BulletSpan.class);
+            BulletSpan[] spans = getBulletSpansInParagraph(editable, position, paragraphEnd);
             if(spans.length == 0) {
                 int spanEnd = paragraphEnd < text.length() ? paragraphEnd + 1 : paragraphEnd;
                 editable.setSpan(RichTextStyle.createBulletSpan(), position, spanEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -259,7 +257,7 @@ public class RichEditText extends AppCompatEditText {
     private void handleBulletListNewLine(Editable editable, int changeStart, int changeCount) {
         if(changeCount == 1 && editable.charAt(changeStart) == '\n' && changeStart < editable.length()) {
             int previousLineStart = getParagraphStart(editable.toString(), changeStart);
-            BulletSpan[] spans = editable.getSpans(previousLineStart, changeStart, BulletSpan.class);
+            BulletSpan[] spans = getBulletSpansInParagraph(editable, previousLineStart, changeStart);
             if(spans.length == 0) return;
             String lineText = editable.subSequence(previousLineStart, changeStart).toString().trim();
             if(lineText.isEmpty()) {
@@ -295,8 +293,16 @@ public class RichEditText extends AppCompatEditText {
         if(editable == null) return false;
         int position = getSelectionStart();
         int paragraphStart = getParagraphStart(editable.toString(), position); int paragraphEnd = getParagraphEnd(editable.toString(), position);
-        BulletSpan[] spans = editable.getSpans(paragraphStart, paragraphEnd, BulletSpan.class);
+        BulletSpan[] spans = getBulletSpansInParagraph(editable, paragraphStart, paragraphEnd);
         return spans.length > 0;
+    }
+    private static BulletSpan[] getBulletSpansInParagraph(Editable editable, int paragraphStart, int paragraphEnd) {
+        BulletSpan[] spans = editable.getSpans(paragraphStart, paragraphEnd, BulletSpan.class);
+        ArrayList<BulletSpan> result = new ArrayList<>();
+        for(BulletSpan span : allSpans)
+            if(editable.getSpanStart(span) >= paragraphStart)
+                result.add(span);
+        return result.toArray(new BulletSpan[0]);
     }
     private static int getParagraphStart(String text, int position) {
         int start = text.lastIndexOf('\n', position - 1);
