@@ -288,7 +288,7 @@ public class RichEditText extends AppCompatEditText {
     private static BulletSpan[] getBulletSpansInParagraph(Editable editable, int paragraphStart, int paragraphEnd) {
         BulletSpan[] spans = editable.getSpans(paragraphStart, paragraphEnd, BulletSpan.class);
         ArrayList<BulletSpan> result = new ArrayList<>();
-        for(BulletSpan span : allSpans)
+        for(BulletSpan span : spans)
             if(editable.getSpanStart(span) >= paragraphStart)
                 result.add(span);
         return result.toArray(new BulletSpan[0]);
