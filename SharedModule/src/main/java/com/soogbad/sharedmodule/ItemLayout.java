@@ -64,18 +64,6 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     public void onUnderlineButtonClick() { contentEditText.toggleStyle(RichTextStyle.UNDERLINE); }
     public void onTextSizeSelected(RichTextStyle.TextSize size) { contentEditText.toggleStyle(RichTextStyle.TEXT_SIZE(size)); }
     public void onTextColorSelected(RichTextStyle.TextColor color) { contentEditText.toggleStyle(RichTextStyle.TEXT_COLOR(color)); }
-
-    public void onHyperlinkButtonClick() {
-        EditText urlEditText = new EditText(getContext());
-        urlEditText.setHint("https://");
-        String existingUrl = contentEditText.getHyperlinkUrlAtSelection();
-        if(existingUrl != null)
-            urlEditText.setText(existingUrl);
-        new AlertDialog.Builder(getContext()).setTitle("Hyperlink").setView(urlEditText)
-                .setPositiveButton("Apply", (dialog, which) -> contentEditText.applyHyperlinkToSelection(urlEditText.getText().toString().trim()))
-                .setNegativeButton("Remove", (dialog, which) -> contentEditText.removeHyperlinksFromSelection()).setNeutralButton("Cancel", null).show();
-    }
-
     public void onTextSizeButtonClick() {
         RichTextStyle.TextSize[] sizes = RichTextStyle.TextSize.values();
         int[] sizeValues = new int[sizes.length];
@@ -95,6 +83,17 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
             if(style.spanClass == ForegroundColorSpan.class)
                 selectedColor = style.value;
         showSelectionPopup(textColorButton, colorValues, selectedColor, true, i -> onTextColorSelected(colors[i]));
+    }
+    public void onBulletListButtonClick() { }
+    public void onHyperlinkButtonClick() {
+        EditText urlEditText = new EditText(getContext());
+        urlEditText.setHint("https://");
+        String existingUrl = contentEditText.getHyperlinkUrlAtSelection();
+        if(existingUrl != null)
+            urlEditText.setText(existingUrl);
+        new AlertDialog.Builder(getContext()).setTitle("Hyperlink").setView(urlEditText)
+                .setPositiveButton("Apply", (dialog, which) -> contentEditText.applyHyperlinkToSelection(urlEditText.getText().toString().trim()))
+                .setNegativeButton("Remove", (dialog, which) -> contentEditText.removeHyperlinksFromSelection()).setNeutralButton("Cancel", null).show();
     }
 
     @Override
