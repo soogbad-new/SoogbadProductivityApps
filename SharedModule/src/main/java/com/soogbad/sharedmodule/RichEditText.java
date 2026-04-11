@@ -259,20 +259,9 @@ public class RichEditText extends AppCompatEditText {
             int previousLineStart = getParagraphStart(editable.toString(), changeStart);
             BulletSpan[] spans = getBulletSpansInParagraph(editable, previousLineStart, changeStart);
             if(spans.length == 0) return;
-            String lineText = editable.subSequence(previousLineStart, changeStart).toString().trim();
-            if(lineText.isEmpty()) {
-                removeBulletIfLineEmpty(editable, spans);
-                return;
-            }
             endBulletSpanBeforeNewLine(editable, spans, changeStart);
             addBulletAfterNewLine(editable, changeStart + 1);
         }
-    }
-    private void removeBulletIfLineEmpty(Editable editable, BulletSpan[] spans) { 
-        for(BulletSpan span : spans)
-            editable.removeSpan(span);
-        bulletListActive = false;
-        notifyListener();
     }
     private static void endBulletSpanBeforeNewLine(Editable editable, BulletSpan[] spans, int newLinePosition) {
         for(BulletSpan span : spans) {
