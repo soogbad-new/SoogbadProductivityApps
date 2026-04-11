@@ -2,6 +2,7 @@ package com.soogbad.sharedmodule;
 
 import android.graphics.Typeface;
 import android.text.style.AbsoluteSizeSpan;
+import android.text.style.BulletSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -76,6 +77,10 @@ public class RichTextStyle<T extends CharacterStyle> {
 
     public static TextSize DEFAULT_TEXT_SIZE = TextSize.SIZE_20;
     public static final TextColor DEFAULT_TEXT_COLOR = TextColor.WHITE;
+
+    private static final int BULLET_GAP_WIDTH = 20;
+    private static final int BULLET_COLOR = 0xFFFFFFFF;
+    public static BulletSpan createBulletSpan() { return new BulletSpan(BULLET_GAP_WIDTH, BULLET_COLOR); }
 
     public enum TextSize {
         SIZE_12(12), SIZE_14(14), SIZE_16(16), SIZE_18(18), SIZE_20(20), SIZE_24(24), SIZE_28(28), SIZE_32(32);

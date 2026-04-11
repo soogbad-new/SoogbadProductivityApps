@@ -96,7 +96,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         showSelectionPopup(textColorButton, colorValues, selectedColor, true, i -> onTextColorSelected(colors[i]));
     }
     public void onBulletListButtonClick() {
-        
+        contentEditText.toggleBulletList();
     }
     public void onHyperlinkButtonClick() {
         int selectionStart = contentEditText.getSelectionStart(); int selectionEnd = contentEditText.getSelectionEnd();
@@ -111,11 +111,12 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     }
 
     @Override
-    public void onStyleStateChanged(HashSet<RichTextStyle<?>> activeStyles) {
+    public void onStyleStateChanged(HashSet<RichTextStyle<?>> activeStyles, boolean bulletListActive) {
         this.activeStyles = activeStyles;
         toggleButton(boldButton, activeStyles.contains(RichTextStyle.BOLD));
         toggleButton(italicButton, activeStyles.contains(RichTextStyle.ITALIC));
         toggleButton(underlineButton, activeStyles.contains(RichTextStyle.UNDERLINE));
+        toggleButton(bulletListButton, bulletListActive);
     }
 
     private void toggleButton(Button button, boolean state) {

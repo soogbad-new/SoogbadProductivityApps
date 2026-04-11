@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
+import android.text.style.BulletSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
@@ -26,6 +27,7 @@ public class RichEditText extends AppCompatEditText {
     private boolean ignoreTextChanges = false;
     public void setIgnoreTextChanges(boolean ignoreTextChanges) { this.ignoreTextChanges = ignoreTextChanges; }
     private final HashSet<RichTextStyle<?>> activeStyles = new HashSet<>();
+    private boolean bulletListActive = false;
     private boolean textChanging;
     private int changeStart, changeCount;
 
@@ -39,6 +41,7 @@ public class RichEditText extends AppCompatEditText {
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
         if(!focused) {
             activeStyles.clear();
+            bulletListActive = false;
             notifyListener();
         }
     }
@@ -67,9 +70,11 @@ public class RichEditText extends AppCompatEditText {
         @Override
         public void afterTextChanged(Editable editable) {
             if(ignoreTextChanges) return;
-            if(changeCount > 0)
+            if(changeCount > 0) {
                 for(RichTextStyle<?> style : RichTextStyle.values())
                     applyActiveStyle(editable, changeStart, changeCount, style, activeStyles.contains(style));
+                handleBulletListNewLine(editable, changeStart, changeCount);
+            }
             textChanging = true;
         }
     };
@@ -137,6 +142,7 @@ public class RichEditText extends AppCompatEditText {
             activeStyles.add(RichTextStyle.TEXT_SIZE(RichTextStyle.DEFAULT_TEXT_SIZE));
         if(!hasTextColor)
             activeStyles.add(RichTextStyle.TEXT_COLOR(RichTextStyle.DEFAULT_TEXT_COLOR));
+        bulletListActive = isCursorInBulletedParagraph();
         notifyListener();
     }
 
@@ -193,13 +199,112 @@ public class RichEditText extends AppCompatEditText {
     }
 
     public interface StyleStateListener {
-        void onStyleStateChanged(HashSet<RichTextStyle<?>> activeStyles);
+        void onStyleStateChanged(HashSet<RichTextStyle<?>> activeStyles, boolean bulletListActive);
     }
     private StyleStateListener styleStateListener;
     public void setStyleStateListener(StyleStateListener listener) { this.styleStateListener = listener; }
     private void notifyListener() {
         if(styleStateListener != null)
-            styleStateListener.onStyleStateChanged(activeStyles);
+            styleStateListener.onStyleStateChanged(activeStyles, bulletListActive);
+    }
+
+    public void toggleBulletList() {
+        Editable editable = getText();
+        if(editable == null) return;
+        int selectionStart = getSelectionStart(); int selectionEnd = getSelectionEnd();
+        int paragraphStart = getParagraphStart(editable.toString(), selectionStart); int paragraphEnd = getParagraphEnd(editable.toString(), selectionEnd);
+        if(areAllParagraphsBulleted(editable, paragraphStart, paragraphEnd))
+            removeBulletsFromParagraphs(editable, paragraphStart, paragraphEnd);
+        else
+            addBulletsToParagraphs(editable, paragraphStart, paragraphEnd);
+        bulletListActive = isCursorInBulletedParagraph();
+        notifyListener();
+    }
+    private static boolean areAllParagraphsBulleted(Editable editable, int start, int end) {
+        int position = start;
+        while(position <= end) {
+            int paragraphEnd = getParagraphEnd(editable.toString(), position);
+            if(paragraphEnd > end)
+                paragraphEnd = end;
+            BulletSpan[] spans = editable.getSpans(position, paragraphEnd, BulletSpan.class);
+            if(spans.length == 0)
+                return false;
+            position = paragraphEnd + 1;
+        }
+        return true;
+    }
+    private static void removeBulletsFromParagraphs(Editable editable, int start, int end) {
+        BulletSpan[] spans = editable.getSpans(start, end, BulletSpan.class);
+        for(BulletSpan span : spans) {
+            int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
+            if(spanStart >= start && spanEnd <= end + 1)
+                editable.removeSpan(span);
+        }
+    }
+    private static void addBulletsToParagraphs(Editable editable, int start, int end) {
+        String text = editable.toString();
+        int position = start;
+        while(position <= end) {
+            int paragraphEnd = getParagraphEnd(text, position);
+            if(paragraphEnd > end)
+                paragraphEnd = end;
+            BulletSpan[] spans = editable.getSpans(position, paragraphEnd, BulletSpan.class);
+            if(spans.length == 0) {
+                int spanEnd = paragraphEnd < text.length() ? paragraphEnd + 1 : paragraphEnd;
+                editable.setSpan(RichTextStyle.createBulletSpan(), position, spanEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            }
+            position = paragraphEnd + 1;
+        }
+    }
+    private void handleBulletListNewLine(Editable editable, int changeStart, int changeCount) {
+        if(changeCount == 1 && editable.charAt(changeStart) == '\n' && changeStart < editable.length()) {
+            int previousLineStart = getParagraphStart(editable.toString(), changeStart);
+            BulletSpan[] spans = editable.getSpans(previousLineStart, changeStart, BulletSpan.class);
+            if(spans.length == 0) return;
+            String lineText = editable.subSequence(previousLineStart, changeStart).toString().trim();
+            if(lineText.isEmpty()) {
+                removeBulletIfLineEmpty(editable, spans);
+                return;
+            }
+            endBulletSpanBeforeNewLine(editable, spans, changeStart);
+            addBulletAfterNewLine(editable, changeStart + 1);
+        }
+    }
+    private void removeBulletIfLineEmpty(Editable editable, BulletSpan[] spans) { 
+        for(BulletSpan span : spans)
+            editable.removeSpan(span);
+        bulletListActive = false;
+        notifyListener();
+    }
+    private static void endBulletSpanBeforeNewLine(Editable editable, BulletSpan[] spans, int newLinePosition) {
+        for(BulletSpan span : spans) {
+            int spanStart = editable.getSpanStart(span);
+            editable.removeSpan(span);
+            editable.setSpan(RichTextStyle.createBulletSpan(), spanStart, newLinePosition + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        }
+    }
+    private static void addBulletAfterNewLine(Editable editable, int newLineStart) {
+        int newLineEnd = getParagraphEnd(editable.toString(), newLineStart);
+        int spanEnd = newLineEnd < editable.length() ? newLineEnd + 1 : newLineEnd;
+        if(spanEnd < newLineStart)
+            spanEnd = newLineStart;
+        editable.setSpan(RichTextStyle.createBulletSpan(), newLineStart, Math.max(spanEnd, newLineStart + 1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+    }
+    private boolean isCursorInBulletedParagraph() {
+        Editable editable = getText();
+        if(editable == null) return false;
+        int position = getSelectionStart();
+        int paragraphStart = getParagraphStart(editable.toString(), position); int paragraphEnd = getParagraphEnd(editable.toString(), position);
+        BulletSpan[] spans = editable.getSpans(paragraphStart, paragraphEnd, BulletSpan.class);
+        return spans.length > 0;
+    }
+    private static int getParagraphStart(String text, int position) {
+        int start = text.lastIndexOf('\n', position - 1);
+        return start == -1 ? 0 : start + 1;
+    }
+    private static int getParagraphEnd(String text, int position) {
+        int end = text.indexOf('\n', position);
+        return end == -1 ? text.length() : end;
     }
 
     public void insertHyperlinkAtCursor(String url, String displayText) {
