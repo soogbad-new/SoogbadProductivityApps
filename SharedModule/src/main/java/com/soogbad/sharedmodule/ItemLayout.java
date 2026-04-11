@@ -29,6 +29,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     private final RichEditText contentEditText;
     private final ConstraintLayout formattingToolbar;
     public ConstraintLayout getFormattingToolbar() { return formattingToolbar; }
+    @SuppressWarnings("FieldCanBeLocal")
     private final Button boldButton, italicButton, underlineButton, textSizeButton, textColorButton, bulletListButton, hyperlinkButton;
 
     private ItemsManager<?, ?> itemsManager;
