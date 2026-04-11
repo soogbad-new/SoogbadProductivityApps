@@ -25,18 +25,26 @@ import java.util.function.IntConsumer;
 
 public class ItemLayout extends ConstraintLayout implements RichEditText.StyleStateListener {
 
+    private EditText titleEditText;
+    private RichEditText contentEditText;
+    private ConstraintLayout formattingToolbar;
+    public ConstraintLayout getFormattingToolbar() { return formattingToolbar; }
+    private Button boldButton, italicButton, underlineButton, textSizeButton, textColorButton, bulletListButton, hyperlinkButton;
+
     private ItemsManager<?, ?> itemsManager;
     private Item<?> item;
-    private RichEditText contentEditText;
-    private EditText titleEditText;
-    private boolean itemDeleted = false;
-    private Button boldButton, italicButton, underlineButton, textSizeButton, textColorButton;
     private HashSet<RichTextStyle<?>> activeStyles = new HashSet<>();
+    private boolean itemDeleted = false;
 
-    public ItemLayout(Context context, AttributeSet attrs) { super(context, attrs); }
+    public ItemLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        LayoutInflater.from(context).inflate(R.layout.item_layout_content, this, true);
+        contentEditText = findViewById(R.id.contentEditText); formattingToolbar = findViewById(R.id.formattingToolbar); boldButton = findViewById(R.id.boldButton); italicButton = findViewById(R.id.italicButton); underlineButton = findViewById(R.id.underlineButton); textSizeButton = findViewById(R.id.textSizeButton); textColorButton = findViewById(R.id.textColorButton); bulletListButton = findViewById(R.id.bulletListButton); hyperlinkButton = findViewById(R.id.hyperlinkButton);
+        boldButton.setOnClickListener(v -> onBoldButtonClick()); italicButton.setOnClickListener(v -> onItalicButtonClick()); underlineButton.setOnClickListener(v -> onUnderlineButtonClick()); textSizeButton.setOnClickListener(v -> onTextSizeButtonClick()); textColorButton.setOnClickListener(v -> onTextColorButtonClick()); bulletListButton.setOnClickListener(v -> onBulletListButtonClick()); hyperlinkButton.setOnClickListener(v -> onHyperlinkButtonClick());
+    }
 
-    public void init(ItemsManager<?, ?> itemsManager, Item<?> item, RichEditText contentEditText, EditText titleEditText, Button boldButton, Button italicButton, Button underlineButton, Button textSizeButton, Button textColorButton) {
-        this.itemsManager = itemsManager; this.item = item; this.contentEditText = contentEditText; this.titleEditText = titleEditText; this.boldButton = boldButton; this.italicButton = italicButton; this.underlineButton = underlineButton; this.textSizeButton = textSizeButton; this.textColorButton = textColorButton;
+    public void init(ItemsManager<?, ?> itemsManager, Item<?> item, EditText titleEditText) {
+        this.itemsManager = itemsManager; this.item = item; this.titleEditText = titleEditText;
         contentEditText.setStyleStateListener(this);
         titleEditText.setText(item.Title);
         itemsManager.loadItemContent(item);
@@ -84,7 +92,9 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
                 selectedColor = style.value;
         showSelectionPopup(textColorButton, colorValues, selectedColor, true, i -> onTextColorSelected(colors[i]));
     }
-    public void onBulletListButtonClick() { }
+    public void onBulletListButtonClick() {
+        
+    }
     public void onHyperlinkButtonClick() {
         EditText urlEditText = new EditText(getContext());
         urlEditText.setHint("https://");

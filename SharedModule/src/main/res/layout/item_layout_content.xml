@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
+
+    <com.soogbad.sharedmodule.RichEditText
+        android:id="@+id/contentEditText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/almostBlack"
+        android:textSize="18dp"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/formattingToolbar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:ignore="SpUsage">
+    </com.soogbad.sharedmodule.RichEditText>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/formattingToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <Button
+            android:id="@+id/boldButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="B"
+            android:textSize="24sp"
+            android:backgroundTint="@color/white"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent">
+        </Button>
+
+        <Button
+            android:id="@+id/italicButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="I"
+            android:textSize="24sp"
+            android:backgroundTint="@color/white"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/boldButton">
+        </Button>
+
+        <Button
+            android:id="@+id/underlineButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="U"
+            android:textSize="24sp"
+            android:backgroundTint="@color/white"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/italicButton">
+        </Button>
+
+        <Button
+            android:id="@+id/textSizeButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="Aa"
+            android:inputType="text"
+            android:textSize="22sp"
+            android:backgroundTint="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/underlineButton">
+        </Button>
+
+        <Button
+            android:id="@+id/textColorButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="A"
+            android:textColor="#A83232"
+            android:textSize="24sp"
+            android:backgroundTint="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/textSizeButton">
+        </Button>
+
+        <Button
+            android:id="@+id/bulletListButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="*"
+            android:textSize="24sp"
+            android:backgroundTint="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/textColorButton">
+        </Button>
+
+        <Button
+            android:id="@+id/hyperlinkButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="🔗"
+            android:textSize="24sp"
+            android:backgroundTint="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/bulletListButton">
+        </Button>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</merge>
