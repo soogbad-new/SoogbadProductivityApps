@@ -202,7 +202,14 @@ public class RichEditText extends AppCompatEditText {
             styleStateListener.onStyleStateChanged(activeStyles);
     }
 
-    public void applyHyperlinkToSelection(String url) {
+    public void insertHyperlinkAtCursor(String url, String displayText) {
+        Editable editable = getText();
+        if(editable == null || url.isEmpty() || displayText.isEmpty()) return;
+        int cursorPosition = getSelectionStart();
+        editable.insert(cursorPosition, displayText);
+        editable.setSpan(new URLSpan(url), cursorPosition, cursorPosition + displayText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+    public void createHyperlinkOnSelectedText(String url) {
         Editable editable = getText();
         if(editable == null || url.isEmpty()) return;
         removeHyperlinksFromSelection();
@@ -210,7 +217,16 @@ public class RichEditText extends AppCompatEditText {
         if(selectionStart != selectionEnd)
             editable.setSpan(new URLSpan(url), selectionStart, selectionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
-    public void removeHyperlinksFromSelection() {
+    public void replaceSelectedURLWithHyperlink(String displayText) {
+        Editable editable = getText();
+        if(editable == null || displayText.isEmpty()) return;
+        int selectionStart = getSelectionStart(); int selectionEnd = getSelectionEnd();
+        String selectedURL = editable.subSequence(selectionStart, selectionEnd).toString();
+        removeHyperlinksFromSelection();
+        editable.replace(selectionStart, selectionEnd, displayText);
+        editable.setSpan(new URLSpan(selectedURL), selectionStart, selectionStart + displayText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+    private void removeHyperlinksFromSelection() {
         Editable editable = getText();
         if(editable == null) return;
         int selectionStart = getSelectionStart(); int selectionEnd = getSelectionEnd();

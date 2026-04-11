@@ -99,14 +99,15 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         
     }
     public void onHyperlinkButtonClick() {
-        EditText urlEditText = new EditText(getContext());
-        urlEditText.setHint("https://");
-        String existingUrl = contentEditText.getHyperlinkUrlAtSelection();
-        if(existingUrl != null)
-            urlEditText.setText(existingUrl);
-        new AlertDialog.Builder(getContext()).setTitle("Hyperlink").setView(urlEditText)
-                .setPositiveButton("Apply", (dialog, which) -> contentEditText.applyHyperlinkToSelection(urlEditText.getText().toString().trim()))
-                .setNegativeButton("Remove", (dialog, which) -> contentEditText.removeHyperlinksFromSelection()).setNeutralButton("Cancel", null).show();
+        int selectionStart = contentEditText.getSelectionStart(); int selectionEnd = contentEditText.getSelectionEnd();
+        if(selectionStart == selectionEnd)
+            showHyperlinkDialog(false, false);
+        else {
+            if(contentEditText.getText() == null) return;
+            String selectedText = contentEditText.getText().subSequence(selectionStart, selectionEnd).toString();
+            boolean selectionIsUrl = selectedText.startsWith("http://") || selectedText.startsWith("https://");
+            showHyperlinkDialog(true, selectionIsUrl);
+        }
     }
 
     @Override
@@ -155,6 +156,31 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
                 textView.setBackground(new LayerDrawable(new Drawable[]{colorDrawable, borderDrawable}));
             } 
         }
+    }
+
+    private void showHyperlinkDialog(boolean selection, boolean selectionIsUrl) {
+        android.view.View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.hyperlink_dialog, null);
+        EditText urlEditText = dialogView.findViewById(R.id.urlEditText); EditText textEditText = dialogView.findViewById(R.id.textEditText);
+        if(selection) {
+            if(selectionIsUrl) {
+                dialogView.findViewById(R.id.urlLabel).setVisibility(GONE); urlEditText.setVisibility(GONE);
+            }
+            else {
+                dialogView.findViewById(R.id.textLabel).setVisibility(GONE); textEditText.setVisibility(GONE);
+                String existingUrl = contentEditText.getHyperlinkUrlAtSelection();
+                    if(existingUrl != null) urlEditText.setText(existingUrl);
+            }
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext()).setTitle("Hyperlink").setView(dialogView).setNeutralButton("Cancel", null);
+        if(!selection)
+            builder.setPositiveButton("Insert", (dialog, which) -> contentEditText.insertHyperlinkAtCursor(urlEditText.getText().toString().trim(), textEditText.getText().toString()));
+        else {
+            if(selectionIsUrl)
+                builder.setPositiveButton("Apply", (dialog, which) -> contentEditText.replaceSelectedURLWithHyperlink(textEditText.getText().toString()));
+            else
+                builder.setPositiveButton("Apply", (dialog, which) -> contentEditText.createHyperlinkOnSelectedText(urlEditText.getText().toString().trim()));
+        }
+        builder.show();
     }
 
 }
