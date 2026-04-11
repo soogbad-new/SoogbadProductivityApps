@@ -35,6 +35,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     private Item<?> item;
     private HashSet<RichTextStyle<?>> activeStyles = new HashSet<>();
     private boolean itemDeleted = false;
+    private boolean contentTouched = false;
 
     public ItemLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -49,6 +50,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         titleEditText.setText(item.Title);
         itemsManager.loadItemContent(item);
         contentEditText.setIgnoreTextChanges(true); contentEditText.setText(item.Content); contentEditText.setIgnoreTextChanges(false);
+        contentEditText.setOnFocusChangeListener((v, hasFocus) -> { if(hasFocus) contentTouched = true; });
     }
 
     public void save() {
@@ -59,7 +61,8 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         item.Content = new SpannedString(contentEditText.getText());
         if(!item.Title.equals(oldTitle))
             itemsManager.saveItemTitle(item);
-        itemsManager.saveItemContent(item);
+        if(contentTouched)
+            itemsManager.saveItemContent(item);
     }
 
     public void delete() {
