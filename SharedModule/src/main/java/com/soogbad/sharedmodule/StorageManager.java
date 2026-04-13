@@ -129,15 +129,11 @@ public class StorageManager {
         int i = 0;
         while(i < html.length()) {
             if(html.startsWith("<p ", i) || html.startsWith("<p>", i)) {
-                int openEnd = html.indexOf(">", i); int closeStart = html.indexOf("</p>", openEnd);
+                int closeStart = html.indexOf("</p>", i);
                 boolean isBulleted = bulletLines.contains(lineIndex);
-                result.append(html, i, openEnd + 1);
-                if(isBulleted) {
-                    result.append("<mybullet>"); result.append(html, openEnd + 1, closeStart); result.append("</mybullet>");
-                }
-                else
-                    result.append(html, openEnd + 1, closeStart);
-                result.append("</p>");
+                if(isBulleted) result.append("<mybullet>");
+                result.append(html, i, closeStart + 4);
+                if(isBulleted) result.append("</mybullet>");
                 lineIndex++;
                 i = closeStart + 4;
             }
