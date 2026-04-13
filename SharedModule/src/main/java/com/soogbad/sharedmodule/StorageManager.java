@@ -2,7 +2,6 @@ package com.soogbad.sharedmodule;
 
 import android.text.Editable;
 import android.text.Html;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.AbsoluteSizeSpan;
@@ -19,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 @SuppressWarnings("ReadWriteStringCanBeUsed")
 public class StorageManager {
@@ -41,8 +41,9 @@ public class StorageManager {
         return uuids;
     }
 
-    public void saveContentToHtmlFile(String uuid, Spanned spannedText) {        
-        String html = Html.toHtml(addHtmlBulletTags(new SpannableStringBuilder(spannedText)), Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
+    public void saveContentToHtmlFile(String uuid, Spanned spannedText) {
+        String html = Html.toHtml(spannedText, Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
+        html = insertHtmlBulletTags(spannedText, html);
         try { Files.write(directory.resolve(uuid + ".html"), html.getBytes(StandardCharsets.UTF_16)); }
         catch(IOException e) { throw new RuntimeException(e); }
     }
@@ -51,7 +52,8 @@ public class StorageManager {
         String html;
         try { html = new String(Files.readAllBytes(directory.resolve(uuid + ".html")), StandardCharsets.UTF_16); }
         catch(IOException e) { throw new RuntimeException(e); }
-        return new SpannedString(Html.fromHtml(replaceHtmlTextSizeTags(html), Html.FROM_HTML_MODE_COMPACT, null, TAG_HANDLER));
+        html = replaceHtmlTextSizeTags(html);
+        return new SpannedString(Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT, null, TAG_HANDLER));
     }
 
     public void saveMetadataToJsonFile(String uuid, String title, Item.ItemOptions options) {
@@ -111,14 +113,40 @@ public class StorageManager {
         return htmlBuilder.toString();
     }
 
-    private static SpannableStringBuilder addHtmlBulletTags(SpannableStringBuilder builder) {
-        BulletSpan[] spans = builder.getSpans(0, builder.length(), BulletSpan.class);
+    private static String insertHtmlBulletTags(Spanned spannedText, String html) {
+        BulletSpan[] spans = spannedText.getSpans(0, spannedText.length(), BulletSpan.class);
+        if(spans.length == 0) return html;
+        HashSet<Integer> bulletLines = new HashSet<>();
         for(BulletSpan span : spans) {
-            int spanStart = builder.getSpanStart(span); int spanEnd = builder.getSpanEnd(span);
-            builder.removeSpan(span);
-            builder.insert(spanEnd, "</mybullet>"); builder.insert(spanStart, "<mybullet>");
+            int line = 0;
+            for(int c = 0; c < spannedText.getSpanStart(span); c++)
+                if(spannedText.toString().charAt(c) == '\n')
+                    line++;
+            bulletLines.add(line);
         }
-        return builder;
+        StringBuilder result = new StringBuilder();
+        int lineIndex = 0;
+        int i = 0;
+        while(i < html.length()) {
+            if(html.startsWith("<p ", i) || html.startsWith("<p>", i)) {
+                int openEnd = html.indexOf(">", i); int closeStart = html.indexOf("</p>", openEnd);
+                boolean isBulleted = bulletLines.contains(lineIndex);
+                result.append(html, i, openEnd + 1);
+                if(isBulleted) {
+                    result.append("<mybullet>"); result.append(html, openEnd + 1, closeStart); result.append("</mybullet>");
+                }
+                else
+                    result.append(html, openEnd + 1, closeStart);
+                result.append("</p>");
+                lineIndex++;
+                i = closeStart + 4;
+            }
+            else {
+                result.append(html.charAt(i));
+                i++;
+            }
+        }
+        return result.toString();
     }
 
     private record MySizeMark(int size) { }
