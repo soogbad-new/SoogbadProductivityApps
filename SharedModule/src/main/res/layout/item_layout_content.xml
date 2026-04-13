@@ -8,6 +8,7 @@
         android:background="@color/almostBlack"
         android:textSize="18dp"
         android:textColor="@color/white"
+        android:gravity="top"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/formattingToolbar"
         app:layout_constraintLeft_toLeftOf="parent"
