@@ -10,7 +10,10 @@ import android.text.SpannedString;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,12 +41,19 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     private HashSet<RichTextStyle<?>> activeStyles = new HashSet<>();
     private boolean itemDeleted = false;
     private boolean contentTouched = false;
+    private ActionMode currentSelectionActionMode = null;
 
     public ItemLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.item_layout_content, this, true);
         contentEditText = findViewById(R.id.contentEditText); formattingToolbar = findViewById(R.id.formattingToolbar); boldButton = findViewById(R.id.boldButton); italicButton = findViewById(R.id.italicButton); underlineButton = findViewById(R.id.underlineButton); textSizeButton = findViewById(R.id.textSizeButton); textColorButton = findViewById(R.id.textColorButton); bulletListButton = findViewById(R.id.bulletListButton); hyperlinkButton = findViewById(R.id.hyperlinkButton);
         boldButton.setOnClickListener(v -> onBoldButtonClick()); italicButton.setOnClickListener(v -> onItalicButtonClick()); underlineButton.setOnClickListener(v -> onUnderlineButtonClick()); textSizeButton.setOnClickListener(v -> onTextSizeButtonClick()); textColorButton.setOnClickListener(v -> onTextColorButtonClick()); bulletListButton.setOnClickListener(v -> onBulletListButtonClick()); hyperlinkButton.setOnClickListener(v -> onHyperlinkButtonClick());
+        contentEditText.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
+            @Override public boolean onCreateActionMode(ActionMode actionMode, Menu menu) { currentSelectionActionMode = actionMode; return true; }
+            @Override public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) { return false; }
+            @Override public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) { return false; }
+            @Override public void onDestroyActionMode(ActionMode actionMode) { currentSelectionActionMode = null; }
+        });
     }
 
     public void init(ItemsManager<?, ?> itemsManager, Item<?> item, EditText titleEditText) {
@@ -129,6 +139,8 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     }
 
     private void showSelectionPopup(Button popupAnchor, int[] options, int selectedOption, boolean showAsColor, IntConsumer onSelect) {
+        if(currentSelectionActionMode != null)
+            currentSelectionActionMode.hide(Long.MAX_VALUE);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         LinearLayout popupLayout = (LinearLayout)inflater.inflate(R.layout.selection_popup, this, false);
         PopupWindow popup = new PopupWindow(popupLayout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, false);
