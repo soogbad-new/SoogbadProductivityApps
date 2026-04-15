@@ -11,6 +11,7 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -131,8 +132,9 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         LayoutInflater inflater = LayoutInflater.from(getContext());
         LinearLayout popupLayout = (LinearLayout)inflater.inflate(R.layout.selection_popup, this, false);
         PopupWindow popup = new PopupWindow(popupLayout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, false);
-        popup.setOutsideTouchable(true);
+        popup.setWindowLayoutType(WindowManager.LayoutParams.TYPE_APPLICATION_SUB_PANEL);
         popup.setElevation(8);
+        popup.setOutsideTouchable(true);
         popup.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         for(int i = 0; i < options.length; i++) {
             TextView textView = (TextView)inflater.inflate(showAsColor ? R.layout.selection_popup_color_option : R.layout.selection_popup_option, popupLayout, false);
