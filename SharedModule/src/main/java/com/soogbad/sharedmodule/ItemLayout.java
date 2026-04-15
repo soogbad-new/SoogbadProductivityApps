@@ -128,6 +128,15 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         toggleButton(boldButton, activeStyles.contains(RichTextStyle.BOLD));
         toggleButton(italicButton, activeStyles.contains(RichTextStyle.ITALIC));
         toggleButton(underlineButton, activeStyles.contains(RichTextStyle.UNDERLINE));
+        int activeTextSize = RichTextStyle.DEFAULT_TEXT_SIZE.size; int activeTextColor = RichTextStyle.DEFAULT_TEXT_COLOR.color;
+        for(RichTextStyle<?> style : activeStyles) {
+            if(style.spanClass == AbsoluteSizeSpan.class)
+                activeTextSize = style.value;
+            else if(style.spanClass == ForegroundColorSpan.class)
+                activeTextColor = style.value;
+        }
+        textSizeButton.setText(String.valueOf(activeTextSize));
+        textColorButton.setTextColor(activeTextColor);
         toggleButton(bulletListButton, bulletListActive);
     }
 
@@ -135,7 +144,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         if(state)
             button.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.lightGreen));
         else
-            button.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.white));
+            button.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.black));
     }
 
     private void showSelectionPopup(Button popupAnchor, int[] options, int selectedOption, boolean showAsColor, IntConsumer onSelect) {

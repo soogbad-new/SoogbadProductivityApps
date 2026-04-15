@@ -30,7 +30,8 @@
             android:layout_height="50dp"
             android:text="B"
             android:textSize="24sp"
-            android:backgroundTint="@color/white"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/black"
             android:scaleType="centerCrop"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent">
@@ -42,7 +43,8 @@
             android:layout_height="50dp"
             android:text="I"
             android:textSize="24sp"
-            android:backgroundTint="@color/white"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/black"
             android:scaleType="centerCrop"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@id/boldButton">
@@ -54,7 +56,8 @@
             android:layout_height="50dp"
             android:text="U"
             android:textSize="24sp"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/black"
+            android:textColor="@color/white"
             android:scaleType="centerCrop"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@id/italicButton">
@@ -67,7 +70,8 @@
             android:text="Aa"
             android:inputType="text"
             android:textSize="22sp"
-            android:backgroundTint="@color/white"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/black"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@id/underlineButton">
         </Button>
@@ -76,10 +80,10 @@
             android:id="@+id/textColorButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:text="A"
-            android:textColor="#A83232"
+            android:text="C"
             android:textSize="24sp"
-            android:backgroundTint="@color/white"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/black"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@id/textSizeButton">
         </Button>
@@ -90,7 +94,8 @@
             android:layout_height="50dp"
             android:text="*"
             android:textSize="24sp"
-            android:backgroundTint="@color/white"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/black"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@id/textColorButton">
         </Button>
@@ -101,7 +106,8 @@
             android:layout_height="50dp"
             android:text="🔗"
             android:textSize="24sp"
-            android:backgroundTint="@color/white"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/black"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@id/bulletListButton">
         </Button>
