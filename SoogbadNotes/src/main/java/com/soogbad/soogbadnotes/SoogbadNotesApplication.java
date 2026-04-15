@@ -14,7 +14,7 @@ public class SoogbadNotesApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        RichTextStyle.DEFAULT_TEXT_SIZE = RichTextStyle.TextSize.SIZE_18;
+        RichTextStyle.DEFAULT_TEXT_SIZE = RichTextStyle.TextSize.SIZE_16;
         notesManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Note::create, Note.NoteOptions::fromJson);
         notesManager.loadItems();
     }
