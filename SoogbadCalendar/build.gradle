@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = 'com.soogbad.soogbadcalendar'
-    compileSdkVersion = 36
+    compileSdkVersion = 37
     defaultConfig {
         applicationId "com.soogbad.soogbadcalendar"
         minSdkVersion 33

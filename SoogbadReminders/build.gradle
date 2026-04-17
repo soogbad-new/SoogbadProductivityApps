@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = 'com.soogbad.soogbadreminders'
-    compileSdkVersion = 36
+    compileSdkVersion = 37
     defaultConfig {
         applicationId "com.soogbad.soogbadreminders"
         minSdkVersion 33
