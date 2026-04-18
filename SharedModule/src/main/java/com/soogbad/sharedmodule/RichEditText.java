@@ -27,7 +27,7 @@ public class RichEditText extends AppCompatEditText {
 
     private boolean ignoreTextChanges = false;
     public void setIgnoreTextChanges(boolean ignoreTextChanges) { this.ignoreTextChanges = ignoreTextChanges; }
-    private final HashSet<RichTextStyle<?>> activeStyles = new HashSet<>();
+    private final HashSet<RichCharacterStyle<?>> activeStyles = new HashSet<>();
     private boolean bulletListActive = false;
     private boolean textChanging;
     private int changeStart, changeCount;
@@ -72,14 +72,14 @@ public class RichEditText extends AppCompatEditText {
         public void afterTextChanged(Editable editable) {
             if(ignoreTextChanges) return;
             if(changeCount > 0) {
-                for(RichTextStyle<?> style : RichTextStyle.values())
+                for(RichCharacterStyle<?> style : RichCharacterStyle.values())
                     applyActiveStyle(editable, changeStart, changeCount, style, activeStyles.contains(style));
                 handleBulletListNewLine(editable, changeStart, changeCount);
             }
             textChanging = true;
         }
     };
-    private static void applyActiveStyle(Editable editable, int changeStart, int changeCount, RichTextStyle<?> style, boolean isActive) {
+    private static void applyActiveStyle(Editable editable, int changeStart, int changeCount, RichCharacterStyle<?> style, boolean isActive) {
         if(isActive) {
             if(!isEntireRangeCovered(editable, changeStart, changeStart + changeCount, style)) {
                 removeSpansInRange(editable, changeStart, changeStart + changeCount, style);
@@ -90,7 +90,7 @@ public class RichEditText extends AppCompatEditText {
             removeSpansInRange(editable, changeStart, changeStart + changeCount, style);
     }
 
-    public void toggleStyle(RichTextStyle<?> style) {
+    public void toggleStyle(RichCharacterStyle<?> style) {
         Editable editable = getText();
         if(editable == null) return;
         int selectionStart = getSelectionStart(); int selectionEnd = getSelectionEnd();
@@ -106,19 +106,19 @@ public class RichEditText extends AppCompatEditText {
             notifyListener();
         }
     }
-    private static void applyStyleToSelection(Editable editable, int selectionStart, int selectionEnd, RichTextStyle<?> style) {
+    private static void applyStyleToSelection(Editable editable, int selectionStart, int selectionEnd, RichCharacterStyle<?> style) {
         boolean wasCovered = isEntireRangeCovered(editable, selectionStart, selectionEnd, style);
         removeSpansInRange(editable, selectionStart, selectionEnd, style);
         if(!wasCovered)
             editable.setSpan(style.createSpan(), selectionStart, selectionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
-    private void toggleActiveStyleFlag(RichTextStyle<?> style) {
+    private void toggleActiveStyleFlag(RichCharacterStyle<?> style) {
         if(activeStyles.contains(style))
             activeStyles.remove(style);
         else
             activeStyles.add(style);
     }
-    private void setActiveStyle(RichTextStyle<?> style) {
+    private void setActiveStyle(RichCharacterStyle<?> style) {
         activeStyles.removeIf(activeStyle -> activeStyle.spanClass == style.spanClass);
         activeStyles.add(style);
     }
@@ -127,7 +127,7 @@ public class RichEditText extends AppCompatEditText {
         Editable editable = getText();
         if(editable == null) return;
         boolean hasTextSize = false, hasTextColor = false;
-        for(RichTextStyle<?> style : RichTextStyle.values()) {
+        for(RichCharacterStyle<?> style : RichCharacterStyle.values()) {
             boolean active = (selectionStart != selectionEnd)
                     ? isEntireRangeCovered(editable, selectionStart, selectionEnd, style)
                     : isStyleActiveAtCursorPosition(editable, selectionStart, style);
@@ -140,14 +140,14 @@ public class RichEditText extends AppCompatEditText {
                 activeStyles.remove(style);
         }
         if(!hasTextSize)
-            activeStyles.add(RichTextStyle.TEXT_SIZE(RichTextStyle.DEFAULT_TEXT_SIZE));
+            activeStyles.add(RichCharacterStyle.TEXT_SIZE(RichCharacterStyle.DEFAULT_TEXT_SIZE));
         if(!hasTextColor)
-            activeStyles.add(RichTextStyle.TEXT_COLOR(RichTextStyle.DEFAULT_TEXT_COLOR));
+            activeStyles.add(RichCharacterStyle.TEXT_COLOR(RichCharacterStyle.DEFAULT_TEXT_COLOR));
         bulletListActive = isCursorInBulletedParagraph();
         notifyListener();
     }
 
-    private static boolean isStyleActiveAtCursorPosition(Editable editable, int cursorPosition, RichTextStyle<?> style) {
+    private static boolean isStyleActiveAtCursorPosition(Editable editable, int cursorPosition, RichCharacterStyle<?> style) {
         if(editable.toString().isEmpty()) return false;
         if(cursorPosition > 0 && editable.charAt(cursorPosition - 1) != '\n')
             return hasStyleAt(editable, cursorPosition - 1, style);
@@ -155,7 +155,7 @@ public class RichEditText extends AppCompatEditText {
             return hasStyleAt(editable, cursorPosition, style);
         return false;
     }
-    private static boolean hasStyleAt(Editable editable, int position, RichTextStyle<?> style) {
+    private static boolean hasStyleAt(Editable editable, int position, RichCharacterStyle<?> style) {
         CharacterStyle[] spans = editable.getSpans(position, position + 1, style.spanClass);
         for(CharacterStyle span : spans) {
             if(style.matchesSpanValue(span)) {
@@ -167,21 +167,21 @@ public class RichEditText extends AppCompatEditText {
         return false;
     }
 
-    private static void removeSpansInRange(Editable editable, int rangeStart, int rangeEnd, RichTextStyle<?> style) {
+    private static void removeSpansInRange(Editable editable, int rangeStart, int rangeEnd, RichCharacterStyle<?> style) {
         CharacterStyle[] spans = editable.getSpans(rangeStart, rangeEnd, style.spanClass);
         for(CharacterStyle span : spans) {
             if(!style.isFlagStyle() || style.matchesSpanValue(span)) {
                 int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
                 editable.removeSpan(span);
                 if(spanStart < rangeStart)
-                    editable.setSpan(RichTextStyle.cloneSpan(span), spanStart, rangeStart, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    editable.setSpan(RichCharacterStyle.cloneSpan(span), spanStart, rangeStart, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 if(spanEnd > rangeEnd)
-                    editable.setSpan(RichTextStyle.cloneSpan(span), rangeEnd, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    editable.setSpan(RichCharacterStyle.cloneSpan(span), rangeEnd, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
     }
 
-    private static boolean isEntireRangeCovered(Editable editable, int rangeStart, int rangeEnd, RichTextStyle<?> style) {
+    private static boolean isEntireRangeCovered(Editable editable, int rangeStart, int rangeEnd, RichCharacterStyle<?> style) {
         if(rangeStart >= rangeEnd) return false;
         CharacterStyle[] spans = editable.getSpans(rangeStart, rangeEnd, style.spanClass);
         Arrays.sort(spans, Comparator.comparingInt(editable::getSpanStart));
@@ -200,7 +200,7 @@ public class RichEditText extends AppCompatEditText {
     }
 
     public interface StyleStateListener {
-        void onStyleStateChanged(HashSet<RichTextStyle<?>> activeStyles, boolean bulletListActive);
+        void onStyleStateChanged(HashSet<RichCharacterStyle<?>> activeStyles, boolean bulletListActive);
     }
     private StyleStateListener styleStateListener;
     public void setStyleStateListener(StyleStateListener listener) { this.styleStateListener = listener; }
@@ -249,7 +249,7 @@ public class RichEditText extends AppCompatEditText {
             BulletSpan[] spans = getBulletSpansInParagraph(editable, position, paragraphEnd);
             if(spans.length == 0) {
                 int spanEnd = paragraphEnd < text.length() ? paragraphEnd + 1 : paragraphEnd;
-                editable.setSpan(RichTextStyle.createBulletSpan(), position, spanEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                editable.setSpan(RichCharacterStyle.createBulletSpan(), position, spanEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             }
             position = paragraphEnd + 1;
         }
@@ -267,7 +267,7 @@ public class RichEditText extends AppCompatEditText {
         for(BulletSpan span : spans) {
             int spanStart = editable.getSpanStart(span);
             editable.removeSpan(span);
-            editable.setSpan(RichTextStyle.createBulletSpan(), spanStart, newLinePosition + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            editable.setSpan(RichCharacterStyle.createBulletSpan(), spanStart, newLinePosition + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
     }
     private static void addBulletAfterNewLine(Editable editable, int newLineStart) {
@@ -275,7 +275,7 @@ public class RichEditText extends AppCompatEditText {
         int spanEnd = newLineEnd < editable.length() ? newLineEnd + 1 : newLineEnd;
         if(spanEnd < newLineStart)
             spanEnd = newLineStart;
-        editable.setSpan(RichTextStyle.createBulletSpan(), newLineStart, Math.max(spanEnd, newLineStart + 1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        editable.setSpan(RichCharacterStyle.createBulletSpan(), newLineStart, Math.max(spanEnd, newLineStart + 1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
     }
     private boolean isCursorInBulletedParagraph() {
         Editable editable = getText();

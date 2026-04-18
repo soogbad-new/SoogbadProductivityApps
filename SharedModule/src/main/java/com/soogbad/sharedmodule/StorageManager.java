@@ -172,7 +172,7 @@ public class StorageManager {
                     MyBulletMark mark = marks[marks.length - 1];
                     int start = output.getSpanStart(mark); int end = output.length();
                     output.removeSpan(mark);
-                    output.setSpan(RichTextStyle.createBulletSpan(), start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                    output.setSpan(RichCharacterStyle.createBulletSpan(), start, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 }
             }
         }

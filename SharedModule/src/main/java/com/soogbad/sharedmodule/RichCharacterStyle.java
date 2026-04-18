@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class RichTextStyle<T extends CharacterStyle> {
+public class RichCharacterStyle<T extends CharacterStyle> {
 
-    private RichTextStyle(Class<T> spanClass, int value) {
+    private RichCharacterStyle(Class<T> spanClass, int value) {
         this.spanClass = spanClass; this.value = value;
     }
 
@@ -53,7 +53,7 @@ public class RichTextStyle<T extends CharacterStyle> {
     public boolean equals(Object o) {
         if(this == o) return true;
         if(o == null || getClass() != o.getClass()) return false;
-        RichTextStyle<?> that = (RichTextStyle<?>)o;
+        RichCharacterStyle<?> that = (RichCharacterStyle<?>)o;
         return value == that.value && spanClass == that.spanClass;
     }
 
@@ -62,18 +62,18 @@ public class RichTextStyle<T extends CharacterStyle> {
         return Objects.hash(spanClass, value);
     }
 
-    public static RichTextStyle<?>[] values() {
-        ArrayList<RichTextStyle<?>> list = new ArrayList<>(Arrays.asList(BOLD, ITALIC, UNDERLINE));
+    public static RichCharacterStyle<?>[] values() {
+        ArrayList<RichCharacterStyle<?>> list = new ArrayList<>(Arrays.asList(BOLD, ITALIC, UNDERLINE));
         for(TextSize size : TextSize.values()) list.add(TEXT_SIZE(size));
         for(TextColor color : TextColor.values()) list.add(TEXT_COLOR(color));
-        return list.toArray(new RichTextStyle<?>[0]);
+        return list.toArray(new RichCharacterStyle<?>[0]);
     }
 
-    public static final RichTextStyle<StyleSpan> BOLD = new RichTextStyle<>(StyleSpan.class, Typeface.BOLD);
-    public static final RichTextStyle<StyleSpan> ITALIC = new RichTextStyle<>(StyleSpan.class, Typeface.ITALIC);
-    public static final RichTextStyle<UnderlineSpan> UNDERLINE = new RichTextStyle<>(UnderlineSpan.class, 0);
-    public static RichTextStyle<AbsoluteSizeSpan> TEXT_SIZE(TextSize size) { return new RichTextStyle<>(AbsoluteSizeSpan.class, size.size); }
-    public static RichTextStyle<ForegroundColorSpan> TEXT_COLOR(TextColor color) { return new RichTextStyle<>(ForegroundColorSpan.class, color.color); }
+    public static final RichCharacterStyle<StyleSpan> BOLD = new RichCharacterStyle<>(StyleSpan.class, Typeface.BOLD);
+    public static final RichCharacterStyle<StyleSpan> ITALIC = new RichCharacterStyle<>(StyleSpan.class, Typeface.ITALIC);
+    public static final RichCharacterStyle<UnderlineSpan> UNDERLINE = new RichCharacterStyle<>(UnderlineSpan.class, 0);
+    public static RichCharacterStyle<AbsoluteSizeSpan> TEXT_SIZE(TextSize size) { return new RichCharacterStyle<>(AbsoluteSizeSpan.class, size.size); }
+    public static RichCharacterStyle<ForegroundColorSpan> TEXT_COLOR(TextColor color) { return new RichCharacterStyle<>(ForegroundColorSpan.class, color.color); }
 
     public static TextSize DEFAULT_TEXT_SIZE = TextSize.SIZE_20;
     public static final TextColor DEFAULT_TEXT_COLOR = TextColor.WHITE;

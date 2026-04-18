@@ -38,7 +38,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
 
     private ItemsManager<?, ?> itemsManager;
     private Item<?> item;
-    private HashSet<RichTextStyle<?>> activeStyles = new HashSet<>();
+    private HashSet<RichCharacterStyle<?>> activeStyles = new HashSet<>();
     private boolean itemDeleted = false;
     private boolean contentTouched = false;
     private ActionMode currentSelectionActionMode = null;
@@ -82,27 +82,27 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         itemsManager.deleteItem(item);
     }
 
-    public void onBoldButtonClick() { contentEditText.toggleStyle(RichTextStyle.BOLD); }
-    public void onItalicButtonClick() { contentEditText.toggleStyle(RichTextStyle.ITALIC); }
-    public void onUnderlineButtonClick() { contentEditText.toggleStyle(RichTextStyle.UNDERLINE); }
-    public void onTextSizeSelected(RichTextStyle.TextSize size) { contentEditText.toggleStyle(RichTextStyle.TEXT_SIZE(size)); }
-    public void onTextColorSelected(RichTextStyle.TextColor color) { contentEditText.toggleStyle(RichTextStyle.TEXT_COLOR(color)); }
+    public void onBoldButtonClick() { contentEditText.toggleStyle(RichCharacterStyle.BOLD); }
+    public void onItalicButtonClick() { contentEditText.toggleStyle(RichCharacterStyle.ITALIC); }
+    public void onUnderlineButtonClick() { contentEditText.toggleStyle(RichCharacterStyle.UNDERLINE); }
+    public void onTextSizeSelected(RichCharacterStyle.TextSize size) { contentEditText.toggleStyle(RichCharacterStyle.TEXT_SIZE(size)); }
+    public void onTextColorSelected(RichCharacterStyle.TextColor color) { contentEditText.toggleStyle(RichCharacterStyle.TEXT_COLOR(color)); }
     public void onTextSizeButtonClick() {
-        RichTextStyle.TextSize[] sizes = RichTextStyle.TextSize.values();
+        RichCharacterStyle.TextSize[] sizes = RichCharacterStyle.TextSize.values();
         int[] sizeValues = new int[sizes.length];
         for(int i = 0; i < sizes.length; i++) sizeValues[i] = sizes[i].size;
-        int selectedSize = RichTextStyle.DEFAULT_TEXT_SIZE.size;
-        for(RichTextStyle<?> style : activeStyles)
+        int selectedSize = RichCharacterStyle.DEFAULT_TEXT_SIZE.size;
+        for(RichCharacterStyle<?> style : activeStyles)
             if(style.spanClass == AbsoluteSizeSpan.class)
                 selectedSize = style.value;
         showSelectionPopup(textSizeButton, sizeValues, selectedSize, false, i -> onTextSizeSelected(sizes[i]));
     }
     public void onTextColorButtonClick() {
-        RichTextStyle.TextColor[] colors = RichTextStyle.TextColor.values();
+        RichCharacterStyle.TextColor[] colors = RichCharacterStyle.TextColor.values();
         int[] colorValues = new int[colors.length];
         for(int i = 0; i < colors.length; i++) colorValues[i] = colors[i].color;
-        int selectedColor = RichTextStyle.DEFAULT_TEXT_COLOR.color;
-        for(RichTextStyle<?> style : activeStyles)
+        int selectedColor = RichCharacterStyle.DEFAULT_TEXT_COLOR.color;
+        for(RichCharacterStyle<?> style : activeStyles)
             if(style.spanClass == ForegroundColorSpan.class)
                 selectedColor = style.value;
         showSelectionPopup(textColorButton, colorValues, selectedColor, true, i -> onTextColorSelected(colors[i]));
@@ -123,13 +123,13 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     }
 
     @Override
-    public void onStyleStateChanged(HashSet<RichTextStyle<?>> activeStyles, boolean bulletListActive) {
+    public void onStyleStateChanged(HashSet<RichCharacterStyle<?>> activeStyles, boolean bulletListActive) {
         this.activeStyles = activeStyles;
-        toggleButton(boldButton, activeStyles.contains(RichTextStyle.BOLD));
-        toggleButton(italicButton, activeStyles.contains(RichTextStyle.ITALIC));
-        toggleButton(underlineButton, activeStyles.contains(RichTextStyle.UNDERLINE));
-        int activeTextSize = RichTextStyle.DEFAULT_TEXT_SIZE.size; int activeTextColor = RichTextStyle.DEFAULT_TEXT_COLOR.color;
-        for(RichTextStyle<?> style : activeStyles) {
+        toggleButton(boldButton, activeStyles.contains(RichCharacterStyle.BOLD));
+        toggleButton(italicButton, activeStyles.contains(RichCharacterStyle.ITALIC));
+        toggleButton(underlineButton, activeStyles.contains(RichCharacterStyle.UNDERLINE));
+        int activeTextSize = RichCharacterStyle.DEFAULT_TEXT_SIZE.size; int activeTextColor = RichCharacterStyle.DEFAULT_TEXT_COLOR.color;
+        for(RichCharacterStyle<?> style : activeStyles) {
             if(style.spanClass == AbsoluteSizeSpan.class)
                 activeTextSize = style.value;
             else if(style.spanClass == ForegroundColorSpan.class)
