@@ -2,11 +2,12 @@ package com.soogbad.sharedmodule;
 
 import android.graphics.Typeface;
 import android.text.style.AbsoluteSizeSpan;
-import android.text.style.BulletSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
+
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +33,6 @@ public class RichCharacterStyle<T extends CharacterStyle> {
         else if(spanClass == ForegroundColorSpan.class) return new ForegroundColorSpan(value);
         return null;
     }
-
     public static CharacterStyle cloneSpan(CharacterStyle span) {
         if(span instanceof StyleSpan) return new StyleSpan(((StyleSpan)span).getStyle());
         else if(span instanceof UnderlineSpan) return new UnderlineSpan();
@@ -40,7 +40,6 @@ public class RichCharacterStyle<T extends CharacterStyle> {
         else if(span instanceof ForegroundColorSpan) return new ForegroundColorSpan(((ForegroundColorSpan)span).getForegroundColor());
         return null;
     }
-
     public boolean matchesSpanValue(CharacterStyle span) {
         if(span instanceof StyleSpan) return ((StyleSpan)span).getStyle() == value;
         else if(span instanceof UnderlineSpan) return true;
@@ -49,16 +48,13 @@ public class RichCharacterStyle<T extends CharacterStyle> {
         return false;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass()) return false;
-        RichCharacterStyle<?> that = (RichCharacterStyle<?>)o;
+    @Override public boolean equals(@Nullable Object obj) {
+        if(this == obj) return true;
+        if(obj == null || getClass() != obj.getClass()) return false;
+        RichCharacterStyle<?> that = (RichCharacterStyle<?>)obj;
         return value == that.value && spanClass == that.spanClass;
     }
-
-    @Override
-    public int hashCode() {
+    @Override public int hashCode() {
         return Objects.hash(spanClass, value);
     }
 
@@ -68,7 +64,6 @@ public class RichCharacterStyle<T extends CharacterStyle> {
         for(TextColor color : TextColor.values()) list.add(TEXT_COLOR(color));
         return list.toArray(new RichCharacterStyle<?>[0]);
     }
-
     public static final RichCharacterStyle<StyleSpan> BOLD = new RichCharacterStyle<>(StyleSpan.class, Typeface.BOLD);
     public static final RichCharacterStyle<StyleSpan> ITALIC = new RichCharacterStyle<>(StyleSpan.class, Typeface.ITALIC);
     public static final RichCharacterStyle<UnderlineSpan> UNDERLINE = new RichCharacterStyle<>(UnderlineSpan.class, 0);
@@ -77,21 +72,13 @@ public class RichCharacterStyle<T extends CharacterStyle> {
 
     public static TextSize DEFAULT_TEXT_SIZE = TextSize.SIZE_20;
     public static final TextColor DEFAULT_TEXT_COLOR = TextColor.WHITE;
-
-    private static final int BULLET_GAP_WIDTH = 20;
-    private static final int BULLET_COLOR = 0xFFFFFFFF;
-    public static BulletSpan createBulletSpan() { return new BulletSpan(BULLET_GAP_WIDTH, BULLET_COLOR); }
-
     public enum TextSize {
         SIZE_12(12), SIZE_14(14), SIZE_16(16), SIZE_18(18), SIZE_20(20), SIZE_22(22), SIZE_24(24), SIZE_26(26), SIZE_28(28);
-
         TextSize(int size) { this.size = size; }
         public final int size;
     }
-
     public enum TextColor {
         WHITE(0xFFFFFFFF), RED(0xFFFF0000), GREEN(0xFF00FF00), BLUE(0xFF1F1FFF), CYAN(0xFF00FFFF), YELLOW(0xFFFFFF00), ORANGE(0xFFFFA500), MAGENTA(0xFFFF00FF);
-
         TextColor(int color) { this.color = color; }
         public final int color;
     }

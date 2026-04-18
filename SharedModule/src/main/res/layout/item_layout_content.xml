@@ -89,18 +89,6 @@
         </Button>
 
         <Button
-            android:id="@+id/alignmentButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:text="L"
-            android:textSize="24sp"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/black"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/textColorButton">
-        </Button>
-
-        <Button
             android:id="@+id/bulletListButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -109,7 +97,19 @@
             android:textColor="@color/white"
             android:backgroundTint="@color/black"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/alignmentButton">
+            app:layout_constraintLeft_toRightOf="@id/textColorButton">
+        </Button>
+
+        <Button
+            android:id="@+id/alignmentButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="L"
+            android:textSize="24sp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/bulletListButton">
         </Button>
 
         <Button
@@ -121,7 +121,7 @@
             android:textColor="@color/white"
             android:backgroundTint="@color/black"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/bulletListButton">
+            app:layout_constraintLeft_toRightOf="@id/alignmentButton">
         </Button>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
