@@ -265,23 +265,23 @@ public class RichEditText extends AppCompatEditText {
         for(RichParagraphStyle<?> style : RichParagraphStyle.values()) {
             ParagraphStyle[] spans = getParagraphSpans(editable, previousLineStart, changeStart, style);
             if(spans.length == 0) continue;
-            endBulletSpanBeforeNewLine(editable, spans, changeStart, style);
-            addBulletAfterNewLine(editable, spans, changeStart, style);
+            endBulletSpanBeforeNewLine(editable, spans, changeStart);
+            addBulletAfterNewLine(editable, spans, changeStart);
         }
     }
-    private static void endBulletSpanBeforeNewLine(Editable editable, ParagraphStyle<?>[] spans, int newLinePosition, RichParagraphStyle<?> style) {
+    private static void endBulletSpanBeforeNewLine(Editable editable, ParagraphStyle[] spans, int newLinePosition) {
         for(ParagraphStyle span : spans) {
             int spanStart = editable.getSpanStart(span);
             editable.removeSpan(span);
-            editable.setSpan(RichParagraphStyle.cloneSpan((ParagraphStyle)span), spanStart, newLinePosition + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            editable.setSpan(RichParagraphStyle.cloneSpan(span), spanStart, newLinePosition + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
     }
-    private static void addBulletAfterNewLine(Editable editable, ParagraphStyle<?>[] spans, int newLinePosition, RichParagraphStyle<?> style) {
+    private static void addBulletAfterNewLine(Editable editable, ParagraphStyle[] spans, int newLinePosition) {
         int newLineEnd = getParagraphEnd(editable.toString(), newLinePosition + 1);
         int spanEnd = newLineEnd < editable.length() ? newLineEnd + 1 : newLineEnd;
         if(spanEnd < newLinePosition + 1)
             spanEnd = newLinePosition + 1;
-        editable.setSpan(RichParagraphStyle.cloneSpan((ParagraphStyle)spans[0]), newLinePosition + 1, Math.max(spanEnd, newLinePosition + 2), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        editable.setSpan(RichParagraphStyle.cloneSpan(spans[0]), newLinePosition + 1, Math.max(spanEnd, newLinePosition + 2), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
     }
     private void updateCurrentActiveParagraphStyles() {
         Editable editable = getText();
@@ -297,7 +297,7 @@ public class RichEditText extends AppCompatEditText {
             }
         }
         if(!hasAlignment)
-            activeParagraphStyles.add(RichParagraphStyle.DEFAULT_ALIGNMENT);
+            activeParagraphStyles.add(RichParagraphStyle.DEFAULT_TEXT_ALIGNMENT);
         notifyListener();
     }
     private static ParagraphStyle[] getParagraphSpans(Editable editable, int paragraphStart, int paragraphEnd, RichParagraphStyle<?> style) {
