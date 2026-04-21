@@ -64,14 +64,17 @@ public class RichCharacterStyle<T extends CharacterStyle> {
         for(TextColor color : TextColor.values()) list.add(TEXT_COLOR(color));
         return list.toArray(new RichCharacterStyle<?>[0]);
     }
+    
     public static final RichCharacterStyle<StyleSpan> BOLD = new RichCharacterStyle<>(StyleSpan.class, Typeface.BOLD);
     public static final RichCharacterStyle<StyleSpan> ITALIC = new RichCharacterStyle<>(StyleSpan.class, Typeface.ITALIC);
     public static final RichCharacterStyle<UnderlineSpan> UNDERLINE = new RichCharacterStyle<>(UnderlineSpan.class, 0);
+
     public static RichCharacterStyle<AbsoluteSizeSpan> TEXT_SIZE(TextSize size) { return new RichCharacterStyle<>(AbsoluteSizeSpan.class, size.size); }
     public static RichCharacterStyle<ForegroundColorSpan> TEXT_COLOR(TextColor color) { return new RichCharacterStyle<>(ForegroundColorSpan.class, color.color); }
 
     public static TextSize DEFAULT_TEXT_SIZE = TextSize.SIZE_20;
     public static final TextColor DEFAULT_TEXT_COLOR = TextColor.WHITE;
+
     public enum TextSize {
         SIZE_12(12), SIZE_14(14), SIZE_16(16), SIZE_18(18), SIZE_20(20), SIZE_22(22), SIZE_24(24), SIZE_26(26), SIZE_28(28);
         TextSize(int size) { this.size = size; }
