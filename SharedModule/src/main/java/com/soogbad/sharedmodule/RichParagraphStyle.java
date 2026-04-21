@@ -51,13 +51,13 @@ public class RichParagraphStyle<T extends ParagraphStyle> {
     }
     
     public static final RichParagraphStyle<BulletSpan> BULLET = new RichParagraphStyle<>(BulletSpan.class, 0);
-    public static final RichParagraphStyle<AlignmentSpan.Standard> ALIGN_LEFT = ALIGNMENT(Layout.Alignment.ALIGN_NORMAL);
-    public static final RichParagraphStyle<AlignmentSpan.Standard> ALIGN_CENTER = ALIGNMENT(Layout.Alignment.ALIGN_CENTER);
-    public static final RichParagraphStyle<AlignmentSpan.Standard> ALIGN_RIGHT = ALIGNMENT(Layout.Alignment.ALIGN_OPPOSITE);
+    public static final RichParagraphStyle<AlignmentSpan.Standard> ALIGN_LEFT = TEXT_ALIGNMENT(Layout.Alignment.ALIGN_NORMAL);
+    public static final RichParagraphStyle<AlignmentSpan.Standard> ALIGN_CENTER = TEXT_ALIGNMENT(Layout.Alignment.ALIGN_CENTER);
+    public static final RichParagraphStyle<AlignmentSpan.Standard> ALIGN_RIGHT = TEXT_ALIGNMENT(Layout.Alignment.ALIGN_OPPOSITE);
 
-    public static RichParagraphStyle<AlignmentSpan.Standard> ALIGNMENT(Layout.Alignment alignment) { return new RichParagraphStyle<>(AlignmentSpan.Standard.class, alignment.ordinal()); }
+    public static RichParagraphStyle<AlignmentSpan.Standard> TEXT_ALIGNMENT(Layout.Alignment alignment) { return new RichParagraphStyle<>(AlignmentSpan.Standard.class, alignment.ordinal()); }
 
-    public static final RichParagraphStyle<AlignmentSpan.Standard> DEFAULT_ALIGNMENT = ALIGN_LEFT;
+    public static final RichParagraphStyle<AlignmentSpan.Standard> DEFAULT_TEXT_ALIGNMENT = ALIGN_LEFT;
 
     private static final int BULLET_GAP_WIDTH = 20;
     private static final int BULLET_COLOR = 0xFFFFFFFF;
