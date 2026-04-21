@@ -9,7 +9,6 @@ import android.text.Editable;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
-import android.text.style.BulletSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ParagraphStyle;
@@ -161,12 +160,12 @@ public class RichEditText extends AppCompatEditText {
     private static boolean isStyleActiveAtCursorPosition(Editable editable, int cursorPosition, RichCharacterStyle<?> style) {
         if(editable.toString().isEmpty()) return false;
         if(cursorPosition > 0 && editable.charAt(cursorPosition - 1) != '\n')
-            return hasStyleAt(editable, cursorPosition - 1, style);
+            return hasStyleAtCharacter(editable, cursorPosition - 1, style);
         else if(cursorPosition < editable.length())
-            return hasStyleAt(editable, cursorPosition, style);
+            return hasStyleAtCharacter(editable, cursorPosition, style);
         return false;
     }
-    private static boolean hasStyleAt(Editable editable, int position, RichCharacterStyle<?> style) {
+    private static boolean hasStyleAtCharacter(Editable editable, int position, RichCharacterStyle<?> style) {
         CharacterStyle[] spans = editable.getSpans(position, position + 1, style.spanClass);
         for(CharacterStyle span : spans) {
             if(style.matchesSpanValue(span)) {
@@ -215,85 +214,91 @@ public class RichEditText extends AppCompatEditText {
         if(editable == null) return;
         int selectionStart = getSelectionStart(); int selectionEnd = getSelectionEnd();
         int paragraphStart = getParagraphStart(editable.toString(), selectionStart); int paragraphEnd = getParagraphEnd(editable.toString(), selectionEnd);
-        if(style.spanClass == BulletSpan.class) {
-            if(areAllParagraphsBulleted(editable, paragraphStart, paragraphEnd))
-                removeBulletsFromParagraphs(editable, paragraphStart, paragraphEnd);
-            else
-                addBulletsToParagraphs(editable, paragraphStart, paragraphEnd);
-            updateCurrentActiveParagraphStyles();
-        }
+        boolean wasCovered = areAllParagraphsStyled(editable, paragraphStart, paragraphEnd, style);
+        removeParagraphSpans(editable, paragraphStart, paragraphEnd, style);
+        if(!wasCovered)
+            addStyleToParagraphs(editable, paragraphStart, paragraphEnd, style);
+        updateCurrentActiveParagraphStyles();
     }
-    private static boolean areAllParagraphsBulleted(Editable editable, int start, int end) {
+    private static boolean areAllParagraphsStyled(Editable editable, int start, int end, RichParagraphStyle<?> style) {
         int position = start;
         while(position <= end) {
             int paragraphEnd = getParagraphEnd(editable.toString(), position);
             if(paragraphEnd > end)
                 paragraphEnd = end;
-            ParagraphStyle[] spans = getParagraphSpans(editable, position, paragraphEnd, RichParagraphStyle.BULLET);
-            if(spans.length == 0)
+            if(!hasStyleAtParagraph(editable, position, paragraphEnd, style))
                 return false;
             position = paragraphEnd + 1;
         }
         return true;
     }
-    private static boolean hasParagraphStyle(Editable editable, int paragraphStart, int paragraphEnd, RichParagraphStyle<?> style) {
+    private static boolean hasStyleAtParagraph(Editable editable, int paragraphStart, int paragraphEnd, RichParagraphStyle<?> style) {
         ParagraphStyle[] spans = editable.getSpans(paragraphStart, paragraphEnd, style.spanClass);
         for(ParagraphStyle span : spans)
-            if(editable.getSpanStart(span) >= paragraphStart)
+            if(editable.getSpanStart(span) >= paragraphStart && style.matchesSpanValue(span))
                 return true;
         return false;
     }
-    private static void removeBulletsFromParagraphs(Editable editable, int start, int end) {
-        ParagraphStyle[] spans = getParagraphSpans(editable, start, end, RichParagraphStyle.BULLET);
+    private static void removeParagraphSpans(Editable editable, int start, int end, RichParagraphStyle<?> style) {
+        ParagraphStyle[] spans = editable.getSpans(start, end, style.spanClass);
         for(ParagraphStyle span : spans)
-            editable.removeSpan(span);
+            if(!style.isFlagStyle() || style.matchesSpanValue(span))
+                editable.removeSpan(span);
     }
-    private static void addBulletsToParagraphs(Editable editable, int start, int end) {
+    private static void addStyleToParagraphs(Editable editable, int start, int end, RichParagraphStyle<?> style) {
         int position = start;
         while(position <= end) {
             int paragraphEnd = getParagraphEnd(editable.toString(), position);
             if(paragraphEnd > end)
                 paragraphEnd = end;
-            ParagraphStyle[] spans = getParagraphSpans(editable, position, paragraphEnd, RichParagraphStyle.BULLET);
-            if(spans.length == 0) {
-                int spanEnd = paragraphEnd < editable.toString().length() ? paragraphEnd + 1 : paragraphEnd;
-                editable.setSpan(RichParagraphStyle.BULLET.createSpan(), position, spanEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            if(!hasStyleAtParagraph(editable, position, paragraphEnd, style)) {
+                int spanEnd = paragraphEnd < editable.length() ? paragraphEnd + 1 : paragraphEnd;
+                editable.setSpan(style.createSpan(), position, spanEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             }
             position = paragraphEnd + 1;
         }
     }
     private void handleParagraphStyleNewLine(Editable editable, int changeStart, int changeCount) {
-        if(changeCount == 1 && editable.charAt(changeStart) == '\n' && changeStart < editable.length()) {
-            int previousLineStart = getParagraphStart(editable.toString(), changeStart);
-            ParagraphStyle[] spans = getParagraphSpans(editable, previousLineStart, changeStart, RichParagraphStyle.BULLET);
-            if(spans.length == 0) return;
-            endBulletSpanBeforeNewLine(editable, spans, changeStart);
-            addBulletAfterNewLine(editable, changeStart + 1);
+        if(changeCount != 1 || editable.charAt(changeStart) != '\n' || changeStart >= editable.length())
+            return;
+        int previousLineStart = getParagraphStart(editable.toString(), changeStart);
+        for(RichParagraphStyle<?> style : RichParagraphStyle.values()) {
+            ParagraphStyle[] spans = getParagraphSpans(editable, previousLineStart, changeStart, style);
+            if(spans.length == 0) continue;
+            endBulletSpanBeforeNewLine(editable, spans, changeStart, style);
+            addBulletAfterNewLine(editable, spans, changeStart, style);
         }
     }
-    private static void endBulletSpanBeforeNewLine(Editable editable, ParagraphStyle[] spans, int newLinePosition) {
+    private static void endBulletSpanBeforeNewLine(Editable editable, ParagraphStyle<?>[] spans, int newLinePosition, RichParagraphStyle<?> style) {
         for(ParagraphStyle span : spans) {
             int spanStart = editable.getSpanStart(span);
             editable.removeSpan(span);
-            editable.setSpan(RichParagraphStyle.BULLET.createSpan(), spanStart, newLinePosition + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            editable.setSpan(RichParagraphStyle.cloneSpan((ParagraphStyle)span), spanStart, newLinePosition + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
     }
-    private static void addBulletAfterNewLine(Editable editable, int newLineStart) {
-        int newLineEnd = getParagraphEnd(editable.toString(), newLineStart);
+    private static void addBulletAfterNewLine(Editable editable, ParagraphStyle<?>[] spans, int newLinePosition, RichParagraphStyle<?> style) {
+        int newLineEnd = getParagraphEnd(editable.toString(), newLinePosition + 1);
         int spanEnd = newLineEnd < editable.length() ? newLineEnd + 1 : newLineEnd;
-        if(spanEnd < newLineStart)
-            spanEnd = newLineStart;
-        editable.setSpan(RichParagraphStyle.BULLET.createSpan(), newLineStart, Math.max(spanEnd, newLineStart + 1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        if(spanEnd < newLinePosition + 1)
+            spanEnd = newLinePosition + 1;
+        editable.setSpan(RichParagraphStyle.cloneSpan((ParagraphStyle)spans[0]), newLinePosition + 1, Math.max(spanEnd, newLinePosition + 2), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
     }
     private void updateCurrentActiveParagraphStyles() {
-        activeParagraphStyles.clear();
         Editable editable = getText();
         if(editable == null) return;
+        activeParagraphStyles.clear();
         int position = getSelectionStart();
         int paragraphStart = getParagraphStart(editable.toString(), position); int paragraphEnd = getParagraphEnd(editable.toString(), position);
-        for(RichParagraphStyle<?> style : RichParagraphStyle.values())
-            if(hasParagraphStyle(editable, paragraphStart, paragraphEnd, style))
+        boolean hasAlignment = false;
+        for(RichParagraphStyle<?> style : RichParagraphStyle.values()) {
+            if(hasStyleAtParagraph(editable, paragraphStart, paragraphEnd, style)) {
                 activeParagraphStyles.add(style);
+                if(style.spanClass == RichParagraphStyle.ALIGN_CENTER.spanClass) hasAlignment = true;
+            }
+        }
+        if(!hasAlignment)
+            activeParagraphStyles.add(RichParagraphStyle.DEFAULT_ALIGNMENT);
+        notifyListener();
     }
     private static ParagraphStyle[] getParagraphSpans(Editable editable, int paragraphStart, int paragraphEnd, RichParagraphStyle<?> style) {
         ParagraphStyle[] spans = editable.getSpans(paragraphStart, paragraphEnd, style.spanClass);
