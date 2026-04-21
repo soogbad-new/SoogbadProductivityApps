@@ -237,31 +237,6 @@ public class RichEditText extends AppCompatEditText {
             addStyleToParagraphs(editable, paragraphStart, paragraphEnd, style);
         updateCurrentActiveParagraphStyles();
     }
-    private static boolean areAllParagraphsStyled(Editable editable, int start, int end, RichParagraphStyle<?> style) {
-        int position = start;
-        while(position <= end) {
-            int paragraphEnd = getParagraphEnd(editable.toString(), position);
-            if(paragraphEnd > end)
-                paragraphEnd = end;
-            if(!hasStyleAtParagraph(editable, position, paragraphEnd, style))
-                return false;
-            position = paragraphEnd + 1;
-        }
-        return true;
-    }
-    private static boolean hasStyleAtParagraph(Editable editable, int paragraphStart, int paragraphEnd, RichParagraphStyle<?> style) {
-        ParagraphStyle[] spans = editable.getSpans(paragraphStart, paragraphEnd, style.spanClass);
-        for(ParagraphStyle span : spans)
-            if(editable.getSpanStart(span) >= paragraphStart && style.matchesSpanValue(span))
-                return true;
-        return false;
-    }
-    private static void removeParagraphSpans(Editable editable, int start, int end, RichParagraphStyle<?> style) {
-        ParagraphStyle[] spans = editable.getSpans(start, end, style.spanClass);
-        for(ParagraphStyle span : spans)
-            if(!style.isFlagStyle() || style.matchesSpanValue(span))
-                editable.removeSpan(span);
-    }
     private static void addStyleToParagraphs(Editable editable, int start, int end, RichParagraphStyle<?> style) {
         int position = start;
         while(position <= end) {
@@ -274,6 +249,31 @@ public class RichEditText extends AppCompatEditText {
             }
             position = paragraphEnd + 1;
         }
+    }
+    private static boolean hasStyleAtParagraph(Editable editable, int paragraphStart, int paragraphEnd, RichParagraphStyle<?> style) {
+        ParagraphStyle[] spans = editable.getSpans(paragraphStart, paragraphEnd, style.spanClass);
+        for(ParagraphStyle span : spans)
+            if(editable.getSpanStart(span) >= paragraphStart && style.matchesSpanValue(span))
+                return true;
+        return false;
+    }
+    private static boolean areAllParagraphsStyled(Editable editable, int start, int end, RichParagraphStyle<?> style) {
+        int position = start;
+        while(position <= end) {
+            int paragraphEnd = getParagraphEnd(editable.toString(), position);
+            if(paragraphEnd > end)
+                paragraphEnd = end;
+            if(!hasStyleAtParagraph(editable, position, paragraphEnd, style))
+                return false;
+            position = paragraphEnd + 1;
+        }
+        return true;
+    }
+    private static void removeParagraphSpans(Editable editable, int start, int end, RichParagraphStyle<?> style) {
+        ParagraphStyle[] spans = editable.getSpans(start, end, style.spanClass);
+        for(ParagraphStyle span : spans)
+            if(!style.isFlagStyle() || style.matchesSpanValue(span))
+                editable.removeSpan(span);
     }
     private void handleParagraphStyleNewLine(Editable editable, int changeStart, int changeCount) {
         if(changeCount != 1 || editable.charAt(changeStart) != '\n' || changeStart >= editable.length())
