@@ -101,6 +101,29 @@ public class RichEditText extends AppCompatEditText {
             removeSpansInRange(editable, changeStart, changeStart + changeCount, style);
     }
 
+    private void updateCurrentActiveCharacterStyles(int selectionStart, int selectionEnd) {
+        Editable editable = getText();
+        if(editable == null) return;
+        boolean hasTextSize = false, hasTextColor = false;
+        for(RichCharacterStyle<?> style : RichCharacterStyle.values()) {
+            boolean active = (selectionStart != selectionEnd)
+                    ? isEntireRangeCovered(editable, selectionStart, selectionEnd, style)
+                    : isStyleActiveAtCursorPosition(editable, selectionStart, style);
+            if(active) {
+                activeCharacterStyles.add(style);
+                if(style.spanClass == AbsoluteSizeSpan.class) hasTextSize = true;
+                if(style.spanClass == ForegroundColorSpan.class) hasTextColor = true;
+            }
+            else
+                activeCharacterStyles.remove(style);
+        }
+        if(!hasTextSize)
+            activeCharacterStyles.add(RichCharacterStyle.TEXT_SIZE(RichCharacterStyle.DEFAULT_TEXT_SIZE));
+        if(!hasTextColor)
+            activeCharacterStyles.add(RichCharacterStyle.TEXT_COLOR(RichCharacterStyle.DEFAULT_TEXT_COLOR));
+        notifyListener();
+    }
+
     public void toggleCharacterStyle(RichCharacterStyle<?> style) {
         Editable editable = getText();
         if(editable == null) return;
@@ -132,29 +155,6 @@ public class RichEditText extends AppCompatEditText {
     private void setActiveCharacterStyle(RichCharacterStyle<?> style) {
         activeCharacterStyles.removeIf(activeCharacterStyle -> activeCharacterStyle.spanClass == style.spanClass);
         activeCharacterStyles.add(style);
-    }
-
-    private void updateCurrentActiveCharacterStyles(int selectionStart, int selectionEnd) {
-        Editable editable = getText();
-        if(editable == null) return;
-        boolean hasTextSize = false, hasTextColor = false;
-        for(RichCharacterStyle<?> style : RichCharacterStyle.values()) {
-            boolean active = (selectionStart != selectionEnd)
-                    ? isEntireRangeCovered(editable, selectionStart, selectionEnd, style)
-                    : isStyleActiveAtCursorPosition(editable, selectionStart, style);
-            if(active) {
-                activeCharacterStyles.add(style);
-                if(style.spanClass == AbsoluteSizeSpan.class) hasTextSize = true;
-                if(style.spanClass == ForegroundColorSpan.class) hasTextColor = true;
-            }
-            else
-                activeCharacterStyles.remove(style);
-        }
-        if(!hasTextSize)
-            activeCharacterStyles.add(RichCharacterStyle.TEXT_SIZE(RichCharacterStyle.DEFAULT_TEXT_SIZE));
-        if(!hasTextColor)
-            activeCharacterStyles.add(RichCharacterStyle.TEXT_COLOR(RichCharacterStyle.DEFAULT_TEXT_COLOR));
-        notifyListener();
     }
 
     private static boolean isStyleActiveAtCursorPosition(Editable editable, int cursorPosition, RichCharacterStyle<?> style) {
@@ -209,6 +209,23 @@ public class RichEditText extends AppCompatEditText {
         return false;
     }
 
+    private void updateCurrentActiveParagraphStyles() {
+        Editable editable = getText();
+        if(editable == null) return;
+        activeParagraphStyles.clear();
+        int position = getSelectionStart();
+        int paragraphStart = getParagraphStart(editable.toString(), position); int paragraphEnd = getParagraphEnd(editable.toString(), position);
+        boolean hasAlignment = false;
+        for(RichParagraphStyle<?> style : RichParagraphStyle.values()) {
+            if(hasStyleAtParagraph(editable, paragraphStart, paragraphEnd, style)) {
+                activeParagraphStyles.add(style);
+                if(style.spanClass == RichParagraphStyle.ALIGN_CENTER.spanClass) hasAlignment = true;
+            }
+        }
+        if(!hasAlignment)
+            activeParagraphStyles.add(RichParagraphStyle.DEFAULT_TEXT_ALIGNMENT);
+        notifyListener();
+    }
     public void toggleParagraphStyle(RichParagraphStyle<?> style) {
         Editable editable = getText();
         if(editable == null) return;
@@ -282,23 +299,6 @@ public class RichEditText extends AppCompatEditText {
         if(spanEnd < newLinePosition + 1)
             spanEnd = newLinePosition + 1;
         editable.setSpan(RichParagraphStyle.cloneSpan(spans[0]), newLinePosition + 1, Math.max(spanEnd, newLinePosition + 2), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-    }
-    private void updateCurrentActiveParagraphStyles() {
-        Editable editable = getText();
-        if(editable == null) return;
-        activeParagraphStyles.clear();
-        int position = getSelectionStart();
-        int paragraphStart = getParagraphStart(editable.toString(), position); int paragraphEnd = getParagraphEnd(editable.toString(), position);
-        boolean hasAlignment = false;
-        for(RichParagraphStyle<?> style : RichParagraphStyle.values()) {
-            if(hasStyleAtParagraph(editable, paragraphStart, paragraphEnd, style)) {
-                activeParagraphStyles.add(style);
-                if(style.spanClass == RichParagraphStyle.ALIGN_CENTER.spanClass) hasAlignment = true;
-            }
-        }
-        if(!hasAlignment)
-            activeParagraphStyles.add(RichParagraphStyle.DEFAULT_TEXT_ALIGNMENT);
-        notifyListener();
     }
     private static ParagraphStyle[] getParagraphSpans(Editable editable, int paragraphStart, int paragraphEnd, RichParagraphStyle<?> style) {
         ParagraphStyle[] spans = editable.getSpans(paragraphStart, paragraphEnd, style.spanClass);
