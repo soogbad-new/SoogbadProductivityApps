@@ -124,6 +124,9 @@ public class StorageManager {
                     line++;
             bulletLines.add(line);
         }
+        return getHtmlWithBullets(html, bulletLines);
+    }
+    private static String getHtmlWithBullets(String html, HashSet<Integer> bulletLines) {
         StringBuilder result = new StringBuilder();
         int lineIndex = 0;
         int i = 0;
