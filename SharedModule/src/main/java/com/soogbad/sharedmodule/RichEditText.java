@@ -215,15 +215,9 @@ public class RichEditText extends AppCompatEditText {
         activeParagraphStyles.clear();
         int position = getSelectionStart();
         int paragraphStart = getParagraphStart(editable.toString(), position); int paragraphEnd = getParagraphEnd(editable.toString(), position);
-        boolean hasAlignment = false;
-        for(RichParagraphStyle<?> style : RichParagraphStyle.values()) {
-            if(hasStyleAtParagraph(editable, paragraphStart, paragraphEnd, style)) {
+        for(RichParagraphStyle<?> style : RichParagraphStyle.values())
+            if(hasStyleAtParagraph(editable, paragraphStart, paragraphEnd, style))
                 activeParagraphStyles.add(style);
-                if(style.spanClass == RichParagraphStyle.ALIGN_CENTER.spanClass) hasAlignment = true;
-            }
-        }
-        if(!hasAlignment)
-            activeParagraphStyles.add(RichParagraphStyle.DEFAULT_TEXT_ALIGNMENT);
         notifyListener();
     }
     public void toggleParagraphStyle(RichParagraphStyle<?> style) {

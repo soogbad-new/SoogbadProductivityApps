@@ -156,7 +156,8 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
             else if(style.spanClass == AlignmentSpan.Standard.class) activeAlignment = style.value;
         }
         toggleButton(bulletListButton, bulletListActive);
-        if(activeAlignment == RichParagraphStyle.ALIGN_LEFT.value) textAlignmentButton.setText("L");
+        if(activeAlignment == RichParagraphStyle.ALIGN_AUTO.value) textAlignmentButton.setText("A");
+        else if(activeAlignment == RichParagraphStyle.ALIGN_LEFT.value) textAlignmentButton.setText("L");
         else if(activeAlignment == RichParagraphStyle.ALIGN_CENTER.value) textAlignmentButton.setText("C");
         else if(activeAlignment == RichParagraphStyle.ALIGN_RIGHT.value) textAlignmentButton.setText("R");
     }

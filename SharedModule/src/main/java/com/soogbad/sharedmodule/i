@@ -1,0 +1,1 @@
+i think it can be done much more easily. i have confirmed by printing the html that the problem is that it doesn't apply the bullets on newlines. the html looks like: <mybullet>line1</mybullet><br><mybullet>line3<</mybullet>. even though the second empty line also had a bullet.
