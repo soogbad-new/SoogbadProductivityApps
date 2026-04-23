@@ -62,14 +62,5 @@ public class RichParagraphStyle<T extends ParagraphStyle> {
 
     private static final int BULLET_GAP_WIDTH = 20;
     private static final int BULLET_COLOR = 0xFFFFFFFF;
-    
-    public static RichParagraphStyle<AlignmentSpan.Standard> reverseAlignmentAccordingToDirection(RichParagraphStyle<AlignmentSpan.Standard> style, boolean isRtl) {
-        if(style.value != ALIGN_LEFT.value && style.value != ALIGN_RIGHT.value)
-            return style;
-        else if(!isRtl)
-            return style;
-        else
-            return style.value == ALIGN_LEFT.value ? ALIGN_RIGHT : ALIGN_LEFT;
-    }
 
 }

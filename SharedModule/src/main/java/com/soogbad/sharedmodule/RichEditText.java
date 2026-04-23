@@ -238,7 +238,7 @@ public class RichEditText extends AppCompatEditText {
             int paragraphEnd = getParagraphEnd(editable.toString(), position);
             if(paragraphEnd > end)
                 paragraphEnd = end;
-            RichParagraphStyle<?> resolvedStyle = style.spanClass == AlignmentSpan.Standard.class ? RichParagraphStyle.reverseAlignmentAccordingToDirection(style, paragraphStartsWithRtlCharacter(editable, position, paragraphEnd)) : style;
+            RichParagraphStyle<?> resolvedStyle = reverseAlignmentAccordingToDirection(style, editable, position, paragraphEnd);
             if(!hasStyleAtParagraph(editable, position, paragraphEnd, resolvedStyle)) {
                 int spanEnd = paragraphEnd < editable.length() ? paragraphEnd + 1 : paragraphEnd;
                 editable.setSpan(resolvedStyle.createSpan(), position, spanEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -260,7 +260,7 @@ public class RichEditText extends AppCompatEditText {
             int paragraphEnd = getParagraphEnd(editable.toString(), position);
             if(paragraphEnd > end)
                 paragraphEnd = end;
-            RichParagraphStyle<?> resolvedStyle = style.spanClass == AlignmentSpan.Standard.class ? RichParagraphStyle.reverseAlignmentAccordingToDirection(style, paragraphStartsWithRtlCharacter(editable, position, paragraphEnd)) : style;
+            RichParagraphStyle<?> resolvedStyle = reverseAlignmentAccordingToDirection(style, editable, position, paragraphEnd);
             if(!hasStyleAtParagraph(editable, position, paragraphEnd, resolvedStyle))
                 return false;
             position = paragraphEnd + 1;
@@ -312,6 +312,11 @@ public class RichEditText extends AppCompatEditText {
             if(style.matchesSpanValue(span))
                 result.add(span);
         return result.toArray(new ParagraphStyle[0]);
+    }
+    private static RichParagraphStyle<?> reverseAlignmentAccordingToDirection(RichParagraphStyle<?> style, Editable editable, int paragraphStart, int paragraphEnd) {
+        if(style.spanClass == AlignmentSpan.Standard.class && (style.value == RichParagraphStyle.ALIGN_LEFT.value || style.value == RichParagraphStyle.ALIGN_RIGHT.value) && paragraphStartsWithRtlCharacter(editable, paragraphStart, paragraphEnd))
+            return style.value == RichParagraphStyle.ALIGN_LEFT.value ? RichParagraphStyle.ALIGN_RIGHT : RichParagraphStyle.ALIGN_LEFT;
+        else return style;
     }
     private static boolean paragraphStartsWithRtlCharacter(Editable editable, int start, int end) {
         for(int i = start; i < end; i++) {
