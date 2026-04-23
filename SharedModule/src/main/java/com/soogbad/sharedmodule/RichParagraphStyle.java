@@ -33,6 +33,7 @@ public class RichParagraphStyle<T extends ParagraphStyle> {
         return null;
     }
     public boolean matchesSpanValue(ParagraphStyle span) {
+        if(span.getClass() != spanClass) return false;
         if(span instanceof BulletSpan) return true;
         else if(span instanceof AlignmentSpan.Standard) return ((AlignmentSpan.Standard)span).getAlignment().ordinal() == value;
         return false;

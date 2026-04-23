@@ -41,6 +41,7 @@ public class RichCharacterStyle<T extends CharacterStyle> {
         return null;
     }
     public boolean matchesSpanValue(CharacterStyle span) {
+        if(span.getClass() != spanClass) return false;
         if(span instanceof StyleSpan) return ((StyleSpan)span).getStyle() == value;
         else if(span instanceof UnderlineSpan) return true;
         else if(span instanceof AbsoluteSizeSpan) return ((AbsoluteSizeSpan)span).getSize() == value;
