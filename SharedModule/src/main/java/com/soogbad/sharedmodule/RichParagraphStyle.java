@@ -48,20 +48,28 @@ public class RichParagraphStyle<T extends ParagraphStyle> {
     @Override public int hashCode() { return Objects.hash(spanClass, value); }
 
     public static RichParagraphStyle<?>[] values() {
-        return new RichParagraphStyle<?>[] { BULLET, ALIGN_AUTO, ALIGN_LEFT, ALIGN_CENTER, ALIGN_RIGHT };
+        return new RichParagraphStyle<?>[] { BULLET, ALIGN_LEFT, ALIGN_CENTER, ALIGN_RIGHT };
     }
     
     public static final RichParagraphStyle<BulletSpan> BULLET = new RichParagraphStyle<>(BulletSpan.class, 0);
-    public static final RichParagraphStyle<AlignmentSpan.Standard> ALIGN_AUTO = TEXT_ALIGNMENT(Layout.Alignment.ALIGN_NORMAL);
-    public static final RichParagraphStyle<AlignmentSpan.Standard> ALIGN_LEFT = TEXT_ALIGNMENT(Layout.Alignment.ALIGN_LEFT);
+    public static final RichParagraphStyle<AlignmentSpan.Standard> ALIGN_LEFT = TEXT_ALIGNMENT(Layout.Alignment.ALIGN_NORMAL);
     public static final RichParagraphStyle<AlignmentSpan.Standard> ALIGN_CENTER = TEXT_ALIGNMENT(Layout.Alignment.ALIGN_CENTER);
-    public static final RichParagraphStyle<AlignmentSpan.Standard> ALIGN_RIGHT = TEXT_ALIGNMENT(Layout.Alignment.ALIGN_RIGHT);
+    public static final RichParagraphStyle<AlignmentSpan.Standard> ALIGN_RIGHT = TEXT_ALIGNMENT(Layout.Alignment.ALIGN_OPPOSITE);
 
     public static RichParagraphStyle<AlignmentSpan.Standard> TEXT_ALIGNMENT(Layout.Alignment alignment) { return new RichParagraphStyle<>(AlignmentSpan.Standard.class, alignment.ordinal()); }
 
-    public static final RichParagraphStyle<AlignmentSpan.Standard> DEFAULT_TEXT_ALIGNMENT = ALIGN_AUTO;
+    public static final RichParagraphStyle<AlignmentSpan.Standard> DEFAULT_TEXT_ALIGNMENT = ALIGN_LEFT;
 
     private static final int BULLET_GAP_WIDTH = 20;
     private static final int BULLET_COLOR = 0xFFFFFFFF;
+    
+    public static RichParagraphStyle<AlignmentSpan.Standard> reverseAlignmentAccordingToDirection(RichParagraphStyle<AlignmentSpan.Standard> style, boolean isRtl) {
+        if(style.value != ALIGN_LEFT.value && style.value != ALIGN_RIGHT.value)
+            return style;
+        else if(!isRtl)
+            return style;
+        else
+            return style.value == ALIGN_LEFT.value ? ALIGN_RIGHT : ALIGN_LEFT;
+    }
 
 }

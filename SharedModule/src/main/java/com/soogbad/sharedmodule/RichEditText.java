@@ -12,6 +12,7 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ParagraphStyle;
+import android.text.style.AlignmentSpan;
 import android.text.style.URLSpan;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -237,9 +238,10 @@ public class RichEditText extends AppCompatEditText {
             int paragraphEnd = getParagraphEnd(editable.toString(), position);
             if(paragraphEnd > end)
                 paragraphEnd = end;
-            if(!hasStyleAtParagraph(editable, position, paragraphEnd, style)) {
+            RichParagraphStyle<?> resolvedStyle = style.spanClass == AlignmentSpan.Standard.class ? RichParagraphStyle.reverseAlignmentAccordingToDirection(style, paragraphStartsWithRtlCharacter(editable, position, paragraphEnd)) : style;
+            if(!hasStyleAtParagraph(editable, position, paragraphEnd, resolvedStyle)) {
                 int spanEnd = paragraphEnd < editable.length() ? paragraphEnd + 1 : paragraphEnd;
-                editable.setSpan(style.createSpan(), position, spanEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                editable.setSpan(resolvedStyle.createSpan(), position, spanEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             }
             position = paragraphEnd + 1;
         }
@@ -258,7 +260,8 @@ public class RichEditText extends AppCompatEditText {
             int paragraphEnd = getParagraphEnd(editable.toString(), position);
             if(paragraphEnd > end)
                 paragraphEnd = end;
-            if(!hasStyleAtParagraph(editable, position, paragraphEnd, style))
+            RichParagraphStyle<?> resolvedStyle = style.spanClass == AlignmentSpan.Standard.class ? RichParagraphStyle.reverseAlignmentAccordingToDirection(style, paragraphStartsWithRtlCharacter(editable, position, paragraphEnd)) : style;
+            if(!hasStyleAtParagraph(editable, position, paragraphEnd, resolvedStyle))
                 return false;
             position = paragraphEnd + 1;
         }
@@ -309,6 +312,16 @@ public class RichEditText extends AppCompatEditText {
             if(style.matchesSpanValue(span))
                 result.add(span);
         return result.toArray(new ParagraphStyle[0]);
+    }
+    private static boolean paragraphStartsWithRtlCharacter(Editable editable, int start, int end) {
+        for(int i = start; i < end; i++) {
+            byte directionality = Character.getDirectionality(editable.charAt(i));
+            if(directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT)
+                return true;
+            if(directionality == Character.DIRECTIONALITY_LEFT_TO_RIGHT)
+                return false;
+        }
+        return false;
     }
     private static int getParagraphStart(String text, int position) {
         int start = text.lastIndexOf('\n', position - 1);
