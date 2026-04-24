@@ -217,10 +217,8 @@ public class RichEditText extends AppCompatEditText {
         int position = getSelectionStart();
         int paragraphStart = getParagraphStart(editable.toString(), position); int paragraphEnd = getParagraphEnd(editable.toString(), position);
         for(RichParagraphStyle<?> style : RichParagraphStyle.values())
-            if(hasStyleAtParagraph(editable, paragraphStart, paragraphEnd, style)) {
-                RichParagraphStyle<?> resolvedStyle = reverseAlignmentAccordingToDirection(style, editable, paragraphStart, paragraphEnd);
-                activeParagraphStyles.add(resolvedStyle);
-            }
+            if(hasStyleAtParagraph(editable, paragraphStart, paragraphEnd, style))
+                activeParagraphStyles.add(style);
         notifyListener();
     }
     public void toggleParagraphStyle(RichParagraphStyle<?> style) {
@@ -256,19 +254,6 @@ public class RichEditText extends AppCompatEditText {
                 return true;
         return false;
     }
-    private static boolean areAllParagraphsStyled(Editable editable, int start, int end, RichParagraphStyle<?> style) {
-        int position = start;
-        while(position <= end) {
-            int paragraphEnd = getParagraphEnd(editable.toString(), position);
-            if(paragraphEnd > end)
-                paragraphEnd = end;
-            RichParagraphStyle<?> resolvedStyle = reverseAlignmentAccordingToDirection(style, editable, position, paragraphEnd);
-            if(!hasStyleAtParagraph(editable, position, paragraphEnd, resolvedStyle))
-                return false;
-            position = paragraphEnd + 1;
-        }
-        return true;
-    }
     private static void removeParagraphSpans(Editable editable, int start, int end, RichParagraphStyle<?> style) {
         int endExclusive = end < editable.length() ? end + 1 : end;
         ParagraphStyle[] spans = editable.getSpans(start, endExclusive, style.spanClass);
@@ -282,6 +267,19 @@ public class RichEditText extends AppCompatEditText {
                     editable.setSpan(RichParagraphStyle.cloneSpan(span), endExclusive, spanEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             }
         }
+    }
+    private static boolean areAllParagraphsStyled(Editable editable, int start, int end, RichParagraphStyle<?> style) {
+        int position = start;
+        while(position <= end) {
+            int paragraphEnd = getParagraphEnd(editable.toString(), position);
+            if(paragraphEnd > end)
+                paragraphEnd = end;
+            RichParagraphStyle<?> resolvedStyle = reverseAlignmentAccordingToDirection(style, editable, position, paragraphEnd);
+            if(!hasStyleAtParagraph(editable, position, paragraphEnd, resolvedStyle))
+                return false;
+            position = paragraphEnd + 1;
+        }
+        return true;
     }
     private void handleParagraphStyleNewLine(Editable editable, int changeStart, int changeCount) {
         if(changeCount != 1 || editable.charAt(changeStart) != '\n' || changeStart >= editable.length())
