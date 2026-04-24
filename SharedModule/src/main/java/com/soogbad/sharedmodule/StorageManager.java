@@ -37,7 +37,7 @@ public class StorageManager {
 
     public void saveContentToHtmlFile(String uuid, Spanned spannedText) {
         String html = Html.toHtml(spannedText, Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
-        html = CustomRichTextTagSerializer.serializeCustomTags(spannedText, html);
+        html = CustomStyleSerializer.serializeCustomTags(spannedText, html);
         try { Files.write(directory.resolve(uuid + ".html"), html.getBytes(StandardCharsets.UTF_16)); }
         catch(IOException e) { throw new RuntimeException(e); }
     }
@@ -46,8 +46,8 @@ public class StorageManager {
         String html;
         try { html = new String(Files.readAllBytes(directory.resolve(uuid + ".html")), StandardCharsets.UTF_16); }
         catch(IOException e) { throw new RuntimeException(e); }
-        html = CustomRichTextTagSerializer.deserializeCustomTags(html);
-        return new SpannedString(Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT, null, CustomRichTextTagSerializer.TAG_HANDLER));
+        html = CustomStyleSerializer.deserializeCustomTags(html);
+        return new SpannedString(Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT, null, CustomStyleSerializer.TAG_HANDLER));
     }
 
     public void saveMetadataToJsonFile(String uuid, String title, Item.ItemOptions options) {

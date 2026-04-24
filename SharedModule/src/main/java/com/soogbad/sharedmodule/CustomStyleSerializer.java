@@ -14,13 +14,12 @@ import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.HashSet;
 
-class CustomRichTextTagSerializer {
+public class CustomStyleSerializer {
 
     static String serializeCustomTags(Spanned spannedText, String html) {
         html = insertParagraphTags(spannedText, html);
         return html;
     }
-
     static String deserializeCustomTags(String html) {
         html = replaceTextSizeTags(html);
         return html;
