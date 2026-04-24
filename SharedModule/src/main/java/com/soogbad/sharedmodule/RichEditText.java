@@ -247,7 +247,8 @@ public class RichEditText extends AppCompatEditText {
             int paragraphEnd = getParagraphEnd(editable.toString(), position);
             if(paragraphEnd > end)
                 paragraphEnd = end;
-            if(style.spanClass == AlignmentSpan.Standard.class) style = reverseAlignmentAccordingToDirection(style, editable, position, paragraphEnd);
+            if(style.spanClass == AlignmentSpan.Standard.class)
+                style = reverseAlignmentAccordingToDirection(style, isParagraphRtl(editable, position, paragraphEnd));
             if(!hasStyleAtParagraph(editable, position, paragraphEnd, style)) {
                 int spanEnd = paragraphEnd < editable.length() ? paragraphEnd + 1 : paragraphEnd;
                 editable.setSpan(style.createSpan(), position, spanEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -283,7 +284,8 @@ public class RichEditText extends AppCompatEditText {
             int paragraphEnd = getParagraphEnd(editable.toString(), position);
             if(paragraphEnd > end)
                 paragraphEnd = end;
-            if(style.spanClass == AlignmentSpan.Standard.class) style = reverseAlignmentAccordingToDirection(style, editable, position, paragraphEnd);
+            if(style.spanClass == AlignmentSpan.Standard.class)
+                style = reverseAlignmentAccordingToDirection(style, isParagraphRtl(editable, position, paragraphEnd));
             if(!hasStyleAtParagraph(editable, position, paragraphEnd, style))
                 return false;
             position = paragraphEnd + 1;
@@ -326,14 +328,6 @@ public class RichEditText extends AppCompatEditText {
         if(style.value == RichParagraphStyle.ALIGN_CENTER.value)
             return style;
         else if(isDirectionRtl)
-            return style.value == RichParagraphStyle.ALIGN_LEFT.value ? RichParagraphStyle.ALIGN_RIGHT : RichParagraphStyle.ALIGN_LEFT;
-        else
-            return style;
-    }
-    private static RichParagraphStyle<?> reverseAlignmentAccordingToDirection(RichParagraphStyle<?> style, Editable editable, int paragraphStart, int paragraphEnd) {
-        if(style.value == RichParagraphStyle.ALIGN_CENTER.value)
-            return style;
-        else if(isParagraphRtl(editable, paragraphStart, paragraphEnd))
             return style.value == RichParagraphStyle.ALIGN_LEFT.value ? RichParagraphStyle.ALIGN_RIGHT : RichParagraphStyle.ALIGN_LEFT;
         else
             return style;
