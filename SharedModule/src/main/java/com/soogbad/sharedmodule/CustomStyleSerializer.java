@@ -110,23 +110,36 @@ public class CustomStyleSerializer {
     }
 
     private static String insertParagraphTags(Spanned spannedText, String html) {
+        String text = spannedText.toString();
         BulletSpan[] bulletSpans = spannedText.getSpans(0, spannedText.length(), BulletSpan.class);
         HashSet<Integer> bulletLines = new HashSet<>();
         for(BulletSpan span : bulletSpans) {
+            int spanStart = spannedText.getSpanStart(span); int spanEnd = spannedText.getSpanEnd(span);
             int line = 0;
-            for(int c = 0; c < spannedText.getSpanStart(span); c++)
-                if(spannedText.toString().charAt(c) == '\n')
+            for(int c = 0; c < spanStart; c++)
+                if(text.charAt(c) == '\n')
                     line++;
             bulletLines.add(line);
+            for(int c = spanStart; c < spanEnd; c++)
+                if(text.charAt(c) == '\n' && c + 1 < spanEnd) {
+                    line++;
+                    bulletLines.add(line);
+                }
         }
         AlignmentSpan.Standard[] alignSpans = spannedText.getSpans(0, spannedText.length(), AlignmentSpan.Standard.class);
         HashMap<Integer, Integer> alignmentLines = new HashMap<>();
         for(AlignmentSpan.Standard span : alignSpans) {
+            int spanStart = spannedText.getSpanStart(span); int spanEnd = spannedText.getSpanEnd(span);
             int line = 0;
-            for(int c = 0; c < spannedText.getSpanStart(span); c++)
-                if(spannedText.toString().charAt(c) == '\n')
+            for(int c = 0; c < spanStart; c++)
+                if(text.charAt(c) == '\n')
                     line++;
             alignmentLines.put(line, span.getAlignment().ordinal());
+            for(int c = spanStart; c < spanEnd; c++)
+                if(text.charAt(c) == '\n' && c + 1 < spanEnd) {
+                    line++;
+                    alignmentLines.put(line, span.getAlignment().ordinal());
+                }
         }
         if(bulletLines.isEmpty() && alignmentLines.isEmpty())
             return html;
