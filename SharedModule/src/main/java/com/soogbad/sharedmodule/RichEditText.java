@@ -216,9 +216,18 @@ public class RichEditText extends AppCompatEditText {
         activeParagraphStyles.clear();
         int position = getSelectionStart();
         int paragraphStart = getParagraphStart(editable.toString(), position); int paragraphEnd = getParagraphEnd(editable.toString(), position);
+        boolean isRtl = isParagraphRtl(editable, paragraphStart, paragraphEnd);
+        RichParagraphStyle<?> activeAlignment = null;
         for(RichParagraphStyle<?> style : RichParagraphStyle.values())
-            if(hasStyleAtParagraph(editable, paragraphStart, paragraphEnd, style))
-                activeParagraphStyles.add(style);
+            if(hasStyleAtParagraph(editable, paragraphStart, paragraphEnd, style)) {
+                if(style.spanClass == AlignmentSpan.Standard.class)
+                    activeAlignment = reverseAlignmentAccordingToDirection(style, isRtl);
+                else
+                    activeParagraphStyles.add(style);
+            }
+        if(activeAlignment == null)
+            activeAlignment = isRtl ? RichParagraphStyle.ALIGN_RIGHT : RichParagraphStyle.ALIGN_LEFT;
+        activeParagraphStyles.add(activeAlignment);
         notifyListener();
     }
     public void toggleParagraphStyle(RichParagraphStyle<?> style) {
@@ -228,7 +237,7 @@ public class RichEditText extends AppCompatEditText {
         int paragraphStart = getParagraphStart(editable.toString(), selectionStart); int paragraphEnd = getParagraphEnd(editable.toString(), selectionEnd);
         boolean wasCovered = areAllParagraphsStyled(editable, paragraphStart, paragraphEnd, style);
         removeParagraphSpans(editable, paragraphStart, paragraphEnd, style);
-        if(!wasCovered)
+        if(!wasCovered || style.spanClass == AlignmentSpan.Standard.class)
             addStyleToParagraphs(editable, paragraphStart, paragraphEnd, style);
         updateCurrentActiveParagraphStyles();
     }
@@ -238,10 +247,10 @@ public class RichEditText extends AppCompatEditText {
             int paragraphEnd = getParagraphEnd(editable.toString(), position);
             if(paragraphEnd > end)
                 paragraphEnd = end;
-            RichParagraphStyle<?> resolvedStyle = reverseAlignmentAccordingToDirection(style, editable, position, paragraphEnd);
-            if(!hasStyleAtParagraph(editable, position, paragraphEnd, resolvedStyle)) {
+            if(style.spanClass == AlignmentSpan.Standard.class) style = reverseAlignmentAccordingToDirection(style, editable, position, paragraphEnd);
+            if(!hasStyleAtParagraph(editable, position, paragraphEnd, style)) {
                 int spanEnd = paragraphEnd < editable.length() ? paragraphEnd + 1 : paragraphEnd;
-                editable.setSpan(resolvedStyle.createSpan(), position, spanEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                editable.setSpan(style.createSpan(), position, spanEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             }
             position = paragraphEnd + 1;
         }
@@ -274,8 +283,8 @@ public class RichEditText extends AppCompatEditText {
             int paragraphEnd = getParagraphEnd(editable.toString(), position);
             if(paragraphEnd > end)
                 paragraphEnd = end;
-            RichParagraphStyle<?> resolvedStyle = reverseAlignmentAccordingToDirection(style, editable, position, paragraphEnd);
-            if(!hasStyleAtParagraph(editable, position, paragraphEnd, resolvedStyle))
+            if(style.spanClass == AlignmentSpan.Standard.class) style = reverseAlignmentAccordingToDirection(style, editable, position, paragraphEnd);
+            if(!hasStyleAtParagraph(editable, position, paragraphEnd, style))
                 return false;
             position = paragraphEnd + 1;
         }
@@ -313,12 +322,23 @@ public class RichEditText extends AppCompatEditText {
                 result.add(span);
         return result.toArray(new ParagraphStyle[0]);
     }
-    private static RichParagraphStyle<?> reverseAlignmentAccordingToDirection(RichParagraphStyle<?> style, Editable editable, int paragraphStart, int paragraphEnd) {
-        if(style.spanClass == AlignmentSpan.Standard.class && (style.value == RichParagraphStyle.ALIGN_LEFT.value || style.value == RichParagraphStyle.ALIGN_RIGHT.value) && paragraphStartsWithRtlCharacter(editable, paragraphStart, paragraphEnd))
+    private static RichParagraphStyle<?> reverseAlignmentAccordingToDirection(RichParagraphStyle<?> style, boolean isDirectionRtl) {
+        if(style.value == RichParagraphStyle.ALIGN_CENTER.value)
+            return style;
+        else if(isDirectionRtl)
             return style.value == RichParagraphStyle.ALIGN_LEFT.value ? RichParagraphStyle.ALIGN_RIGHT : RichParagraphStyle.ALIGN_LEFT;
-        else return style;
+        else
+            return style;
     }
-    private static boolean paragraphStartsWithRtlCharacter(Editable editable, int start, int end) {
+    private static RichParagraphStyle<?> reverseAlignmentAccordingToDirection(RichParagraphStyle<?> style, Editable editable, int paragraphStart, int paragraphEnd) {
+        if(style.value == RichParagraphStyle.ALIGN_CENTER.value)
+            return style;
+        else if(isParagraphRtl(editable, paragraphStart, paragraphEnd))
+            return style.value == RichParagraphStyle.ALIGN_LEFT.value ? RichParagraphStyle.ALIGN_RIGHT : RichParagraphStyle.ALIGN_LEFT;
+        else
+            return style;
+    }
+    private static boolean isParagraphRtl(Editable editable, int start, int end) {
         for(int i = start; i < end; i++) {
             byte directionality = Character.getDirectionality(editable.charAt(i));
             if(directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT)

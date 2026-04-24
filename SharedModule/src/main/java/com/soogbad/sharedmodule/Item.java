@@ -18,7 +18,7 @@ public abstract class Item<O extends Item.ItemOptions> {
 
     @FunctionalInterface
     public interface OptionsParser<O extends ItemOptions> {
-        O parse(JSONObject json);
+        O parse(JSONObject ignoredJson);
     }
 
     public static class ItemOptions {
