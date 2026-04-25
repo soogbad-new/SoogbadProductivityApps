@@ -4,6 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="SoogbadCalendar">
         <option name="selectionMode" value="DROPDOWN" />
+        <DialogSelection />
       </SelectionState>
       <SelectionState runConfigName="SoogbadNotes">
         <option name="selectionMode" value="DROPDOWN" />
