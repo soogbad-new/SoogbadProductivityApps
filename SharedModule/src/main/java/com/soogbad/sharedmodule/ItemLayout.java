@@ -34,12 +34,12 @@ import java.util.function.IntConsumer;
 @SuppressWarnings("FieldCanBeLocal")
 public class ItemLayout extends ConstraintLayout implements RichEditText.StyleStateListener {
 
-    private EditText titleEditText;
     private final RichEditText contentEditText;
     private final ConstraintLayout formattingToolbar;
     public ConstraintLayout getFormattingToolbar() { return formattingToolbar; }
     private final Button boldButton, italicButton, underlineButton, textSizeButton, textColorButton, bulletListButton, textAlignmentButton, hyperlinkButton;
 
+    private ItemActionBar itemActionBar;
     private ItemsManager<?, ?> itemsManager;
     private Item<?> item;
     private HashSet<RichCharacterStyle<?>> activeCharacterStyles = new HashSet<>();
@@ -61,10 +61,10 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         });
     }
 
-    public void init(ItemsManager<?, ?> itemsManager, Item<?> item, EditText titleEditText) {
-        this.itemsManager = itemsManager; this.item = item; this.titleEditText = titleEditText;
+    public void init(ItemActionBar itemActionBar, ItemsManager<?, ?> itemsManager, Item<?> item) {
+        this.itemActionBar = itemActionBar; this.itemsManager = itemsManager; this.item = item;
+        itemActionBar.init(this, item);
         contentEditText.setStyleStateListener(this);
-        titleEditText.setText(item.Title);
         itemsManager.loadItemContent(item);
         contentEditText.setIgnoreTextChanges(true); contentEditText.setText(item.Content); contentEditText.setIgnoreTextChanges(false);
         contentEditText.setOnFocusChangeListener((v, hasFocus) -> { if(hasFocus) contentTouched = true; });
@@ -74,7 +74,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         if(itemDeleted)
             return;
         String oldTitle = item.Title;
-        item.Title = titleEditText.getText().toString();
+        item.Title = itemActionBar.getTitleEditText().getText().toString();
         item.Content = new SpannedString(contentEditText.getText());
         if(!item.Title.equals(oldTitle))
             itemsManager.saveItemTitle(item);

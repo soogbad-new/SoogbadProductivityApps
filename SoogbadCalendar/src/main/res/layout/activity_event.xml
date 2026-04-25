@@ -15,33 +15,11 @@
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        <LinearLayout
+        <com.soogbad.sharedmodule.ItemActionBar
+            android:id="@+id/itemActionBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <EditText
-                android:id="@+id/titleEditText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textColor="@color/white"
-                android:background="@android:color/transparent"
-                android:hint=""
-                android:autofillHints="">
-            </EditText>
-            <ImageButton
-                android:id="@+id/deleteButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@android:drawable/ic_menu_delete"
-                android:scaleType="centerCrop"
-                android:onClick="onDeleteButtonClick"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toRightOf="parent">
-            </ImageButton>
-        </LinearLayout>
+        </com.soogbad.sharedmodule.ItemActionBar>
     </androidx.appcompat.widget.Toolbar>
 
     <com.soogbad.sharedmodule.ItemLayout

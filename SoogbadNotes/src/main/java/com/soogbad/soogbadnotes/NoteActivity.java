@@ -8,12 +8,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.soogbad.sharedmodule.ItemActionBar;
 import com.soogbad.sharedmodule.ItemLayout;
 import com.soogbad.sharedmodule.ItemsManager;
 import com.soogbad.sharedmodule.Utility;
 
 public class NoteActivity extends AppCompatActivity {
 
+    private ItemActionBar noteActionBar;
     private ItemLayout noteLayout;
 
     @Override
@@ -21,17 +23,12 @@ public class NoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.activity_note, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
-        noteLayout = findViewById(R.id.noteLayout);
+        noteActionBar = findViewById(R.id.itemActionBar); noteLayout = findViewById(R.id.noteLayout);
         ItemsManager<Note, Note.NoteOptions> notesManager = ((SoogbadNotesApplication)getApplication()).getNotesManager();
         Note note = notesManager.getItem(getIntent().getStringExtra("item_uuid"));
+        noteLayout.init(noteActionBar, notesManager, note);
         note.Options.LastViewed = System.currentTimeMillis();
         notesManager.saveItemOptions(note);
-        noteLayout.init(notesManager, note, findViewById(R.id.titleEditText));
-    }
-
-    public void onDeleteButtonClick(View view) {
-        noteLayout.delete();
-        finish();
     }
 
     @Override

@@ -8,12 +8,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.soogbad.sharedmodule.ItemActionBar;
 import com.soogbad.sharedmodule.ItemLayout;
 import com.soogbad.sharedmodule.ItemsManager;
 import com.soogbad.sharedmodule.Utility;
 
 public class EventActivity extends AppCompatActivity {
 
+    private ItemActionBar eventActionBar;
     private ItemLayout eventLayout;
 
     @Override
@@ -21,15 +23,10 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.activity_event, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
-        eventLayout = findViewById(R.id.eventLayout);
+        eventActionBar = findViewById(R.id.itemActionBar); eventLayout = findViewById(R.id.eventLayout);
         ItemsManager<Event, Event.EventOptions> eventsManager = ((SoogbadCalendarApplication)getApplication()).getEventsManager();
         Event event = eventsManager.getItem(getIntent().getStringExtra("item_uuid"));
-        eventLayout.init(eventsManager, event, findViewById(R.id.titleEditText));
-    }
-
-    public void onDeleteButtonClick(View view) {
-        eventLayout.delete();
-        finish();
+        eventLayout.init(eventActionBar, eventsManager, event);
     }
 
     @Override

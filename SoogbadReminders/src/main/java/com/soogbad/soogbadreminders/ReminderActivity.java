@@ -8,12 +8,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.soogbad.sharedmodule.ItemActionBar;
 import com.soogbad.sharedmodule.ItemLayout;
 import com.soogbad.sharedmodule.ItemsManager;
 import com.soogbad.sharedmodule.Utility;
 
 public class ReminderActivity extends AppCompatActivity {
 
+    private ItemActionBar reminderActionBar;
     private ItemLayout reminderLayout;
 
     @Override
@@ -21,15 +23,10 @@ public class ReminderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.activity_reminder, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
-        reminderLayout = findViewById(R.id.reminderLayout);
+        reminderActionBar = findViewById(R.id.itemActionBar); reminderLayout = findViewById(R.id.reminderLayout);
         ItemsManager<Reminder, Reminder.ReminderOptions> remindersManager = ((SoogbadRemindersApplication)getApplication()).getRemindersManager();
         Reminder reminder = remindersManager.getItem(getIntent().getStringExtra("item_uuid"));
-        reminderLayout.init(remindersManager, reminder, findViewById(R.id.titleEditText));
-    }
-
-    public void onDeleteButtonClick(View view) {
-        reminderLayout.delete();
-        finish();
+        reminderLayout.init(reminderActionBar, remindersManager, reminder);
     }
 
     @Override
