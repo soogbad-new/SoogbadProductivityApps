@@ -15,11 +15,12 @@
     </EditText>
 
     <ImageButton
-        android:id="@+id/deleteButton"
+        android:id="@+id/overflowMenuButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@android:drawable/ic_menu_delete"
-        android:scaleType="centerCrop">
-    </ImageButton>
+        android:src="@android:drawable/ic_menu_more"
+        android:scaleType="centerInside"
+        android:background="?attr/selectableItemBackgroundBorderless">
+        </ImageButton>
 
 </merge>
