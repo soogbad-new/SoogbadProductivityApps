@@ -15,7 +15,6 @@ import com.soogbad.sharedmodule.Utility;
 
 public class ReminderActivity extends AppCompatActivity {
 
-    private ItemActionBar reminderActionBar;
     private ItemLayout reminderLayout;
 
     @Override
@@ -23,7 +22,7 @@ public class ReminderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.activity_reminder, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
-        reminderActionBar = findViewById(R.id.itemActionBar); reminderLayout = findViewById(R.id.reminderLayout);
+        reminderLayout = findViewById(R.id.reminderLayout); ItemActionBar reminderActionBar = findViewById(R.id.itemActionBar);
         ItemsManager<Reminder, Reminder.ReminderOptions> remindersManager = ((SoogbadRemindersApplication)getApplication()).getRemindersManager();
         Reminder reminder = remindersManager.getItem(getIntent().getStringExtra("item_uuid"));
         reminderLayout.init(reminderActionBar, remindersManager, reminder);

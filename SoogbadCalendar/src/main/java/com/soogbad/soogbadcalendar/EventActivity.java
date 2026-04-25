@@ -15,7 +15,6 @@ import com.soogbad.sharedmodule.Utility;
 
 public class EventActivity extends AppCompatActivity {
 
-    private ItemActionBar eventActionBar;
     private ItemLayout eventLayout;
 
     @Override
@@ -23,7 +22,7 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.activity_event, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
-        eventActionBar = findViewById(R.id.itemActionBar); eventLayout = findViewById(R.id.eventLayout);
+        eventLayout = findViewById(R.id.eventLayout); ItemActionBar eventActionBar = findViewById(R.id.itemActionBar);
         ItemsManager<Event, Event.EventOptions> eventsManager = ((SoogbadCalendarApplication)getApplication()).getEventsManager();
         Event event = eventsManager.getItem(getIntent().getStringExtra("item_uuid"));
         eventLayout.init(eventActionBar, eventsManager, event);

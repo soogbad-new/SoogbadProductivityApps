@@ -13,14 +13,13 @@ public class ItemActionBar extends LinearLayout {
 
     private final EditText titleEditText;
     public EditText getTitleEditText() { return titleEditText; }
-    private final ImageButton deleteButton;
 
     private ItemLayout itemLayout;
 
     public ItemActionBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.item_action_bar_content, this, true);
-        titleEditText = findViewById(R.id.titleEditText); deleteButton = findViewById(R.id.deleteButton);
+        titleEditText = findViewById(R.id.titleEditText); ImageButton deleteButton = findViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(v -> onDeleteButtonClick());
     }
 
