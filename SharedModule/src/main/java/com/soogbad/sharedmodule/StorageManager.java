@@ -1,6 +1,5 @@
 package com.soogbad.sharedmodule;
 
-import android.text.Html;
 import android.text.Spanned;
 import android.text.SpannedString;
 
@@ -29,47 +28,45 @@ public class StorageManager {
 
     public ArrayList<String> loadItemUUIDs() {
         ArrayList<String> uuids = new ArrayList<>();
-        try(DirectoryStream<Path> stream = Files.newDirectoryStream(directory, "*.html")) {
-            stream.forEach(path -> uuids.add(path.getFileName().toString().replace(".html", "")));
+        try(DirectoryStream<Path> stream = Files.newDirectoryStream(directory, "*.metadata.json")) {
+            stream.forEach(path -> uuids.add(path.getFileName().toString().replace(".metadata.json", "")));
         } catch(IOException e) { throw new RuntimeException(e); }
         return uuids;
     }
 
-    public void saveContentToHtmlFile(String uuid, Spanned spannedText) {
-        String html = Html.toHtml(spannedText, Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
-        html = CustomStyleSerializer.serializeCustomTags(spannedText, html);
-        try { Files.write(directory.resolve(uuid + ".html"), html.getBytes(StandardCharsets.UTF_16)); }
+    public void saveContent(String uuid, Spanned spannedText) {
+        String json = RichTextSerializer.serialize(spannedText);
+        try { Files.write(directory.resolve(uuid + ".content.json"), json.getBytes(StandardCharsets.UTF_16)); }
         catch(IOException e) { throw new RuntimeException(e); }
     }
 
-    public SpannedString loadContentFromHtmlFile(String uuid) {
-        String html;
-        try { html = new String(Files.readAllBytes(directory.resolve(uuid + ".html")), StandardCharsets.UTF_16); }
+    public SpannedString loadContent(String uuid) {
+        String json;
+        try { json = new String(Files.readAllBytes(directory.resolve(uuid + ".content.json")), StandardCharsets.UTF_16); }
         catch(IOException e) { throw new RuntimeException(e); }
-        html = CustomStyleSerializer.deserializeCustomTags(html);
-        return new SpannedString(Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT, null, CustomStyleSerializer.TAG_HANDLER));
+        return RichTextSerializer.deserialize(json);
     }
 
-    public void saveMetadataToJsonFile(String uuid, String title, Item.ItemOptions options) {
+    public void saveMetadata(String uuid, String title, Item.ItemOptions options) {
         try {
             JSONObject metadata = new JSONObject();
             metadata.put("title", title);
             metadata.put("options", options.toJson());
-            Files.write(directory.resolve(uuid + ".json"), metadata.toString().getBytes(StandardCharsets.UTF_16));
+            Files.write(directory.resolve(uuid + ".metadata.json"), metadata.toString().getBytes(StandardCharsets.UTF_16));
         } catch(JSONException | IOException e) { throw new RuntimeException(e); }
     }
 
-    public JSONObject loadMetadataFromJsonFile(String uuid) {
+    public JSONObject loadMetadata(String uuid) {
         try {
-            String json = new String(Files.readAllBytes(directory.resolve(uuid + ".json")), StandardCharsets.UTF_16);
+            String json = new String(Files.readAllBytes(directory.resolve(uuid + ".metadata.json")), StandardCharsets.UTF_16);
             return new JSONObject(json);
         } catch(JSONException | IOException e) { throw new RuntimeException(e); }
     }
 
     public void deleteItemFiles(String uuid) {
         try {
-            Files.delete(directory.resolve(uuid + ".html"));
-            Files.delete(directory.resolve(uuid + ".json"));
+            Files.delete(directory.resolve(uuid + ".content.json"));
+            Files.delete(directory.resolve(uuid + ".metadata.json"));
         } catch(IOException e) { throw new RuntimeException(e); }
     }
 

@@ -23,7 +23,7 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
     public void loadItems() {
         for(String uuid : storageManager.loadItemUUIDs()) {
             try {
-                JSONObject metadata = storageManager.loadMetadataFromJsonFile(uuid);
+                JSONObject metadata = storageManager.loadMetadata(uuid);
                 String title = metadata.getString("title");
                 O options = optionsParser.parse(metadata.getJSONObject("options"));
                 items.add(itemCreator.create(uuid, title, options));
@@ -31,16 +31,16 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
         }
     }
 
-    public void loadItemContent(Item<?> item) { item.Content = storageManager.loadContentFromHtmlFile(item.UUID); }
-    public void saveItemContent(Item<?> item) { storageManager.saveContentToHtmlFile(item.UUID, item.Content); }
-    public void saveItemTitle(Item<?> item) { storageManager.saveMetadataToJsonFile(item.UUID, item.Title, item.Options); }
-    public void saveItemOptions(T item) { storageManager.saveMetadataToJsonFile(item.UUID, item.Title, item.Options); }
+    public void loadItemContent(Item<?> item) { item.Content = storageManager.loadContent(item.UUID); }
+    public void saveItemContent(Item<?> item) { storageManager.saveContent(item.UUID, item.Content); }
+    public void saveItemTitle(Item<?> item) { storageManager.saveMetadata(item.UUID, item.Title, item.Options); }
+    public void saveItemOptions(T item) { storageManager.saveMetadata(item.UUID, item.Title, item.Options); }
 
     public String createItem(O defaultOptions) {
         String uuid = Utility.generateUniqueUUID(items);
         items.add(itemCreator.create(uuid, "", defaultOptions));
-        storageManager.saveContentToHtmlFile(uuid, new SpannableString(""));
-        storageManager.saveMetadataToJsonFile(uuid, "", defaultOptions);
+        storageManager.saveContent(uuid, new SpannableString(""));
+        storageManager.saveMetadata(uuid, "", defaultOptions);
         return uuid;
     }
 
