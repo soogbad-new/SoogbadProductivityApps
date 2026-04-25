@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utility.setWindowProperties(this, R.layout.activity_main, R.id.actionBar);
+        Utility.setWindowProperties(this, R.layout.activity_main, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         noteList = findViewById(R.id.noteList);
         notesManager = ((SoogbadNotesApplication)getApplication()).getNotesManager();
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     public WindowInsetsCompat onApplyWindowInsetsListener(View view, WindowInsetsCompat insets) {
         Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-        view.getRootView().findViewById(R.id.actionBar).setPadding(0, systemBars.top, 0, 0);
+        view.getRootView().findViewById(R.id.toolbar).setPadding(0, systemBars.top, 0, 0);
         view.setPadding(0, 0, 0, systemBars.bottom);
         return insets;
     }

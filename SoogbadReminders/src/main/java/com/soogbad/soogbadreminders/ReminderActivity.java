@@ -19,7 +19,7 @@ public class ReminderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utility.setWindowProperties(this, R.layout.activity_reminder, R.id.actionBar);
+        Utility.setWindowProperties(this, R.layout.activity_reminder, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         reminderLayout = findViewById(R.id.reminderLayout);
         ItemsManager<Reminder, Reminder.ReminderOptions> remindersManager = ((SoogbadRemindersApplication)getApplication()).getRemindersManager();
@@ -40,7 +40,7 @@ public class ReminderActivity extends AppCompatActivity {
 
     public WindowInsetsCompat onApplyWindowInsetsListener(View view, WindowInsetsCompat insets) {
         Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-        view.getRootView().findViewById(R.id.actionBar).setPadding(0, systemBars.top, 0, 0);
+        view.getRootView().findViewById(R.id.toolbar).setPadding(0, systemBars.top, 0, 0);
         view.setPadding(0, 0, 0, systemBars.bottom);
         Insets keyboard = insets.getInsets(WindowInsetsCompat.Type.ime());
         reminderLayout.getFormattingToolbar().setPadding(0, 0, 0, keyboard.bottom - systemBars.bottom);
