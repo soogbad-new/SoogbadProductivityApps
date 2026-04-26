@@ -352,6 +352,7 @@ public class RichEditText extends AppCompatEditText {
         return end == -1 ? text.length() : end;
     }
 
+    @SuppressWarnings("UnnecessaryLocalVariable")
     private static void autoDetectWebLink(Editable editable, int changeStart, int changeCount) {
         if(changeCount != 1) return;
         char typed = editable.charAt(changeStart);

@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("IfCanBeSwitch")
 public class RichTextSerializer {
 
     public static String serialize(Spanned spanned) {
