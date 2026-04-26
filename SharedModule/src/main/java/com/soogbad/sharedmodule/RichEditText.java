@@ -86,6 +86,7 @@ public class RichEditText extends AppCompatEditText {
                 for(RichCharacterStyle<?> style : RichCharacterStyle.values())
                     applyActiveCharacterStyle(editable, changeStart, changeCount, style, activeCharacterStyles.contains(style));
                 handleParagraphStyleNewLine(editable, changeStart, changeCount);
+                autoDetectWebLink(editable, changeStart, changeCount);
             }
             textChanging = true;
         }
@@ -349,6 +350,21 @@ public class RichEditText extends AppCompatEditText {
     private static int getParagraphEnd(String text, int position) {
         int end = text.indexOf('\n', position);
         return end == -1 ? text.length() : end;
+    }
+
+    private static void autoDetectWebLink(Editable editable, int changeStart, int changeCount) {
+        if(changeCount != 1) return;
+        char typed = editable.charAt(changeStart);
+        if(typed != ' ' && typed != '\n') return;
+        int wordEnd = changeStart;
+        int wordStart = wordEnd;
+        while(wordStart > 0 && editable.charAt(wordStart - 1) != ' ' && editable.charAt(wordStart - 1) != '\n')
+            wordStart--;
+        if(wordStart >= wordEnd) return;
+        String word = editable.toString().substring(wordStart, wordEnd);
+        URLSpan[] existingSpans = editable.getSpans(wordStart, wordEnd, URLSpan.class);
+        if(existingSpans.length == 0 && (word.startsWith("http://") || word.startsWith("https://")))
+            editable.setSpan(new URLSpan(word), wordStart, wordEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     public void insertHyperlinkAtCursor(String url, String displayText) {
