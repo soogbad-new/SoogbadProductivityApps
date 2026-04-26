@@ -172,14 +172,14 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         if(currentSelectionActionMode != null)
             currentSelectionActionMode.hide(Long.MAX_VALUE);
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        LinearLayout popupLayout = (LinearLayout)inflater.inflate(R.layout.selection_popup, this, false);
+        LinearLayout popupLayout = (LinearLayout)inflater.inflate(R.layout.formatting_toolbar_popup, this, false);
         PopupWindow popup = new PopupWindow(popupLayout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, false);
         popup.setWindowLayoutType(WindowManager.LayoutParams.TYPE_APPLICATION_SUB_PANEL);
         popup.setElevation(8);
         popup.setOutsideTouchable(true);
         popup.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         for(int i = 0; i < options.length; i++) {
-            TextView textView = (TextView)inflater.inflate(styleType == ForegroundColorSpan.class ? R.layout.selection_popup_color_option : R.layout.selection_popup_option, popupLayout, false);
+            TextView textView = (TextView)inflater.inflate(styleType == ForegroundColorSpan.class ? R.layout.formatting_toolbar_popup_option_color : R.layout.formatting_toolbar_popup_option, popupLayout, false);
             adjustOptionTextView(textView, options[i], options[i] == selectedOption, styleType);
             final int index = i;
             textView.setOnClickListener(view -> { popup.dismiss(); onSelect.accept(index); });

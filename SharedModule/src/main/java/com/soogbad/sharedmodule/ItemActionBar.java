@@ -5,9 +5,9 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -27,7 +27,7 @@ public class ItemActionBar extends LinearLayout {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.item_action_bar_content, this, true);
         titleEditText = findViewById(R.id.titleEditText); ImageButton overflowMenuButton = findViewById(R.id.overflowMenuButton);
-        overflowMenuButton.setOnClickListener(v -> showOverflowMenu(v));
+        overflowMenuButton.setOnClickListener(this::showOverflowMenu);
     }
 
     public void init(ItemLayout itemLayout, Item<?> item) {
@@ -37,29 +37,24 @@ public class ItemActionBar extends LinearLayout {
 
     private void showOverflowMenu(View view) {
         PopupMenu popup = new PopupMenu(getContext(), view);
-        popup.getMenuInflater().inflate(R.menu.menu_item_action_bar, popup.getMenu());
-        popup.setOnMenuItemClickListener(item -> {
-            if(item.getItemId() == R.id.action_delete) {
-                onDeleteButtonClick();
-                return true;
-            } else if(item.getItemId() == R.id.action_copy_uuid) {
-                onCopyUuidButtonClick();
-                return true;
-            }
-            return false;
-        });
+        popup.getMenuInflater().inflate(R.menu.action_bar_overflow_menu_item, popup.getMenu());
+        popup.setOnMenuItemClickListener(this::onOverflowMenuItemClick);
         popup.show();
     }
 
-    private void onDeleteButtonClick() {
-        itemLayout.delete();
-        ((Activity)getContext()).finish();
-    }
-
-    private void onCopyUuidButtonClick() {
-        ClipboardManager clipboard = (ClipboardManager)getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-        clipboard.setPrimaryClip(ClipData.newPlainText("UUID", item.UUID));
-        Toast.makeText(getContext(), "Item UUID copied to clipboard", Toast.LENGTH_SHORT).show();
+    private boolean onOverflowMenuItemClick(MenuItem menuItem) {
+        if(menuItem.getItemId() == R.id.action_delete) {
+            itemLayout.delete();
+            ((Activity)getContext()).finish();
+            return true;
+        }
+        else if(menuItem.getItemId() == R.id.action_copy_uuid) {
+            ClipboardManager clipboard = (ClipboardManager)getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setPrimaryClip(ClipData.newPlainText("UUID", item.UUID));
+            Toast.makeText(getContext(), "Item UUID copied to clipboard", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
     }
 
 }
