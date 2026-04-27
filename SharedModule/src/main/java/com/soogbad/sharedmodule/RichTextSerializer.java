@@ -71,7 +71,7 @@ public class RichTextSerializer {
         else if(span instanceof BulletSpan) spanJson.put("type", "bullet");
         else if(span instanceof AlignmentSpan.Standard) { spanJson.put("type", "align"); spanJson.put("align", ((AlignmentSpan.Standard)span).getAlignment().ordinal()); }
         else if(span instanceof URLSpan) { spanJson.put("type", "url"); spanJson.put("url", ((URLSpan)span).getURL()); }
-        else if(span instanceof CollapsibleRegionSpan) { spanJson.put("type", "region"); spanJson.put("collapsed", ((CollapsibleRegionSpan)span).isCollapsed()); }
+        else if(span instanceof CollapsibleRegionSpan) spanJson.put("type", "region");
         else return null;
         return spanJson;
     }
@@ -85,7 +85,7 @@ public class RichTextSerializer {
         else if(type.equals("bullet")) return RichParagraphStyle.BULLET.createSpan();
         else if(type.equals("align")) return RichParagraphStyle.TEXT_ALIGNMENT(Layout.Alignment.values()[spanJson.getInt("align")]).createSpan();
         else if(type.equals("url")) return new URLSpan(spanJson.getString("url"));
-        else if(type.equals("region")) return new CollapsibleRegionSpan(spanJson.getBoolean("collapsed"));
+        else if(type.equals("region")) return new CollapsibleRegionSpan();
         return null;
     }
 
