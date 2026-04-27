@@ -450,7 +450,7 @@ public class RichEditText extends AppCompatEditText {
         Intent intent = new Intent();
         intent.setComponent(new ComponentName(targetPackage, targetPackage + "." + targetActivity));
         intent.putExtra("item_uuid", itemUuid);
-        if(!targetPackage.equals(getPackageName()))
+        if(!targetPackage.equals(getContext().getPackageName()))
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getContext().startActivity(intent);
     }

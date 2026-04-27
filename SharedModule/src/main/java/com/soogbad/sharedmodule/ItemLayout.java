@@ -126,13 +126,8 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     public void onTextAlignmentSelected(Layout.Alignment alignment) { contentEditText.toggleParagraphStyle(RichParagraphStyle.TEXT_ALIGNMENT(alignment)); }
     public void onHyperlinkButtonClick() {
         int selectionStart = contentEditText.getSelectionStart(); int selectionEnd = contentEditText.getSelectionEnd();
-        if(selectionStart == selectionEnd) {
-            String existingUrl = contentEditText.getHyperlinkUrlAtSelection();
-            if(existingUrl != null)
-                showHyperlinkDialog(true, false);
-            else
-                showHyperlinkDialog(false, false);
-        }
+        if(selectionStart == selectionEnd)
+            showHyperlinkDialog(false, false);
         else {
             if(contentEditText.getText() == null) return;
             String selectedText = contentEditText.getText().subSequence(selectionStart, selectionEnd).toString();
