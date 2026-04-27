@@ -3,6 +3,7 @@ package com.soogbad.sharedmodule;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ComponentName;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.text.Editable;
@@ -86,7 +87,7 @@ public class RichEditText extends AppCompatEditText {
                 for(RichCharacterStyle<?> style : RichCharacterStyle.values())
                     applyActiveCharacterStyle(editable, changeStart, changeCount, style, activeCharacterStyles.contains(style));
                 handleParagraphStyleNewLine(editable, changeStart, changeCount);
-                autoDetectWebLink(editable, changeStart, changeCount);
+                autoDetectLinks(editable, changeStart, changeCount);
             }
             textChanging = true;
         }
@@ -353,7 +354,7 @@ public class RichEditText extends AppCompatEditText {
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    private static void autoDetectWebLink(Editable editable, int changeStart, int changeCount) {
+    private static void autoDetectLinks(Editable editable, int changeStart, int changeCount) {
         if(changeCount != 1) return;
         char typed = editable.charAt(changeStart);
         if(typed != ' ' && typed != '\n') return;
@@ -362,10 +363,11 @@ public class RichEditText extends AppCompatEditText {
         while(wordStart > 0 && editable.charAt(wordStart - 1) != ' ' && editable.charAt(wordStart - 1) != '\n')
             wordStart--;
         if(wordStart >= wordEnd) return;
-        String word = editable.toString().substring(wordStart, wordEnd);
         URLSpan[] existingSpans = editable.getSpans(wordStart, wordEnd, URLSpan.class);
-        if(existingSpans.length == 0 && (word.startsWith("http://") || word.startsWith("https://")))
-            editable.setSpan(new URLSpan(word), wordStart, wordEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if(existingSpans.length > 0) return;
+        String url = editable.toString().substring(wordStart, wordEnd);
+        if(Utility.isLinkUrlValid(url))
+            editable.setSpan(new URLSpan(url), wordStart, wordEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     public void insertHyperlinkAtCursor(String url, String displayText) {
@@ -425,12 +427,32 @@ public class RichEditText extends AppCompatEditText {
         URLSpan[] spans = editable.getSpans(offset, offset, URLSpan.class);
         if(spans.length > 0) {
             String url = spans[0].getURL();
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            getContext().startActivity(intent);
+            if(url.startsWith("http://") || url.startsWith("https://"))
+                openWebLink(url);
+            if(url.startsWith("EVENT-"))
+                openItemLink(url, "com.soogbad.soogbadcalendar", "EventActivity", url.substring("EVENT-".length()));
+            else if(url.startsWith("NOTE-"))
+                openItemLink(url, "com.soogbad.soogbadnotes", "NoteActivity", url.substring("NOTE-".length()));
+            else if(url.startsWith("REMINDER-"))
+                openItemLink(url, "com.soogbad.soogbadreminders", "ReminderActivity", url.substring("REMINDER-".length()));
+            else
+                return false;
             return true;
         }
         return false;
+    }
+    private void openWebLink(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getContext().startActivity(intent);
+    }
+    private void openItemLink(String url, String targetPackage, String targetActivity, String itemUuid) {
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName(targetPackage, targetPackage + "." + targetActivity));
+        intent.putExtra("item_uuid", itemUuid);
+        if(!targetPackage.equals(getPackageName()))
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getContext().startActivity(intent);
     }
 
 }

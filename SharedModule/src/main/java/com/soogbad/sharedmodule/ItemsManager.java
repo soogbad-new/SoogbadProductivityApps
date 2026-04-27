@@ -53,7 +53,7 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
         for(T item : items)
             if(item.UUID.equals(uuid))
                 return item;
-        throw new RuntimeException("Item not found");
+        return null;
     }
 
 }

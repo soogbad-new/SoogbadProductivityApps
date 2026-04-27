@@ -1,6 +1,7 @@
 package com.soogbad.sharedmodule;
 
 import android.graphics.Color;
+import android.util.Patterns;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
@@ -24,6 +25,10 @@ public class Utility {
             return generateUniqueUUID(items);
         else
             return uuid;
+    }
+
+    public static boolean isLinkUrlValid(String url) {
+        return Patterns.WEB_URL.matcher(url).matches() || url.startsWith("EVENT-") || url.startsWith("NOTE-") || url.startsWith("REMINDER-");
     }
 
 }

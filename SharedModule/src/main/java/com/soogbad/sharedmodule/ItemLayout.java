@@ -126,13 +126,17 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     public void onTextAlignmentSelected(Layout.Alignment alignment) { contentEditText.toggleParagraphStyle(RichParagraphStyle.TEXT_ALIGNMENT(alignment)); }
     public void onHyperlinkButtonClick() {
         int selectionStart = contentEditText.getSelectionStart(); int selectionEnd = contentEditText.getSelectionEnd();
-        if(selectionStart == selectionEnd)
-            showHyperlinkDialog(false, false);
+        if(selectionStart == selectionEnd) {
+            String existingUrl = contentEditText.getHyperlinkUrlAtSelection();
+            if(existingUrl != null)
+                showHyperlinkDialog(true, false);
+            else
+                showHyperlinkDialog(false, false);
+        }
         else {
             if(contentEditText.getText() == null) return;
             String selectedText = contentEditText.getText().subSequence(selectionStart, selectionEnd).toString();
-            boolean selectionIsUrl = selectedText.startsWith("http://") || selectedText.startsWith("https://");
-            showHyperlinkDialog(true, selectionIsUrl);
+            showHyperlinkDialog(true, Utility.isLinkUrlValid(selectedText));
         }
     }
 
@@ -228,14 +232,46 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext()).setTitle("Hyperlink").setView(dialogView).setNeutralButton("Cancel", null);
         if(!selection)
-            builder.setPositiveButton("Insert", (dialog, which) -> contentEditText.insertHyperlinkAtCursor(urlEditText.getText().toString().trim(), textEditText.getText().toString()));
-        else {
-            if(selectionIsUrl)
-                builder.setPositiveButton("Apply", (dialog, which) -> contentEditText.replaceSelectedURLWithHyperlink(textEditText.getText().toString()));
-            else
-                builder.setPositiveButton("Apply", (dialog, which) -> contentEditText.createHyperlinkOnSelectedText(urlEditText.getText().toString().trim()));
+            builder.setPositiveButton("Insert", null);
+        else
+            builder.setPositiveButton("Apply", null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        if(!selection) {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                String url = urlEditText.getText().toString().trim();
+                if(Utility.isLinkUrlValid(url)) {
+                    contentEditText.insertHyperlinkAtCursor(url, textEditText.getText().toString());
+                    dialog.dismiss();
+                }
+                else
+                    urlEditText.setError("URL is not valid");
+            });
         }
-        builder.show();
+        else {
+            if(selectionIsUrl) {
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                    String displayText = textEditText.getText().toString();
+                    if(!displayText.isEmpty()) {
+                        contentEditText.replaceSelectedURLWithHyperlink(displayText);
+                        dialog.dismiss();
+                    }
+                    else
+                        textEditText.setError("Display text is required");
+                });
+            }
+            else {
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                    String url = urlEditText.getText().toString().trim();
+                    if(Utility.isLinkUrlValid(url)) {
+                        contentEditText.createHyperlinkOnSelectedText(url);
+                        dialog.dismiss();
+                    }
+                    else
+                        urlEditText.setError("URL is not valid");
+                });
+            }
+        }
     }
 
 }
