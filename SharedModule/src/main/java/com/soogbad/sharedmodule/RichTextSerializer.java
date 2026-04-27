@@ -113,7 +113,7 @@ public class RichTextSerializer {
             for(int i = 1; i < matchingSpans.size(); i++) {
                 JSONObject nextSpan = matchingSpans.get(i);
                 int mergedEnd = mergedSpan.getInt("end"); int nextStart = nextSpan.getInt("start");
-                if(nextStart <= mergedEnd) {
+                if(nextStart < mergedEnd) {
                     mergedSpan.put("end", Math.max(mergedEnd, nextSpan.getInt("end")));
                     mergedSpan.put("flags", Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
