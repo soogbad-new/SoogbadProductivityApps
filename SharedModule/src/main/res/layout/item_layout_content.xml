@@ -124,6 +124,18 @@
             app:layout_constraintLeft_toRightOf="@id/textAlignmentButton">
         </Button>
 
+        <Button
+            android:id="@+id/regionButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="▼"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/hyperlinkButton">
+        </Button>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </merge>

@@ -4,21 +4,33 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ComponentName;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.text.Editable;
 import android.text.Spanned;
+import android.text.SpannedString;
 import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
+import android.text.style.BulletSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ParagraphStyle;
+import android.text.style.StyleSpan;
 import android.text.style.AlignmentSpan;
+import android.text.style.UnderlineSpan;
 import android.text.style.URLSpan;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 
 import androidx.appcompat.widget.AppCompatEditText;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,10 +45,15 @@ public class RichEditText extends AppCompatEditText {
     private final HashSet<RichParagraphStyle<?>> activeParagraphStyles = new HashSet<>();
     private boolean textChanging;
     private int changeStart, changeCount;
+    private final Paint arrowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final float arrowSize;
 
     public RichEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         addTextChangedListener(textChangedListener);
+        arrowPaint.setColor(Color.WHITE);
+        arrowPaint.setStyle(Paint.Style.FILL);
+        arrowSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
     }
 
     public interface StyleStateListener {
@@ -93,6 +110,8 @@ public class RichEditText extends AppCompatEditText {
         }
     };
 
+    // ===== Character Styles =====
+
     private static void applyActiveCharacterStyle(Editable editable, int changeStart, int changeCount, RichCharacterStyle<?> style, boolean isActive) {
         if(isActive) {
             if(!isEntireRangeCovered(editable, changeStart, changeStart + changeCount, style)) {
@@ -103,7 +122,6 @@ public class RichEditText extends AppCompatEditText {
         else if(style.isFlagStyle())
             removeSpansInRange(editable, changeStart, changeStart + changeCount, style);
     }
-
     private void updateCurrentActiveCharacterStyles(int selectionStart, int selectionEnd) {
         Editable editable = getText();
         if(editable == null) return;
@@ -179,7 +197,6 @@ public class RichEditText extends AppCompatEditText {
         }
         return false;
     }
-
     private static void removeSpansInRange(Editable editable, int rangeStart, int rangeEnd, RichCharacterStyle<?> style) {
         CharacterStyle[] spans = editable.getSpans(rangeStart, rangeEnd, style.spanClass);
         for(CharacterStyle span : spans) {
@@ -193,7 +210,6 @@ public class RichEditText extends AppCompatEditText {
             }
         }
     }
-
     private static boolean isEntireRangeCovered(Editable editable, int rangeStart, int rangeEnd, RichCharacterStyle<?> style) {
         if(rangeStart >= rangeEnd) return false;
         CharacterStyle[] spans = editable.getSpans(rangeStart, rangeEnd, style.spanClass);
@@ -211,6 +227,8 @@ public class RichEditText extends AppCompatEditText {
         }
         return false;
     }
+
+    // ===== Paragraph Styles =====
 
     private void updateCurrentActiveParagraphStyles() {
         Editable editable = getText();
@@ -232,6 +250,7 @@ public class RichEditText extends AppCompatEditText {
         activeParagraphStyles.add(activeAlignment);
         notifyListener();
     }
+
     public void toggleParagraphStyle(RichParagraphStyle<?> style) {
         Editable editable = getText();
         if(editable == null) return;
@@ -258,6 +277,7 @@ public class RichEditText extends AppCompatEditText {
             position = paragraphEnd + 1;
         }
     }
+
     private static boolean hasStyleAtParagraph(Editable editable, int paragraphStart, int paragraphEnd, RichParagraphStyle<?> style) {
         int paragraphEndExclusive = paragraphEnd < editable.length() ? paragraphEnd + 1 : paragraphEnd;
         ParagraphStyle[] spans = editable.getSpans(paragraphStart, paragraphEndExclusive, style.spanClass);
@@ -294,6 +314,7 @@ public class RichEditText extends AppCompatEditText {
         }
         return true;
     }
+
     private void handleParagraphStyleNewLine(Editable editable, int changeStart, int changeCount) {
         if(changeCount != 1 || editable.charAt(changeStart) != '\n' || changeStart >= editable.length())
             return;
@@ -318,14 +339,7 @@ public class RichEditText extends AppCompatEditText {
         int spanEnd = newLineEnd < editable.length() ? newLineEnd + 1 : newLineEnd;
         editable.setSpan(RichParagraphStyle.cloneSpan(spans[0]), spanStart, spanEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
     }
-    private static ParagraphStyle[] getParagraphSpans(Editable editable, int paragraphStart, int paragraphEnd, RichParagraphStyle<?> style) {
-        ParagraphStyle[] spans = editable.getSpans(paragraphStart, paragraphEnd, style.spanClass);
-        ArrayList<ParagraphStyle> result = new ArrayList<>();
-        for(ParagraphStyle span : spans)
-            if(style.matchesSpanValue(span))
-                result.add(span);
-        return result.toArray(new ParagraphStyle[0]);
-    }
+
     private static RichParagraphStyle<?> reverseAlignmentAccordingToDirection(RichParagraphStyle<?> style, boolean isDirectionRtl) {
         if(style.value == RichParagraphStyle.ALIGN_CENTER.value)
             return style;
@@ -333,6 +347,14 @@ public class RichEditText extends AppCompatEditText {
             return style.value == RichParagraphStyle.ALIGN_LEFT.value ? RichParagraphStyle.ALIGN_RIGHT : RichParagraphStyle.ALIGN_LEFT;
         else
             return style;
+    }
+    private static ParagraphStyle[] getParagraphSpans(Editable editable, int paragraphStart, int paragraphEnd, RichParagraphStyle<?> style) {
+        ParagraphStyle[] spans = editable.getSpans(paragraphStart, paragraphEnd, style.spanClass);
+        ArrayList<ParagraphStyle> result = new ArrayList<>();
+        for(ParagraphStyle span : spans)
+            if(style.matchesSpanValue(span))
+                result.add(span);
+        return result.toArray(new ParagraphStyle[0]);
     }
     private static boolean isParagraphRtl(Editable editable, int start, int end) {
         for(int i = start; i < end; i++) {
@@ -352,6 +374,8 @@ public class RichEditText extends AppCompatEditText {
         int end = text.indexOf('\n', position);
         return end == -1 ? text.length() : end;
     }
+
+    // ===== Hyperlinks =====
 
     @SuppressWarnings("UnnecessaryLocalVariable")
     private static void autoDetectLinks(Editable editable, int changeStart, int changeCount) {
@@ -410,6 +434,7 @@ public class RichEditText extends AppCompatEditText {
         URLSpan[] spans = editable.getSpans(position, selectionEnd, URLSpan.class);
         return spans.length > 0 ? spans[0].getURL() : null;
     }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -453,6 +478,11 @@ public class RichEditText extends AppCompatEditText {
         if(!targetPackage.equals(getContext().getPackageName()))
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getContext().startActivity(intent);
+    }
+
+    // ===== Collapsible Regions =====
+
+    public void toggleCollapsibleRegion() {
     }
 
 }

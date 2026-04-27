@@ -38,7 +38,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     private final RichEditText contentEditText;
     private final ConstraintLayout formattingToolbar;
     public ConstraintLayout getFormattingToolbar() { return formattingToolbar; }
-    private final Button boldButton, italicButton, underlineButton, textSizeButton, textColorButton, bulletListButton, textAlignmentButton, hyperlinkButton;
+    private final Button boldButton, italicButton, underlineButton, textSizeButton, textColorButton, bulletListButton, textAlignmentButton, hyperlinkButton, regionButton;
 
     private ItemActionBar itemActionBar;
     private ItemsManager<?, ?> itemsManager;
@@ -52,8 +52,8 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     public ItemLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.item_layout_content, this, true);
-        contentEditText = findViewById(R.id.contentEditText); formattingToolbar = findViewById(R.id.formattingToolbar); boldButton = findViewById(R.id.boldButton); italicButton = findViewById(R.id.italicButton); underlineButton = findViewById(R.id.underlineButton); textSizeButton = findViewById(R.id.textSizeButton); textColorButton = findViewById(R.id.textColorButton); bulletListButton = findViewById(R.id.bulletListButton); textAlignmentButton = findViewById(R.id.textAlignmentButton); hyperlinkButton = findViewById(R.id.hyperlinkButton);
-        boldButton.setOnClickListener(v -> onBoldButtonClick()); italicButton.setOnClickListener(v -> onItalicButtonClick()); underlineButton.setOnClickListener(v -> onUnderlineButtonClick()); textSizeButton.setOnClickListener(v -> onTextSizeButtonClick()); textColorButton.setOnClickListener(v -> onTextColorButtonClick()); bulletListButton.setOnClickListener(v -> onBulletListButtonClick()); textAlignmentButton.setOnClickListener(v -> onTextAlignmentButtonClick()); hyperlinkButton.setOnClickListener(v -> onHyperlinkButtonClick());
+        contentEditText = findViewById(R.id.contentEditText); formattingToolbar = findViewById(R.id.formattingToolbar); boldButton = findViewById(R.id.boldButton); italicButton = findViewById(R.id.italicButton); underlineButton = findViewById(R.id.underlineButton); textSizeButton = findViewById(R.id.textSizeButton); textColorButton = findViewById(R.id.textColorButton); bulletListButton = findViewById(R.id.bulletListButton); textAlignmentButton = findViewById(R.id.textAlignmentButton); hyperlinkButton = findViewById(R.id.hyperlinkButton); regionButton = findViewById(R.id.regionButton);
+        boldButton.setOnClickListener(v -> onBoldButtonClick()); italicButton.setOnClickListener(v -> onItalicButtonClick()); underlineButton.setOnClickListener(v -> onUnderlineButtonClick()); textSizeButton.setOnClickListener(v -> onTextSizeButtonClick()); textColorButton.setOnClickListener(v -> onTextColorButtonClick()); bulletListButton.setOnClickListener(v -> onBulletListButtonClick()); textAlignmentButton.setOnClickListener(v -> onTextAlignmentButtonClick()); hyperlinkButton.setOnClickListener(v -> onHyperlinkButtonClick()); regionButton.setOnClickListener(v -> onRegionButtonClick());
         contentEditText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, RichCharacterStyle.DEFAULT_TEXT_SIZE.size);
         contentEditText.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
             @Override public boolean onCreateActionMode(ActionMode actionMode, Menu menu) { currentSelectionActionMode = actionMode; return true; }
@@ -134,6 +134,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
             showHyperlinkDialog(true, Utility.isLinkUrlValid(selectedText));
         }
     }
+    public void onRegionButtonClick() { contentEditText.toggleCollapsibleRegion(); }
 
     @Override
     public void onStyleStateChanged(HashSet<RichCharacterStyle<?>> activeCharacterStyles, HashSet<RichParagraphStyle<?>> activeParagraphStyles) {
