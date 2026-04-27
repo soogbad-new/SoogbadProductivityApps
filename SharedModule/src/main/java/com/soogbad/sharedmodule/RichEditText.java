@@ -46,15 +46,10 @@ public class RichEditText extends AppCompatEditText {
     private final HashSet<RichParagraphStyle<?>> activeParagraphStyles = new HashSet<>();
     private boolean textChanging;
     private int changeStart, changeCount;
-    private final Paint arrowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final float arrowSize;
 
     public RichEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         addTextChangedListener(textChangedListener);
-        arrowPaint.setColor(Color.WHITE);
-        arrowPaint.setStyle(Paint.Style.FILL);
-        arrowSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
     }
 
     public interface StyleStateListener {
