@@ -24,6 +24,7 @@ import android.text.style.AlignmentSpan;
 import android.text.style.UnderlineSpan;
 import android.text.style.URLSpan;
 import android.util.AttributeSet;
+import android.util.Patterns;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 
@@ -452,14 +453,14 @@ public class RichEditText extends AppCompatEditText {
         URLSpan[] spans = editable.getSpans(offset, offset, URLSpan.class);
         if(spans.length > 0) {
             String url = spans[0].getURL();
-            if(url.startsWith("http://") || url.startsWith("https://"))
+            if(Patterns.WEB_URL.matcher(url).matches())
                 openWebLink(url);
             if(url.startsWith("EVENT-"))
-                openItemLink(url, "com.soogbad.soogbadcalendar", "EventActivity", url.substring("EVENT-".length()));
+                openItemLink("com.soogbad.soogbadcalendar", "EventActivity", url.substring("EVENT-".length()));
             else if(url.startsWith("NOTE-"))
-                openItemLink(url, "com.soogbad.soogbadnotes", "NoteActivity", url.substring("NOTE-".length()));
+                openItemLink("com.soogbad.soogbadnotes", "NoteActivity", url.substring("NOTE-".length()));
             else if(url.startsWith("REMINDER-"))
-                openItemLink(url, "com.soogbad.soogbadreminders", "ReminderActivity", url.substring("REMINDER-".length()));
+                openItemLink("com.soogbad.soogbadreminders", "ReminderActivity", url.substring("REMINDER-".length()));
             else
                 return false;
             return true;
@@ -467,11 +468,14 @@ public class RichEditText extends AppCompatEditText {
         return false;
     }
     private void openWebLink(String url) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        Uri uri = Uri.parse(url);
+        if (uri.getScheme() == null)
+            uri = uri.buildUpon().scheme("https").build();
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getContext().startActivity(intent);
     }
-    private void openItemLink(String url, String targetPackage, String targetActivity, String itemUuid) {
+    private void openItemLink(String targetPackage, String targetActivity, String itemUuid) {
         Intent intent = new Intent();
         intent.setComponent(new ComponentName(targetPackage, targetPackage + "." + targetActivity));
         intent.putExtra("item_uuid", itemUuid);

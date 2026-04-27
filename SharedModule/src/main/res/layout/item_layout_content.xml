@@ -26,10 +26,10 @@
 
         <Button
             android:id="@+id/boldButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:text="B"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textColor="@color/white"
             android:backgroundTint="@color/black"
             android:scaleType="centerCrop"
@@ -39,10 +39,10 @@
 
         <Button
             android:id="@+id/italicButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:text="I"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textColor="@color/white"
             android:backgroundTint="@color/black"
             android:scaleType="centerCrop"
@@ -52,10 +52,10 @@
 
         <Button
             android:id="@+id/underlineButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:text="U"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:backgroundTint="@color/black"
             android:textColor="@color/white"
             android:scaleType="centerCrop"
@@ -65,11 +65,11 @@
 
         <Button
             android:id="@+id/textSizeButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:text="Aa"
             android:inputType="text"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:textColor="@color/white"
             android:backgroundTint="@color/black"
             app:layout_constraintTop_toTopOf="parent"
@@ -78,10 +78,10 @@
 
         <Button
             android:id="@+id/textColorButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:text="C"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textColor="@color/white"
             android:backgroundTint="@color/black"
             app:layout_constraintTop_toTopOf="parent"
@@ -90,10 +90,10 @@
 
         <Button
             android:id="@+id/bulletListButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:text="*"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textColor="@color/white"
             android:backgroundTint="@color/black"
             app:layout_constraintTop_toTopOf="parent"
@@ -102,10 +102,10 @@
 
         <Button
             android:id="@+id/textAlignmentButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:text="A"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textColor="@color/white"
             android:backgroundTint="@color/black"
             app:layout_constraintTop_toTopOf="parent"
@@ -114,10 +114,10 @@
 
         <Button
             android:id="@+id/hyperlinkButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:text="🔗"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textColor="@color/white"
             android:backgroundTint="@color/black"
             app:layout_constraintTop_toTopOf="parent"
@@ -126,8 +126,8 @@
 
         <Button
             android:id="@+id/regionButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:text="▼"
             android:textSize="18sp"
             android:textColor="@color/white"
