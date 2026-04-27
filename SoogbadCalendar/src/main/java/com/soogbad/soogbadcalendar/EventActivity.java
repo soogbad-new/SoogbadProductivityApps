@@ -2,6 +2,7 @@ package com.soogbad.soogbadcalendar;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -25,6 +26,11 @@ public class EventActivity extends AppCompatActivity {
         eventLayout = findViewById(R.id.eventLayout); ItemActionBar eventActionBar = findViewById(R.id.itemActionBar);
         ItemsManager<Event, Event.EventOptions> eventsManager = ((SoogbadCalendarApplication)getApplication()).getEventsManager();
         Event event = eventsManager.getItem(getIntent().getStringExtra("item_uuid"));
+        if(event == null) {
+            Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();
+            finishAndRemoveTask();
+            return;
+        }
         eventLayout.init(eventActionBar, eventsManager, event);
     }
 

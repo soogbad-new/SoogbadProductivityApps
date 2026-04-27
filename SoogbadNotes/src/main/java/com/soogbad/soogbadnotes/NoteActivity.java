@@ -2,6 +2,7 @@ package com.soogbad.soogbadnotes;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -25,6 +26,11 @@ public class NoteActivity extends AppCompatActivity {
         noteLayout = findViewById(R.id.noteLayout); ItemActionBar noteActionBar = findViewById(R.id.itemActionBar);
         ItemsManager<Note, Note.NoteOptions> notesManager = ((SoogbadNotesApplication)getApplication()).getNotesManager();
         Note note = notesManager.getItem(getIntent().getStringExtra("item_uuid"));
+        if(note == null) {
+            Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();
+            finishAndRemoveTask();
+            return;
+        }
         noteLayout.init(noteActionBar, notesManager, note);
         note.Options.LastViewed = System.currentTimeMillis();
         notesManager.saveItemOptions(note);

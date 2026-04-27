@@ -2,6 +2,7 @@ package com.soogbad.soogbadreminders;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -25,6 +26,11 @@ public class ReminderActivity extends AppCompatActivity {
         reminderLayout = findViewById(R.id.reminderLayout); ItemActionBar reminderActionBar = findViewById(R.id.itemActionBar);
         ItemsManager<Reminder, Reminder.ReminderOptions> remindersManager = ((SoogbadRemindersApplication)getApplication()).getRemindersManager();
         Reminder reminder = remindersManager.getItem(getIntent().getStringExtra("item_uuid"));
+        if(reminder == null) {
+            Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();
+            finishAndRemoveTask();
+            return;
+        }
         reminderLayout.init(reminderActionBar, remindersManager, reminder);
     }
 
