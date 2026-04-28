@@ -50,7 +50,14 @@ public class ItemActionBar extends LinearLayout {
         }
         else if(menuItem.getItemId() == R.id.action_copy_uuid) {
             ClipboardManager clipboard = (ClipboardManager)getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setPrimaryClip(ClipData.newPlainText("UUID", item.UUID));
+            String prefix = "";
+            if(getContext().getPackageName().equals("com.soogbad.soogbadcalendar"))
+                prefix = "EVENT-";
+            else if(getContext().getPackageName().equals("com.soogbad.soogbadnotes"))
+                prefix = "NOTE-";
+            else if(getContext().getPackageName().equals("com.soogbad.soogbadreminders"))
+                prefix = "REMINDER-";
+            clipboard.setPrimaryClip(ClipData.newPlainText("UUID", prefix + item.UUID));
             Toast.makeText(getContext(), "Item UUID copied to clipboard", Toast.LENGTH_SHORT).show();
             return true;
         }
