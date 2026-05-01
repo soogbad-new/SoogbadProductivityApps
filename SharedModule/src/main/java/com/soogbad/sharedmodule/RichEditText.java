@@ -16,13 +16,10 @@ import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
-import android.text.style.BulletSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ParagraphStyle;
-import android.text.style.StyleSpan;
 import android.text.style.AlignmentSpan;
-import android.text.style.UnderlineSpan;
 import android.text.style.URLSpan;
 import android.util.AttributeSet;
 import android.util.Patterns;
@@ -30,9 +27,6 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 
 import androidx.appcompat.widget.AppCompatEditText;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,6 +45,9 @@ public class RichEditText extends AppCompatEditText {
     public RichEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         addTextChangedListener(textChangedListener);
+        arrowPaint.setColor(Color.WHITE);
+        arrowPaint.setStyle(Paint.Style.FILL);
+        arrowSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
     }
 
     public interface StyleStateListener {
@@ -61,6 +58,20 @@ public class RichEditText extends AppCompatEditText {
     private void notifyListener() {
         if(styleStateListener != null)
             styleStateListener.onStyleStateChanged(activeCharacterStyles, activeParagraphStyles);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_UP) {
+            boolean handled = handleCollapsibleRegionClick(event);
+            if(handled) return true;
+        }
+        if(event.getAction() == MotionEvent.ACTION_UP && getSelectionStart() == getSelectionEnd()) {
+            boolean handled = handleHyperlinkClick(event);
+            if(handled) return true;
+        }
+        return super.onTouchEvent(event);
     }
 
     @Override
@@ -432,15 +443,6 @@ public class RichEditText extends AppCompatEditText {
         return spans.length > 0 ? spans[0].getURL() : null;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_UP && getSelectionStart() == getSelectionEnd()) {
-            boolean handled = handleHyperlinkClick(event);
-            if(handled) return true;
-        }
-        return super.onTouchEvent(event);
-    }
     private boolean handleHyperlinkClick(MotionEvent event) {
         Editable editable = getText();
         if(editable == null) return false;
@@ -483,6 +485,154 @@ public class RichEditText extends AppCompatEditText {
     // ===== Collapsible Regions =====
 
     public void toggleCollapsibleRegion() {
+        Editable editable = getText();
+        if(editable == null) return;
+        int selectionStart = getSelectionStart(); int selectionEnd = getSelectionEnd();
+        if(selectionStart == selectionEnd) return;
+        int regionStart = getLineStart(editable.toString(), selectionStart); int regionEnd = getLineEnd(editable.toString(), selectionEnd - 1);
+        if(regionStart == regionEnd) return;
+        CollapsibleRegionSpan[] existingSpans = editable.getSpans(regionStart, regionEnd, CollapsibleRegionSpan.class);
+        if(existingSpans.length > 0)
+            for(CollapsibleRegionSpan span : existingSpans) {
+                if(span.isCollapsed()) expandRegion(span);
+                editable.removeSpan(span);
+            }
+        else {
+            CollapsibleRegionSpan span = new CollapsibleRegionSpan();
+            editable.setSpan(span, regionStart, regionEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        }
+        invalidate();
+    }
+
+    public void collapseRegion(CollapsibleRegionSpan span) {
+        Editable editable = getText();
+        if(editable == null || span.isCollapsed()) return;
+        int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
+        if(spanStart < 0 || spanEnd < 0) return;
+        int firstLineEnd = getLineEnd(editable.toString(), spanStart);
+        if(firstLineEnd >= spanEnd) return;
+        int hideStart = firstLineEnd;
+        span.setHiddenContent(new SpannableStringBuilder(editable, hideStart, spanEnd));
+        span.setCollapsed(true);
+        ignoreTextChanges = true;
+        editable.removeSpan(span);
+        editable.delete(hideStart, spanEnd);
+        int newEnd = hideStart;
+        editable.setSpan(span, spanStart, newEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        ignoreTextChanges = false;
+        invalidate();
+    }
+    public void expandRegion(CollapsibleRegionSpan span) {
+        Editable editable = getText();
+        if(editable == null || !span.isCollapsed()) return;
+        int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
+        if(spanStart < 0 || spanEnd < 0) return;
+        SpannableStringBuilder hiddenContent = span.getHiddenContent();
+        if(hiddenContent == null) return;
+        int insertPosition = spanEnd;
+        ignoreTextChanges = true;
+        editable.removeSpan(span);
+        editable.insert(insertPosition, hiddenContent);
+        int newEnd = insertPosition + hiddenContent.length();
+        editable.setSpan(span, spanStart, newEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        span.setCollapsed(false);
+        span.setHiddenContent(null);
+        ignoreTextChanges = false;
+        invalidate();
+    }
+
+    private boolean handleCollapsibleRegionClick(MotionEvent event) {
+        Editable editable = getText();
+        if(editable == null || getLayout() == null) return false;
+        float touchX = event.getX();
+        float touchY = event.getY() - getTotalPaddingTop() + getScrollY();
+        int line = getLayout().getLineForVertical((int)touchY);
+        int lineStart = getLayout().getLineStart(line);
+        CollapsibleRegionSpan[] spans = editable.getSpans(0, editable.length(), CollapsibleRegionSpan.class);
+        for(CollapsibleRegionSpan span : spans) {
+            int spanStart = editable.getSpanStart(span);
+            int regionFirstLine = getLayout().getLineForOffset(spanStart);
+            if(line == regionFirstLine) {
+                if(span.isCollapsed()) {
+                    expandRegion(span);
+                    return true;
+                } else if(touchX < getPaddingLeft()) {
+                    collapseRegion(span);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private final Paint arrowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final float arrowSize;
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        drawCollapsibleRegionArrows(canvas);
+    }
+    private void drawCollapsibleRegionArrows(Canvas canvas) {
+        Editable editable = getText();
+        if(editable == null || getLayout() == null) return;
+        CollapsibleRegionSpan[] spans = editable.getSpans(0, editable.length(), CollapsibleRegionSpan.class);
+        for(CollapsibleRegionSpan span : spans) {
+            int spanStart = editable.getSpanStart(span);
+            if(spanStart < 0) continue;
+            int line = getLayout().getLineForOffset(spanStart);
+            int lineTop = getLayout().getLineTop(line) + getTotalPaddingTop();
+            int lineBottom = getLayout().getLineBottom(line) + getTotalPaddingTop();
+            float centerY = (lineTop + lineBottom) / 2f;
+            float centerX = getPaddingLeft() / 2f;
+            Path path = new Path();
+            if(span.isCollapsed()) {
+                path.moveTo(centerX - arrowSize / 3, centerY - arrowSize / 2);
+                path.lineTo(centerX + arrowSize * 2 / 3, centerY);
+                path.lineTo(centerX - arrowSize / 3, centerY + arrowSize / 2);
+            } else {
+                path.moveTo(centerX - arrowSize / 2, centerY - arrowSize / 3);
+                path.lineTo(centerX, centerY + arrowSize * 2 / 3);
+                path.lineTo(centerX + arrowSize / 2, centerY - arrowSize / 3);
+            }
+            path.close();
+            canvas.drawPath(path, arrowPaint);
+        }
+    }
+
+    public SpannedString getFullContent() {
+        Editable editable = getText();
+        if(editable == null) return new SpannedString("");
+        CollapsibleRegionSpan[] spans = editable.getSpans(0, editable.length(), CollapsibleRegionSpan.class);
+        boolean hasCollapsed = false;
+        for(CollapsibleRegionSpan span : spans)
+            if(span.isCollapsed()) { hasCollapsed = true; break; }
+        if(!hasCollapsed)
+            return new SpannedString(editable);
+        Arrays.sort(spans, Comparator.comparingInt(editable::getSpanStart));
+        SpannableStringBuilder builder = new SpannableStringBuilder(editable);
+        int offset = 0;
+        for(CollapsibleRegionSpan span : spans) {
+            if(!span.isCollapsed()) continue;
+            SpannableStringBuilder hiddenContent = span.getHiddenContent();
+            if(hiddenContent == null) continue;
+            int spanEnd = builder.getSpanEnd(span) + offset;
+            builder.insert(spanEnd, hiddenContent);
+            int regionStart = builder.getSpanStart(span);
+            builder.removeSpan(span);
+            CollapsibleRegionSpan fullSpan = new CollapsibleRegionSpan();
+            builder.setSpan(fullSpan, regionStart, spanEnd + hiddenContent.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            offset += hiddenContent.length();
+        }
+        return new SpannedString(builder);
+    }
+
+    private static int getLineStart(String text, int position) {
+        int start = text.lastIndexOf('\n', position - 1);
+        return start == -1 ? 0 : start + 1;
+    }
+    private static int getLineEnd(String text, int position) {
+        int end = text.indexOf('\n', position);
+        return end == -1 ? text.length() : end;
     }
 
 }
