@@ -489,7 +489,7 @@ public class RichEditText extends AppCompatEditText {
         if(editable == null) return;
         int selectionStart = getSelectionStart(); int selectionEnd = getSelectionEnd();
         if(selectionStart == selectionEnd) return;
-        int regionStart = getLineStart(editable.toString(), selectionStart); int regionEnd = getLineEnd(editable.toString(), selectionEnd - 1);
+        int regionStart = getParagraphStart(editable.toString(), selectionStart); int regionEnd = getParagraphEnd(editable.toString(), selectionEnd - 1);
         if(regionStart == regionEnd) return;
         CollapsibleRegionSpan[] existingSpans = editable.getSpans(regionStart, regionEnd, CollapsibleRegionSpan.class);
         if(existingSpans.length > 0)
@@ -508,13 +508,12 @@ public class RichEditText extends AppCompatEditText {
         Editable editable = getText();
         if(editable == null || getLayout() == null) return false;
         float touchY = event.getY() - getTotalPaddingTop() + getScrollY();
-        int line = getLayout().getLineForVertical((int)touchY);
-        getLayout().getLineStart(line);
+        int touchLine = getLayout().getLineForVertical((int)touchY);
         CollapsibleRegionSpan[] spans = editable.getSpans(0, editable.length(), CollapsibleRegionSpan.class);
         for(CollapsibleRegionSpan span : spans) {
-            int spanStart = editable.getSpanStart(span);
-            int regionFirstLine = getLayout().getLineForOffset(spanStart);
-            if(line == regionFirstLine) {
+            int firstParagraphStart = editable.getSpanStart(span); int firstParagraphEnd = getParagraphEnd(editable.toString(), firstParagraphStart);
+            int firstParagraphFirstLine = getLayout().getLineForOffset(firstParagraphStart); int firstParagraphLastLine = getLayout().getLineForOffset(firstParagraphEnd);
+            if(touchLine >= firstParagraphFirstLine && touchLine <= firstParagraphLastLine) {
                 if(span.isCollapsed())
                     expandRegion(span);
                 else
@@ -530,14 +529,14 @@ public class RichEditText extends AppCompatEditText {
         if(editable == null || span.isCollapsed()) return;
         int spanStart = editable.getSpanStart(span); int spanEnd = editable.getSpanEnd(span);
         if(spanStart < 0 || spanEnd < 0) return;
-        int firstLineEnd = getLineEnd(editable.toString(), spanStart);
-        if(firstLineEnd >= spanEnd) return;
-        span.setHiddenContent(new SpannableStringBuilder(editable, firstLineEnd, spanEnd));
+        int firstParagraphEnd = getParagraphEnd(editable.toString(), spanStart);
+        if(firstParagraphEnd >= spanEnd) return;
+        span.setHiddenContent(new SpannableStringBuilder(editable, firstParagraphEnd, spanEnd));
         span.setCollapsed(true);
         ignoreTextChanges = true;
         editable.removeSpan(span);
-        editable.delete(firstLineEnd, spanEnd);
-        editable.setSpan(span, spanStart, firstLineEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        editable.delete(firstParagraphEnd, spanEnd);
+        editable.setSpan(span, spanStart, firstParagraphEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
         ignoreTextChanges = false;
         invalidate();
     }
@@ -571,19 +570,20 @@ public class RichEditText extends AppCompatEditText {
         for(CollapsibleRegionSpan span : spans) {
             int spanStart = editable.getSpanStart(span);
             if(spanStart < 0) continue;
-            int line = getLayout().getLineForOffset(spanStart);
-            int lineTop = getLayout().getLineTop(line) + getTotalPaddingTop(); int lineBottom = getLayout().getLineBottom(line) + getTotalPaddingTop();
+            int firstParagraphEnd = getParagraphEnd(editable.toString(), spanStart);
+            int firstLine = getLayout().getLineForOffset(spanStart); int lastLine = getLayout().getLineForOffset(firstParagraphEnd);
+            int lineTop = getLayout().getLineTop(firstLine) + getTotalPaddingTop(); int lineBottom = getLayout().getLineBottom(lastLine) + getTotalPaddingTop();
             canvas.drawRect(getPaddingLeft(), lineTop, getWidth() - getPaddingRight(), lineBottom, regionBorderPaint);
             float centerY = (lineTop + lineBottom) / 2f; float centerX = getPaddingLeft() / 2f;
-            Path path = new Path();
+            Path arrowPath = new Path();
             if(span.isCollapsed()) {
-                path.moveTo(centerX - arrowSize / 3, centerY - arrowSize / 2); path.lineTo(centerX + arrowSize * 2 / 3, centerY); path.lineTo(centerX - arrowSize / 3, centerY + arrowSize / 2);
+                arrowPath.moveTo(centerX - arrowSize / 3, centerY - arrowSize / 2); arrowPath.lineTo(centerX + arrowSize * 2 / 3, centerY); arrowPath.lineTo(centerX - arrowSize / 3, centerY + arrowSize / 2);
             } 
             else {
-                path.moveTo(centerX - arrowSize / 2, centerY - arrowSize / 3); path.lineTo(centerX, centerY + arrowSize * 2 / 3); path.lineTo(centerX + arrowSize / 2, centerY - arrowSize / 3);
+                arrowPath.moveTo(centerX - arrowSize / 2, centerY - arrowSize / 3); arrowPath.lineTo(centerX, centerY + arrowSize * 2 / 3); arrowPath.lineTo(centerX + arrowSize / 2, centerY - arrowSize / 3);
             }
-            path.close();
-            canvas.drawPath(path, arrowPaint);
+            arrowPath.close();
+            canvas.drawPath(arrowPath, arrowPaint);
         }
     }
 
@@ -594,27 +594,16 @@ public class RichEditText extends AppCompatEditText {
         if(spans.length == 0) return new SpannedString(editable);
         Arrays.sort(spans, Comparator.comparingInt(editable::getSpanStart));
         SpannableStringBuilder builder = new SpannableStringBuilder(editable);
-        int offset = 0;
         for(CollapsibleRegionSpan span : spans) {
             if(!span.isCollapsed()) continue;
             SpannableStringBuilder hiddenContent = span.getHiddenContent();
             if(hiddenContent == null) continue;
-            int spanStart = builder.getSpanStart(span); int spanEnd = builder.getSpanEnd(span) + offset;
+            int spanStart = builder.getSpanStart(span); int spanEnd = builder.getSpanEnd(span);
             builder.insert(spanEnd, hiddenContent);
             builder.removeSpan(span);
             builder.setSpan(new CollapsibleRegionSpan(), spanStart, spanEnd + hiddenContent.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-            offset += hiddenContent.length();
         }
         return new SpannedString(builder);
-    }
-
-    private static int getLineStart(String text, int position) {
-        int start = text.lastIndexOf('\n', position - 1);
-        return start == -1 ? 0 : start + 1;
-    }
-    private static int getLineEnd(String text, int position) {
-        int end = text.indexOf('\n', position);
-        return end == -1 ? text.length() : end;
     }
 
 }
