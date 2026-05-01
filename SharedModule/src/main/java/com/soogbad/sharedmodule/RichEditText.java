@@ -507,22 +507,19 @@ public class RichEditText extends AppCompatEditText {
     private boolean handleCollapsibleRegionClick(MotionEvent event) {
         Editable editable = getText();
         if(editable == null || getLayout() == null) return false;
-        float touchX = event.getX();
         float touchY = event.getY() - getTotalPaddingTop() + getScrollY();
         int line = getLayout().getLineForVertical((int)touchY);
-        int lineStart = getLayout().getLineStart(line);
+        getLayout().getLineStart(line);
         CollapsibleRegionSpan[] spans = editable.getSpans(0, editable.length(), CollapsibleRegionSpan.class);
         for(CollapsibleRegionSpan span : spans) {
             int spanStart = editable.getSpanStart(span);
             int regionFirstLine = getLayout().getLineForOffset(spanStart);
             if(line == regionFirstLine) {
-                if(span.isCollapsed()) {
+                if(span.isCollapsed())
                     expandRegion(span);
-                    return true;
-                } else if(touchX < getPaddingLeft()) {
+                else
                     collapseRegion(span);
-                    return true;
-                }
+                return true;
             }
         }
         return false;
@@ -535,13 +532,12 @@ public class RichEditText extends AppCompatEditText {
         if(spanStart < 0 || spanEnd < 0) return;
         int firstLineEnd = getLineEnd(editable.toString(), spanStart);
         if(firstLineEnd >= spanEnd) return;
-        int hiddenLinesStart = firstLineEnd;
-        span.setHiddenContent(new SpannableStringBuilder(editable, hiddenLinesStart, spanEnd));
+        span.setHiddenContent(new SpannableStringBuilder(editable, firstLineEnd, spanEnd));
         span.setCollapsed(true);
         ignoreTextChanges = true;
         editable.removeSpan(span);
-        editable.delete(hiddenLinesStart, spanEnd);
-        editable.setSpan(span, spanStart, hiddenLinesStart, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        editable.delete(firstLineEnd, spanEnd);
+        editable.setSpan(span, spanStart, firstLineEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
         ignoreTextChanges = false;
         invalidate();
     }
@@ -565,6 +561,7 @@ public class RichEditText extends AppCompatEditText {
     private final Paint regionBorderPaint;
     private final Paint arrowPaint;
     private final float arrowSize;
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
