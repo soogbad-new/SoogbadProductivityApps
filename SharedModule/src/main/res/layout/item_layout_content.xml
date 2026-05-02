@@ -12,130 +12,138 @@
         android:paddingStart="20dp"
         android:paddingEnd="16dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/formattingToolbar"
+        app:layout_constraintBottom_toTopOf="@id/formattingToolbarScroll"
         app:layout_constraintLeft_toLeftOf="parent"
         tools:ignore="SpUsage">
     </com.soogbad.sharedmodule.RichEditText>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/formattingToolbar"
+    <HorizontalScrollView
+        android:id="@+id/formattingToolbarScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent">
 
-        <Button
-            android:id="@+id/boldButton"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:text="B"
-            android:textSize="22sp"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/black"
-            android:scaleType="centerCrop"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent">
-        </Button>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/formattingToolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/italicButton"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:text="I"
-            android:textSize="22sp"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/black"
-            android:scaleType="centerCrop"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/boldButton">
-        </Button>
+            <Button
+                android:id="@+id/boldButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="B"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/black"
+                android:scaleType="centerCrop"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent">
+            </Button>
 
-        <Button
-            android:id="@+id/underlineButton"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:text="U"
-            android:textSize="22sp"
-            android:backgroundTint="@color/black"
-            android:textColor="@color/white"
-            android:scaleType="centerCrop"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/italicButton">
-        </Button>
+            <Button
+                android:id="@+id/italicButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="I"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/black"
+                android:scaleType="centerCrop"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/boldButton">
+            </Button>
 
-        <Button
-            android:id="@+id/textSizeButton"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:text="Aa"
-            android:inputType="text"
-            android:textSize="20sp"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/black"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/underlineButton">
-        </Button>
+            <Button
+                android:id="@+id/underlineButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="U"
+                android:textSize="24sp"
+                android:backgroundTint="@color/black"
+                android:textColor="@color/white"
+                android:scaleType="centerCrop"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/italicButton">
+            </Button>
 
-        <Button
-            android:id="@+id/textColorButton"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:text="C"
-            android:textSize="22sp"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/black"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/textSizeButton">
-        </Button>
+            <Button
+                android:id="@+id/textSizeButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="Aa"
+                android:inputType="text"
+                android:textSize="22sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/black"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/underlineButton">
+            </Button>
 
-        <Button
-            android:id="@+id/bulletListButton"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:text="*"
-            android:textSize="22sp"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/black"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/textColorButton">
-        </Button>
+            <Button
+                android:id="@+id/textColorButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="C"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/black"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/textSizeButton">
+            </Button>
 
-        <Button
-            android:id="@+id/textAlignmentButton"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:text="A"
-            android:textSize="22sp"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/black"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/bulletListButton">
-        </Button>
+            <Button
+                android:id="@+id/bulletListButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="*"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/black"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/textColorButton">
+            </Button>
 
-        <Button
-            android:id="@+id/hyperlinkButton"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:text="🔗"
-            android:textSize="20sp"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/black"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/textAlignmentButton">
-        </Button>
+            <Button
+                android:id="@+id/textAlignmentButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="A"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/black"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/bulletListButton">
+            </Button>
 
-        <Button
-            android:id="@+id/regionButton"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:text="▼"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/black"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/hyperlinkButton">
-        </Button>
+            <Button
+                android:id="@+id/hyperlinkButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="🔗"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/black"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/textAlignmentButton">
+            </Button>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:id="@+id/regionButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="▼"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/black"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/hyperlinkButton">
+            </Button>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </HorizontalScrollView>
 
 </merge>
