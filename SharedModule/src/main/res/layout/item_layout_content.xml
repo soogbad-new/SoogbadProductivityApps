@@ -12,7 +12,7 @@
         android:paddingStart="20dp"
         android:paddingEnd="16dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/formattingToolbarScroll"
+        app:layout_constraintBottom_toTopOf="@id/formattingToolbarScrollView"
         app:layout_constraintLeft_toLeftOf="parent"
         tools:ignore="SpUsage">
     </com.soogbad.sharedmodule.RichEditText>
@@ -140,6 +140,30 @@
                 android:backgroundTint="@color/black"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/hyperlinkButton">
+            </Button>
+
+            <Button
+                android:id="@+id/undoButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="↰"
+                android:textSize="26sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/black"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/regionButton">
+            </Button>
+
+            <Button
+                android:id="@+id/redoButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="↱"
+                android:textSize="26sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/black"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/undoButton">
             </Button>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

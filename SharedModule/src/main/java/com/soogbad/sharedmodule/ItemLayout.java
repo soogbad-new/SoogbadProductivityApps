@@ -37,7 +37,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     private final RichEditText contentEditText;
     private final ConstraintLayout formattingToolbar;
     public ConstraintLayout getFormattingToolbar() { return formattingToolbar; }
-    private final Button boldButton, italicButton, underlineButton, textSizeButton, textColorButton, bulletListButton, textAlignmentButton, hyperlinkButton, regionButton;
+    private final Button boldButton, italicButton, underlineButton, textSizeButton, textColorButton, bulletListButton, textAlignmentButton, hyperlinkButton, regionButton, undoButton, redoButton;
 
     private ItemActionBar itemActionBar;
     private ItemsManager<?, ?> itemsManager;
@@ -51,8 +51,8 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     public ItemLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.item_layout_content, this, true);
-        contentEditText = findViewById(R.id.contentEditText); formattingToolbar = findViewById(R.id.formattingToolbar); boldButton = findViewById(R.id.boldButton); italicButton = findViewById(R.id.italicButton); underlineButton = findViewById(R.id.underlineButton); textSizeButton = findViewById(R.id.textSizeButton); textColorButton = findViewById(R.id.textColorButton); bulletListButton = findViewById(R.id.bulletListButton); textAlignmentButton = findViewById(R.id.textAlignmentButton); hyperlinkButton = findViewById(R.id.hyperlinkButton); regionButton = findViewById(R.id.regionButton);
-        boldButton.setOnClickListener(v -> onBoldButtonClick()); italicButton.setOnClickListener(v -> onItalicButtonClick()); underlineButton.setOnClickListener(v -> onUnderlineButtonClick()); textSizeButton.setOnClickListener(v -> onTextSizeButtonClick()); textColorButton.setOnClickListener(v -> onTextColorButtonClick()); bulletListButton.setOnClickListener(v -> onBulletListButtonClick()); textAlignmentButton.setOnClickListener(v -> onTextAlignmentButtonClick()); hyperlinkButton.setOnClickListener(v -> onHyperlinkButtonClick()); regionButton.setOnClickListener(v -> onRegionButtonClick());
+        contentEditText = findViewById(R.id.contentEditText); formattingToolbar = findViewById(R.id.formattingToolbar); boldButton = findViewById(R.id.boldButton); italicButton = findViewById(R.id.italicButton); underlineButton = findViewById(R.id.underlineButton); textSizeButton = findViewById(R.id.textSizeButton); textColorButton = findViewById(R.id.textColorButton); bulletListButton = findViewById(R.id.bulletListButton); textAlignmentButton = findViewById(R.id.textAlignmentButton); hyperlinkButton = findViewById(R.id.hyperlinkButton); regionButton = findViewById(R.id.regionButton); undoButton = findViewById(R.id.undoButton); redoButton = findViewById(R.id.redoButton);
+        boldButton.setOnClickListener(v -> onBoldButtonClick()); italicButton.setOnClickListener(v -> onItalicButtonClick()); underlineButton.setOnClickListener(v -> onUnderlineButtonClick()); textSizeButton.setOnClickListener(v -> onTextSizeButtonClick()); textColorButton.setOnClickListener(v -> onTextColorButtonClick()); bulletListButton.setOnClickListener(v -> onBulletListButtonClick()); textAlignmentButton.setOnClickListener(v -> onTextAlignmentButtonClick()); hyperlinkButton.setOnClickListener(v -> onHyperlinkButtonClick()); regionButton.setOnClickListener(v -> onRegionButtonClick()); undoButton.setOnClickListener(v -> onUndoButtonClick()); redoButton.setOnClickListener(v -> onRedoButtonClick());
         contentEditText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, RichCharacterStyle.DEFAULT_TEXT_SIZE.size);
         contentEditText.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
             @Override public boolean onCreateActionMode(ActionMode actionMode, Menu menu) { currentSelectionActionMode = actionMode; return true; }
@@ -88,10 +88,10 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         itemsManager.deleteItem(item);
     }
 
-    public void onBoldButtonClick() { contentEditText.toggleCharacterStyle(RichCharacterStyle.BOLD); }
-    public void onItalicButtonClick() { contentEditText.toggleCharacterStyle(RichCharacterStyle.ITALIC); }
-    public void onUnderlineButtonClick() { contentEditText.toggleCharacterStyle(RichCharacterStyle.UNDERLINE); }
-    public void onTextSizeButtonClick() {
+    private void onBoldButtonClick() { contentEditText.toggleCharacterStyle(RichCharacterStyle.BOLD); }
+    private void onItalicButtonClick() { contentEditText.toggleCharacterStyle(RichCharacterStyle.ITALIC); }
+    private void onUnderlineButtonClick() { contentEditText.toggleCharacterStyle(RichCharacterStyle.UNDERLINE); }
+    private void onTextSizeButtonClick() {
         RichCharacterStyle.TextSize[] sizes = RichCharacterStyle.TextSize.values();
         int[] sizeValues = new int[sizes.length];
         for(int i = 0; i < sizes.length; i++) sizeValues[i] = sizes[i].size;
@@ -101,8 +101,8 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
                 selectedSize = style.value;
         showSelectionPopup(textSizeButton, sizeValues, selectedSize, AbsoluteSizeSpan.class, i -> onTextSizeSelected(sizes[i]));
     }
-    public void onTextSizeSelected(RichCharacterStyle.TextSize size) { contentEditText.toggleCharacterStyle(RichCharacterStyle.TEXT_SIZE(size)); }
-    public void onTextColorButtonClick() {
+    private void onTextSizeSelected(RichCharacterStyle.TextSize size) { contentEditText.toggleCharacterStyle(RichCharacterStyle.TEXT_SIZE(size)); }
+    private void onTextColorButtonClick() {
         RichCharacterStyle.TextColor[] colors = RichCharacterStyle.TextColor.values();
         int[] colorValues = new int[colors.length];
         for(int i = 0; i < colors.length; i++) colorValues[i] = colors[i].color;
@@ -112,9 +112,9 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
                 selectedColor = style.value;
         showSelectionPopup(textColorButton, colorValues, selectedColor, ForegroundColorSpan.class, i -> onTextColorSelected(colors[i]));
     }
-    public void onTextColorSelected(RichCharacterStyle.TextColor color) { contentEditText.toggleCharacterStyle(RichCharacterStyle.TEXT_COLOR(color)); }
-    public void onBulletListButtonClick() { contentEditText.toggleParagraphStyle(RichParagraphStyle.BULLET); }
-    public void onTextAlignmentButtonClick() {
+    private void onTextColorSelected(RichCharacterStyle.TextColor color) { contentEditText.toggleCharacterStyle(RichCharacterStyle.TEXT_COLOR(color)); }
+    private void onBulletListButtonClick() { contentEditText.toggleParagraphStyle(RichParagraphStyle.BULLET); }
+    private void onTextAlignmentButtonClick() {
         int[] alignmentValues = new int[]{ RichParagraphStyle.ALIGN_LEFT.value, RichParagraphStyle.ALIGN_CENTER.value, RichParagraphStyle.ALIGN_RIGHT.value };
         int selectedAlignment = RichParagraphStyle.DEFAULT_TEXT_ALIGNMENT.value;
         for(RichParagraphStyle<?> style : activeParagraphStyles)
@@ -122,8 +122,8 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
                 selectedAlignment = style.value;
         showSelectionPopup(textAlignmentButton, alignmentValues, selectedAlignment, AlignmentSpan.Standard.class, i -> onTextAlignmentSelected(Layout.Alignment.values()[alignmentValues[i]]));
     }
-    public void onTextAlignmentSelected(Layout.Alignment alignment) { contentEditText.toggleParagraphStyle(RichParagraphStyle.TEXT_ALIGNMENT(alignment)); }
-    public void onHyperlinkButtonClick() {
+    private void onTextAlignmentSelected(Layout.Alignment alignment) { contentEditText.toggleParagraphStyle(RichParagraphStyle.TEXT_ALIGNMENT(alignment)); }
+    private void onHyperlinkButtonClick() {
         int selectionStart = contentEditText.getSelectionStart(); int selectionEnd = contentEditText.getSelectionEnd();
         if(selectionStart == selectionEnd)
             showHyperlinkDialog(false, false);
@@ -133,7 +133,13 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
             showHyperlinkDialog(true, Utility.isLinkUrlValid(selectedText));
         }
     }
-    public void onRegionButtonClick() { contentEditText.toggleCollapsibleRegion(); }
+    private void onRegionButtonClick() { contentEditText.toggleCollapsibleRegion(); }
+    private void onUndoButtonClick() {
+
+    }
+    private void onRedoButtonClick() {
+
+    }
 
     @Override
     public void onStyleStateChanged(HashSet<RichCharacterStyle<?>> activeCharacterStyles, HashSet<RichParagraphStyle<?>> activeParagraphStyles) {
