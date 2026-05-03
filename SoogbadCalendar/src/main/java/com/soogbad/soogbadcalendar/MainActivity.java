@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_main, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         eventList = findViewById(R.id.eventList);
-        eventsManager = ((SoogbadCalendarApplication)getApplication()).getEventsManager();
+        eventsManager = ((SoogbadCalendarApplication)getApplication()).getItemsManager();
         eventList.setLayoutManager(new LinearLayoutManager(this));
         eventList.setAdapter(new ItemListAdapter(eventsManager.getItems(), R.layout.event_list_item, R.id.itemTitleTextView));
     }

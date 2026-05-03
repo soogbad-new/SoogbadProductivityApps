@@ -24,7 +24,7 @@ public class EventActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_event, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         eventLayout = findViewById(R.id.eventLayout); ItemActionBar eventActionBar = findViewById(R.id.itemActionBar);
-        ItemsManager<Event, Event.EventOptions> eventsManager = ((SoogbadCalendarApplication)getApplication()).getEventsManager();
+        ItemsManager<Event, Event.EventOptions> eventsManager = ((SoogbadCalendarApplication)getApplication()).getItemsManager();
         Event event = eventsManager.getItem(getIntent().getStringExtra("item_uuid"));
         if(event == null) {
             Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();

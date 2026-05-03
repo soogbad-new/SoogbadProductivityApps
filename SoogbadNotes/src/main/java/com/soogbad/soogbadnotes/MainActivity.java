@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_main, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         noteList = findViewById(R.id.noteList);
-        notesManager = ((SoogbadNotesApplication)getApplication()).getNotesManager();
+        notesManager = ((SoogbadNotesApplication)getApplication()).getItemsManager();
         noteList.setLayoutManager(new LinearLayoutManager(this));
         noteList.setAdapter(new ItemListAdapter(notesManager.getItems(), R.layout.note_list_item, R.id.itemTitleTextView));
     }

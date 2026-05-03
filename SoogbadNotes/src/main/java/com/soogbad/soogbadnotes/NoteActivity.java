@@ -24,7 +24,7 @@ public class NoteActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_note, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         noteLayout = findViewById(R.id.noteLayout); ItemActionBar noteActionBar = findViewById(R.id.itemActionBar);
-        ItemsManager<Note, Note.NoteOptions> notesManager = ((SoogbadNotesApplication)getApplication()).getNotesManager();
+        ItemsManager<Note, Note.NoteOptions> notesManager = ((SoogbadNotesApplication)getApplication()).getItemsManager();
         Note note = notesManager.getItem(getIntent().getStringExtra("item_uuid"));
         if(note == null) {
             Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();

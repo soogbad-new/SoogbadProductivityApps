@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_main, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
         reminderList = findViewById(R.id.reminderList);
-        remindersManager = ((SoogbadRemindersApplication)getApplication()).getRemindersManager();
+        remindersManager = ((SoogbadRemindersApplication)getApplication()).getItemsManager();
         reminderList.setLayoutManager(new LinearLayoutManager(this));
         reminderList.setAdapter(new ItemListAdapter(remindersManager.getItems(), R.layout.reminder_list_item, R.id.itemTitleTextView));
     }
