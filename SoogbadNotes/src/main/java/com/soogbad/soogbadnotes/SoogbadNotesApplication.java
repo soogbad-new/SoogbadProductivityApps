@@ -1,22 +1,18 @@
 package com.soogbad.soogbadnotes;
 
-import android.app.Application;
-
+import com.soogbad.sharedmodule.ItemApplication;
 import com.soogbad.sharedmodule.ItemsManager;
-import com.soogbad.sharedmodule.RichCharacterStyle;
 import com.soogbad.sharedmodule.StorageManager;
+import com.soogbad.sharedmodule.RichCharacterStyle;
 
-public class SoogbadNotesApplication extends Application {
-
-    private ItemsManager<Note, Note.NoteOptions> notesManager;
-    public ItemsManager<Note, Note.NoteOptions> getNotesManager() { return notesManager; }
+public class SoogbadNotesApplication extends ItemApplication<Note, Note.NoteOptions> {
 
     @Override
     public void onCreate() {
         super.onCreate();
         RichCharacterStyle.DEFAULT_TEXT_SIZE = RichCharacterStyle.TextSize.SIZE_16;
-        notesManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Note::create, Note.NoteOptions::fromJson);
-        notesManager.loadItems();
+        itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Note::create, Note.NoteOptions::fromJson);
+        itemsManager.loadItems();
     }
 
 }
