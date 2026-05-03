@@ -134,12 +134,8 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         }
     }
     private void onRegionButtonClick() { contentEditText.toggleCollapsibleRegion(); }
-    private void onUndoButtonClick() {
-
-    }
-    private void onRedoButtonClick() {
-
-    }
+    private void onUndoButtonClick() { contentEditText.onTextContextMenuItem(android.R.id.undo); }
+    private void onRedoButtonClick() { contentEditText.onTextContextMenuItem(android.R.id.redo); }
 
     @Override
     public void onStyleStateChanged(HashSet<RichCharacterStyle<?>> activeCharacterStyles, HashSet<RichParagraphStyle<?>> activeParagraphStyles) {
