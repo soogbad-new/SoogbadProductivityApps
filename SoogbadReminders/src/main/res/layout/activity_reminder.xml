@@ -15,11 +15,11 @@
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        <com.soogbad.sharedmodule.ItemActionBar
+        <com.soogbad.soogbadreminders.ReminderActionBar
             android:id="@+id/itemActionBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </com.soogbad.sharedmodule.ItemActionBar>
+        </com.soogbad.soogbadreminders.ReminderActionBar>
     </androidx.appcompat.widget.Toolbar>
 
     <com.soogbad.sharedmodule.ItemLayout

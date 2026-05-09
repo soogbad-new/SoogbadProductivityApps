@@ -14,11 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-public class ItemActionBar extends LinearLayout {
+public abstract class ItemActionBar extends LinearLayout {
 
 
     private final EditText titleEditText;
     public EditText getTitleEditText() { return titleEditText; }
+    private final ImageButton overflowMenuButton, scheduleButton;
 
     private ItemLayout itemLayout;
     private Item<?> item;
@@ -26,7 +27,7 @@ public class ItemActionBar extends LinearLayout {
     public ItemActionBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.item_action_bar_content, this, true);
-        titleEditText = findViewById(R.id.titleEditText); ImageButton overflowMenuButton = findViewById(R.id.overflowMenuButton);
+        titleEditText = findViewById(R.id.titleEditText); overflowMenuButton = findViewById(R.id.overflowMenuButton); scheduleButton = findViewById(R.id.scheduleButton);
         overflowMenuButton.setOnClickListener(this::showOverflowMenu);
     }
 
@@ -50,18 +51,13 @@ public class ItemActionBar extends LinearLayout {
         }
         else if(menuItem.getItemId() == R.id.action_copy_uuid) {
             ClipboardManager clipboard = (ClipboardManager)getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-            String prefix = "";
-            if(getContext().getPackageName().equals("com.soogbad.soogbadcalendar"))
-                prefix = "EVENT-";
-            else if(getContext().getPackageName().equals("com.soogbad.soogbadnotes"))
-                prefix = "NOTE-";
-            else if(getContext().getPackageName().equals("com.soogbad.soogbadreminders"))
-                prefix = "REMINDER-";
-            clipboard.setPrimaryClip(ClipData.newPlainText("UUID", prefix + item.UUID));
+            clipboard.setPrimaryClip(ClipData.newPlainText("UUID", getItemUuidPrefix() + item.UUID));
             Toast.makeText(getContext(), "Item UUID copied to clipboard", Toast.LENGTH_SHORT).show();
             return true;
         }
         return false;
     }
+
+    protected abstract String getItemUuidPrefix();
 
 }
