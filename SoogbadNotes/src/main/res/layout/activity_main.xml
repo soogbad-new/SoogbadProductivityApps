@@ -36,6 +36,7 @@
         android:layout_height="50dp"
         android:src="@android:drawable/ic_input_add"
         android:onClick="onAddButtonClick"
+        android:contentDescription="Add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_margin="16dp">

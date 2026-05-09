@@ -15,6 +15,7 @@ public abstract class Item<O extends Item.ItemOptions> {
 
     @FunctionalInterface
     public interface Creator<T extends Item<O>, O extends ItemOptions> {
+        @SuppressWarnings("unused")
         T create(String uuid, String title, O options);
     }
 

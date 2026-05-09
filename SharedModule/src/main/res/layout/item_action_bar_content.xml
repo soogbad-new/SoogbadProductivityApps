@@ -10,19 +10,9 @@
         android:singleLine="true"
         android:textColor="@color/white"
         android:background="@android:color/transparent"
-        android:hint=""
+        android:hint="Type to enter title..."
         android:autofillHints="">
     </EditText>
-
-    <ImageButton
-        android:id="@+id/scheduleButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@android:drawable/ic_menu_recent_history"
-        android:scaleType="centerInside"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:visibility="gone">
-    </ImageButton>
 
     <ImageButton
         android:id="@+id/overflowMenuButton"
@@ -30,7 +20,8 @@
         android:layout_height="50dp"
         android:src="@android:drawable/ic_menu_more"
         android:scaleType="centerInside"
-        android:background="?attr/selectableItemBackgroundBorderless">
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="More">
     </ImageButton>
 
 </merge>

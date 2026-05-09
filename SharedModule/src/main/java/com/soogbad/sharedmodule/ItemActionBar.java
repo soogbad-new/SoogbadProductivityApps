@@ -19,7 +19,7 @@ public abstract class ItemActionBar extends LinearLayout {
 
     private final EditText titleEditText;
     public EditText getTitleEditText() { return titleEditText; }
-    protected final ImageButton overflowMenuButton, scheduleButton;
+    protected final ImageButton overflowMenuButton;
 
     private ItemLayout itemLayout;
     private Item<?> item;
@@ -27,7 +27,7 @@ public abstract class ItemActionBar extends LinearLayout {
     public ItemActionBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.item_action_bar_content, this, true);
-        titleEditText = findViewById(R.id.titleEditText); overflowMenuButton = findViewById(R.id.overflowMenuButton); scheduleButton = findViewById(R.id.scheduleButton);
+        titleEditText = findViewById(R.id.titleEditText); overflowMenuButton = findViewById(R.id.overflowMenuButton);
         overflowMenuButton.setOnClickListener(this::showOverflowMenu);
     }
 
