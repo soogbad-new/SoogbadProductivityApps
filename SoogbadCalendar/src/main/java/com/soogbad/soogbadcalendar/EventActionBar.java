@@ -7,7 +7,6 @@ import android.view.View;
 import com.soogbad.sharedmodule.Item;
 import com.soogbad.sharedmodule.ItemActionBar;
 import com.soogbad.sharedmodule.ItemLayout;
-import com.soogbad.sharedmodule.Schedule;
 
 public class EventActionBar extends ItemActionBar {
 

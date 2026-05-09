@@ -4,6 +4,8 @@ import android.text.SpannedString;
 
 import org.json.JSONObject;
 
+import java.util.Date;
+
 public abstract class Item<O extends Item.ItemOptions> {
 
     public String UUID;
@@ -23,6 +25,11 @@ public abstract class Item<O extends Item.ItemOptions> {
 
     public static class ItemOptions {
         public JSONObject toJson() { return new JSONObject(); }
+    }
+
+    public static class SchedulableItemOptions extends ItemOptions {
+        public Date Time;
+        public Schedule RepeatSchedule;
     }
 
 }

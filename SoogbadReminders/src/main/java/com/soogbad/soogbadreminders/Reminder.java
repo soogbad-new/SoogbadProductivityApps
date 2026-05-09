@@ -18,9 +18,7 @@ public class Reminder extends Item<Reminder.ReminderOptions> {
         return new Reminder(uuid, title, options);
     }
 
-    public static class ReminderOptions extends ItemOptions {
-        public Date Time;
-        public Schedule RepeatSchedule;
+    public static class ReminderOptions extends SchedulableItemOptions {
 
         public ReminderOptions(Date time, Schedule repeatSchedule) { Time = time; RepeatSchedule = repeatSchedule; }
 

@@ -18,9 +18,7 @@ public class Event extends Item<Event.EventOptions> {
         return new Event(uuid, title, options);
     }
 
-    public static class EventOptions extends ItemOptions {
-        public Date Time;
-        public Schedule RepeatSchedule;
+    public static class EventOptions extends SchedulableItemOptions {
 
         public EventOptions(Date time, Schedule repeatSchedule) { Time = time; RepeatSchedule = repeatSchedule; }
 
