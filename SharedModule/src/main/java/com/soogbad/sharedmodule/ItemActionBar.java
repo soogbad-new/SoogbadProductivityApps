@@ -10,11 +10,12 @@ import android.view.View;
 import android.view.LayoutInflater;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-public abstract class ItemActionBar extends LinearLayout {
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+public abstract class ItemActionBar extends ConstraintLayout {
 
 
     private final EditText titleEditText;
