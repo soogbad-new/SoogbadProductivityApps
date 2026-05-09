@@ -19,7 +19,7 @@ public abstract class ItemActionBar extends LinearLayout {
 
     private final EditText titleEditText;
     public EditText getTitleEditText() { return titleEditText; }
-    private final ImageButton overflowMenuButton, scheduleButton;
+    protected final ImageButton overflowMenuButton, scheduleButton;
 
     private ItemLayout itemLayout;
     private Item<?> item;
