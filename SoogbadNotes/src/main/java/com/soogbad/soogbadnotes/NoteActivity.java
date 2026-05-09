@@ -33,7 +33,7 @@ public class NoteActivity extends AppCompatActivity {
         }
         noteLayout.init(noteActionBar, notesManager, note);
         note.Options.LastViewed = System.currentTimeMillis();
-        notesManager.saveItemOptions(note);
+        notesManager.saveItemMetadata(note);
     }
 
     @Override

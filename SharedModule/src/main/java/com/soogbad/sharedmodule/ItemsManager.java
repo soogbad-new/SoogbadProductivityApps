@@ -33,8 +33,7 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
 
     public void loadItemContent(Item<?> item) { item.Content = storageManager.loadContent(item.UUID); }
     public void saveItemContent(Item<?> item) { storageManager.saveContent(item.UUID, item.Content); }
-    public void saveItemTitle(Item<?> item) { storageManager.saveMetadata(item.UUID, item.Title, item.Options); }
-    public void saveItemOptions(T item) { storageManager.saveMetadata(item.UUID, item.Title, item.Options); }
+    public void saveItemMetadata(Item<?> item) { storageManager.saveMetadata(item.UUID, item.Title, item.Options); }
 
     public String createItem(O defaultOptions) {
         String uuid = Utility.generateUniqueUUID(items);

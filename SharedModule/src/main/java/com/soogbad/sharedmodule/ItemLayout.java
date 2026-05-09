@@ -44,9 +44,12 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     private Item<?> item;
     private HashSet<RichCharacterStyle<?>> activeCharacterStyles = new HashSet<>();
     private HashSet<RichParagraphStyle<?>> activeParagraphStyles = new HashSet<>();
+    private ActionMode currentSelectionActionMode = null;
+
     private boolean itemDeleted = false;
     private boolean contentTouched = false;
-    private ActionMode currentSelectionActionMode = null;
+    private boolean optionsChanged = false;
+    public void markOptionsChanged() { optionsChanged = true; }
 
     public ItemLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -77,10 +80,12 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         String oldTitle = item.Title;
         item.Title = itemActionBar.getTitleEditText().getText().toString();
         item.Content = contentEditText.getTextIncludingHiddenContent();
-        if(!item.Title.equals(oldTitle))
-            itemsManager.saveItemTitle(item);
+        if(optionsChanged || !item.Title.equals(oldTitle))
+            itemsManager.saveItemMetadata(item);
         if(contentTouched)
             itemsManager.saveItemContent(item);
+        optionsChanged = false;
+        contentTouched = contentEditText.hasFocus();
     }
 
     public void delete() {
