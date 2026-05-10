@@ -14,8 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/formattingToolbarScrollView"
         app:layout_constraintLeft_toLeftOf="parent"
-        tools:ignore="SpUsage">
-    </com.soogbad.sharedmodule.RichEditText>
+        tools:ignore="SpUsage" />
 
     <HorizontalScrollView
         android:id="@+id/formattingToolbarScrollView"

@@ -11,16 +11,14 @@
         android:layout_height="wrap_content"
         android:text="URL: "
         android:labelFor="@id/urlEditText"
-        tools:ignore="HardcodedText">
-    </TextView>
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/urlEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textUri"
-        android:autofillHints="url">
-    </EditText>
+        android:autofillHints="url" />
 
     <TextView
         android:id="@+id/textLabel"
@@ -29,15 +27,13 @@
         android:layout_marginTop="8dp"
         android:text="Text: "
         android:labelFor="@id/textEditText"
-        tools:ignore="HardcodedText">
-    </TextView>
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/textEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
-        android:autofillHints="">
-    </EditText>
+        android:autofillHints="" />
 
 </LinearLayout>

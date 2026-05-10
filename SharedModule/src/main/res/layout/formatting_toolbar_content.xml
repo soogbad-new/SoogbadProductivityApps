@@ -11,8 +11,7 @@
         android:backgroundTint="@color/black"
         android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent">
-    </Button>
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/italicButton"
@@ -24,8 +23,7 @@
         android:backgroundTint="@color/black"
         android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/boldButton">
-    </Button>
+        app:layout_constraintLeft_toRightOf="@id/boldButton" />
 
     <Button
         android:id="@+id/underlineButton"
@@ -37,8 +35,7 @@
         android:textColor="@color/white"
         android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/italicButton">
-    </Button>
+        app:layout_constraintLeft_toRightOf="@id/italicButton" />
 
     <Button
         android:id="@+id/textSizeButton"
@@ -49,8 +46,7 @@
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/underlineButton">
-    </Button>
+        app:layout_constraintLeft_toRightOf="@id/underlineButton" />
 
     <Button
         android:id="@+id/textColorButton"
@@ -61,8 +57,7 @@
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/textSizeButton">
-    </Button>
+        app:layout_constraintLeft_toRightOf="@id/textSizeButton" />
 
     <Button
         android:id="@+id/bulletListButton"
@@ -73,8 +68,7 @@
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/textColorButton">
-    </Button>
+        app:layout_constraintLeft_toRightOf="@id/textColorButton" />
 
     <Button
         android:id="@+id/textAlignmentButton"
@@ -85,8 +79,7 @@
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/bulletListButton">
-    </Button>
+        app:layout_constraintLeft_toRightOf="@id/bulletListButton" />
 
     <Button
         android:id="@+id/hyperlinkButton"
@@ -97,8 +90,7 @@
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/textAlignmentButton">
-    </Button>
+        app:layout_constraintLeft_toRightOf="@id/textAlignmentButton" />
 
     <Button
         android:id="@+id/regionButton"
@@ -109,8 +101,7 @@
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/hyperlinkButton">
-    </Button>
+        app:layout_constraintLeft_toRightOf="@id/hyperlinkButton" />
 
     <Button
         android:id="@+id/undoButton"
@@ -121,8 +112,7 @@
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/regionButton">
-    </Button>
+        app:layout_constraintLeft_toRightOf="@id/regionButton" />
 
     <Button
         android:id="@+id/redoButton"
@@ -133,7 +123,6 @@
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/undoButton">
-    </Button>
+        app:layout_constraintLeft_toRightOf="@id/undoButton" />
 
 </merge>
