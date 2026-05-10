@@ -7,17 +7,18 @@
     android:fitsSystemWindows="false"
     tools:context=".MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/darkGreen"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:titleTextColor="@color/white"
+        app:titleTextAppearance="@style/ToolbarTitle"
         app:title="SoogbadCalendar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-    </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/eventList"
