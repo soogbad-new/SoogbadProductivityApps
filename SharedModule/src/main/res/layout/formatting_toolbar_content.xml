@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Button
+        android:id="@+id/boldButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="B"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/black"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+    </Button>
+
+    <Button
+        android:id="@+id/italicButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="I"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/black"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/boldButton">
+    </Button>
+
+    <Button
+        android:id="@+id/underlineButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="U"
+        android:textSize="24sp"
+        android:backgroundTint="@color/black"
+        android:textColor="@color/white"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/italicButton">
+    </Button>
+
+    <Button
+        android:id="@+id/textSizeButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="Aa"
+        android:textSize="22sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/underlineButton">
+    </Button>
+
+    <Button
+        android:id="@+id/textColorButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="C"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/textSizeButton">
+    </Button>
+
+    <Button
+        android:id="@+id/bulletListButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="*"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/textColorButton">
+    </Button>
+
+    <Button
+        android:id="@+id/textAlignmentButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="A"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/bulletListButton">
+    </Button>
+
+    <Button
+        android:id="@+id/hyperlinkButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="🔗"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/textAlignmentButton">
+    </Button>
+
+    <Button
+        android:id="@+id/regionButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="▼"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/hyperlinkButton">
+    </Button>
+
+    <Button
+        android:id="@+id/undoButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="↰"
+        android:textSize="26sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/regionButton">
+    </Button>
+
+    <Button
+        android:id="@+id/redoButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="↱"
+        android:textSize="26sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/undoButton">
+    </Button>
+
+</merge>
