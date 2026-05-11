@@ -22,7 +22,7 @@ public class NoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.activity_note, R.id.toolbar);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
         noteLayout = findViewById(R.id.noteLayout); ItemActionBar noteActionBar = findViewById(R.id.itemActionBar);
         ItemsManager<Note, Note.NoteOptions> notesManager = ((SoogbadNotesApplication)getApplication()).getItemsManager();
         Note note = notesManager.getItem(getIntent().getStringExtra("item_uuid"));
