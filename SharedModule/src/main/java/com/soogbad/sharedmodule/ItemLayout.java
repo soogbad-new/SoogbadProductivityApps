@@ -3,7 +3,7 @@ package com.soogbad.sharedmodule;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Color;
+
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import androidx.appcompat.view.ContextThemeWrapper;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -179,13 +180,16 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     private void showSelectionPopup(Button popupAnchor, int[] options, int selectedOption, Class<?> styleType, IntConsumer onSelect) {
         if(currentSelectionActionMode != null)
             currentSelectionActionMode.hide(Long.MAX_VALUE);
-        LayoutInflater inflater = LayoutInflater.from(getContext());
+        Context themedContext = new ContextThemeWrapper(getContext(), R.style.AppTheme_PopupOverlay);
+        LayoutInflater inflater = LayoutInflater.from(themedContext);
         LinearLayout popupLayout = (LinearLayout)inflater.inflate(R.layout.formatting_toolbar_popup, this, false);
         PopupWindow popup = new PopupWindow(popupLayout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, false);
         popup.setWindowLayoutType(WindowManager.LayoutParams.TYPE_APPLICATION_SUB_PANEL);
         popup.setElevation(8);
         popup.setOutsideTouchable(true);
-        popup.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        TypedValue typedValue = new TypedValue();
+        themedContext.getTheme().resolveAttribute(android.R.attr.colorBackground, typedValue, true);
+        popup.setBackgroundDrawable(new ColorDrawable(typedValue.data));
         for(int i = 0; i < options.length; i++) {
             TextView textView = (TextView)inflater.inflate(styleType == ForegroundColorSpan.class ? R.layout.formatting_toolbar_popup_option_color : R.layout.formatting_toolbar_popup_option, popupLayout, false);
             adjustOptionTextView(textView, options[i], options[i] == selectedOption, styleType);
