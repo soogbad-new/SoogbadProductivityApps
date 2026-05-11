@@ -20,6 +20,7 @@
         android:id="@+id/formattingToolbarScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/almostBlack"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent">
@@ -27,9 +28,12 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/formattingToolbar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingVertical="4dp"
+            android:paddingHorizontal="4dp">
 
-            <include layout="@layout/formatting_toolbar_content" />
+            <include
+                layout="@layout/formatting_toolbar_content" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
