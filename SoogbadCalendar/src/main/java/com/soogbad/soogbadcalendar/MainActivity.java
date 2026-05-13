@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.activity_main, R.id.toolbar);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
         eventList = findViewById(R.id.eventList);
         eventsManager = ((SoogbadCalendarApplication)getApplication()).getItemsManager();
         eventList.setLayoutManager(new LinearLayoutManager(this));

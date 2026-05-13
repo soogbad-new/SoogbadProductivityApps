@@ -22,7 +22,7 @@ public class ReminderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.activity_reminder, R.id.toolbar);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.constraintLayout), this::onApplyWindowInsetsListener);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
         reminderLayout = findViewById(R.id.reminderLayout); ItemActionBar reminderActionBar = findViewById(R.id.itemActionBar);
         ItemsManager<Reminder, Reminder.ReminderOptions> remindersManager = ((SoogbadRemindersApplication)getApplication()).getItemsManager();
         Reminder reminder = remindersManager.getItem(getIntent().getStringExtra("item_uuid"));

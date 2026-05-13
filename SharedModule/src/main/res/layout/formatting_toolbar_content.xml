@@ -1,125 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/boldButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        style="?attr/materialIconButtonStyle"
         android:text="B"
-        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textSize="18sp"
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
-        android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/italicButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        style="?attr/materialIconButtonStyle"
         android:text="I"
-        android:textSize="24sp"
+        android:textStyle="italic"
+        android:textSize="18sp"
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
-        android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/boldButton" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/underlineButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        style="?attr/materialIconButtonStyle"
         android:text="U"
-        android:textSize="24sp"
-        android:backgroundTint="@color/black"
+        android:textSize="18sp"
         android:textColor="@color/white"
-        android:scaleType="centerCrop"
+        android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/italicButton" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/textSizeButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        style="?attr/materialIconButtonStyle"
         android:text="Aa"
-        android:textSize="22sp"
+        android:textSize="16sp"
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/underlineButton" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/textColorButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        style="?attr/materialIconButtonStyle"
         android:text="C"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/textSizeButton" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/bulletListButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:text="*"
-        android:textSize="24sp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        style="?attr/materialIconButtonStyle"
+        android:text="•"
+        android:textSize="20sp"
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/textColorButton" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/textAlignmentButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:text="A"
-        android:textSize="24sp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        style="?attr/materialIconButtonStyle"
+        android:text="≡"
+        android:textSize="20sp"
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/bulletListButton" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/hyperlinkButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        style="?attr/materialIconButtonStyle"
         android:text="🔗"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/textAlignmentButton" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/regionButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        style="?attr/materialIconButtonStyle"
         android:text="▼"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/hyperlinkButton" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/undoButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        style="?attr/materialIconButtonStyle"
         android:text="↰"
-        android:textSize="26sp"
+        android:textSize="20sp"
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/regionButton" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/redoButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        style="?attr/materialIconButtonStyle"
         android:text="↱"
-        android:textSize="26sp"
+        android:textSize="20sp"
         android:textColor="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
