@@ -1,7 +1,7 @@
 [versions]
 agp = "9.2.1"
 appcompat = "1.7.1"
-material = "1.13.0"
+material = "1.14.0"
 
 [libraries]
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
