@@ -15,8 +15,6 @@ public abstract class ItemApplication<T extends Item<O>, O extends Item.ItemOpti
 
     public interface AppUtility {
 
-        void deleteItem(Item<?> item);
-
         String getItemUuidPrefix();
         default void copyItemUuid(Context context, Item<?> item) {
             ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);

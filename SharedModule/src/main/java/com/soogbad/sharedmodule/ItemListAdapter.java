@@ -1,11 +1,13 @@
 package com.soogbad.sharedmodule;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.IdRes;
@@ -44,21 +46,25 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
         Item<?> item = items.get(position);
         holder.titleTextView.setText(item.Title);
         holder.itemView.setTag(item.UUID);
-        holder.itemView.setOnLongClickListener(v -> showContextMenu(v, item));
+        holder.itemView.setOnCreateContextMenuListener((menu, view, menuInfo) -> showContextMenu(menu, holder, item));
     }
 
-    private boolean showContextMenu(View view, Item<?> item) {
-        PopupMenu popup = new PopupMenu(view.getContext(), view);
-        popup.getMenuInflater().inflate(R.menu.item_overflow_menu, popup.getMenu());
-        popup.setOnMenuItemClickListener(menuItem -> onContextMenuItemClick(menuItem, item, view.getContext()));
-        popup.show();
-        return true;
+    private void showContextMenu(ContextMenu menu, ViewHolder itemHolder, Item<?> item) {
+        new MenuInflater(itemHolder.itemView.getContext()).inflate(R.menu.item_overflow_menu, menu);
+        for(int i = 0; i < menu.size(); i++)
+            menu.getItem(i).setOnMenuItemClickListener(menuItem -> onContextMenuItemClick(menuItem, item, itemHolder));
     }
 
-    private boolean onContextMenuItemClick(MenuItem menuItem, Item<?> item, Context context) {
+    @SuppressLint("NotifyDataSetChanged")
+    private boolean onContextMenuItemClick(MenuItem menuItem, Item<?> item, ViewHolder itemHolder) {
+        Context context = itemHolder.itemView.getContext();
         if(menuItem.getItemId() == R.id.action_delete) {
-            Utility.getAppUtility(context).deleteItem(item);
-            notifyDataSetChanged();
+            ((ItemApplication<?, ?>)context.getApplicationContext()).getItemsManager().deleteItem(item);
+            int position = itemHolder.getBindingAdapterPosition();
+            if(position != RecyclerView.NO_POSITION)
+                notifyItemRemoved(position);
+            else
+                notifyDataSetChanged();
             return true;
         }
         else if(menuItem.getItemId() == R.id.action_copy_uuid) {

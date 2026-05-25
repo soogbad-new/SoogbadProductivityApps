@@ -1,6 +1,5 @@
 package com.soogbad.soogbadcalendar;
 
-import com.soogbad.sharedmodule.Item;
 import com.soogbad.sharedmodule.ItemApplication;
 import com.soogbad.sharedmodule.ItemsManager;
 import com.soogbad.sharedmodule.StorageManager;
@@ -17,7 +16,6 @@ public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Eve
     @Override
     public AppUtility getAppUtility() {
         return new AppUtility() {
-            @Override public void deleteItem(Item<?> item) { itemsManager.deleteItem(item); }
             @Override public String getItemUuidPrefix() { return "EVENT-"; }
         };
     }

@@ -43,7 +43,7 @@ public abstract class ItemActionBar extends ConstraintLayout {
 
     private boolean onOverflowMenuItemClick(MenuItem menuItem) {
         if(menuItem.getItemId() == R.id.action_delete) {
-            Utility.getAppUtility(getContext()).deleteItem(item);
+            itemLayout.delete();
             ((Activity)getContext()).finish();
             return true;
         }
