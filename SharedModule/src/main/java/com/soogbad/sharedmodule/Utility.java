@@ -1,6 +1,7 @@
 package com.soogbad.sharedmodule;
 
 import android.graphics.Color;
+import android.content.Context;
 import android.util.Patterns;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +11,10 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class Utility {
+
+    public static ItemApplication.AppUtility getAppUtility(Context context) {
+        return ((ItemApplication<?, ?>)context.getApplicationContext()).getAppUtility();
+    }
 
     public static void setWindowProperties(AppCompatActivity activity, int activityID, int toolbarID) {
         activity.setContentView(activityID);

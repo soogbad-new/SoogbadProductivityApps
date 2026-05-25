@@ -19,7 +19,4 @@ public class EventActionBar extends ItemActionBar {
         //scheduleButton.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    protected String getItemUuidPrefix() { return "EVENT-"; }
-
 }

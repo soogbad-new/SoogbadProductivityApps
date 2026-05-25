@@ -11,7 +11,4 @@ public class NoteActionBar extends ItemActionBar {
         super(context, attrs);
     }
 
-    @Override
-    protected String getItemUuidPrefix() { return "NOTE-"; }
-
 }

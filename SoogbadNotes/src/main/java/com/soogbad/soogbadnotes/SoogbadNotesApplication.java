@@ -1,5 +1,6 @@
 package com.soogbad.soogbadnotes;
 
+import com.soogbad.sharedmodule.Item;
 import com.soogbad.sharedmodule.ItemApplication;
 import com.soogbad.sharedmodule.ItemsManager;
 import com.soogbad.sharedmodule.StorageManager;
@@ -13,6 +14,14 @@ public class SoogbadNotesApplication extends ItemApplication<Note, Note.NoteOpti
         RichCharacterStyle.DEFAULT_TEXT_SIZE = RichCharacterStyle.TextSize.SIZE_16;
         itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Note::create, Note.NoteOptions::fromJson);
         itemsManager.loadItems();
+    }
+
+    @Override
+    public AppUtility getAppUtility() {
+        return new AppUtility() {
+            @Override public void deleteItem(Item<?> item) { itemsManager.deleteItem(item); }
+            @Override public String getItemUuidPrefix() { return "NOTE-"; }
+        };
     }
 
 }

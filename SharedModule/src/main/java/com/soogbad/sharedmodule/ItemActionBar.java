@@ -1,8 +1,6 @@
 package com.soogbad.sharedmodule;
 
 import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MenuItem;
@@ -11,7 +9,6 @@ import android.view.LayoutInflater;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -39,26 +36,22 @@ public abstract class ItemActionBar extends ConstraintLayout {
 
     private void showOverflowMenu(View view) {
         PopupMenu popup = new PopupMenu(getContext(), view);
-        popup.getMenuInflater().inflate(R.menu.action_bar_overflow_menu_item, popup.getMenu());
+        popup.getMenuInflater().inflate(R.menu.item_overflow_menu, popup.getMenu());
         popup.setOnMenuItemClickListener(this::onOverflowMenuItemClick);
         popup.show();
     }
 
     private boolean onOverflowMenuItemClick(MenuItem menuItem) {
         if(menuItem.getItemId() == R.id.action_delete) {
-            itemLayout.delete();
+            Utility.getAppUtility(getContext()).deleteItem(item);
             ((Activity)getContext()).finish();
             return true;
         }
         else if(menuItem.getItemId() == R.id.action_copy_uuid) {
-            ClipboardManager clipboard = (ClipboardManager)getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setPrimaryClip(ClipData.newPlainText("UUID", getItemUuidPrefix() + item.UUID));
-            Toast.makeText(getContext(), "Item UUID copied to clipboard", Toast.LENGTH_SHORT).show();
+            Utility.getAppUtility(getContext()).copyItemUuid(getContext(), item);
             return true;
         }
         return false;
     }
-
-    protected abstract String getItemUuidPrefix();
 
 }

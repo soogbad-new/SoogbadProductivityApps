@@ -19,7 +19,4 @@ public class ReminderActionBar extends ItemActionBar {
         //scheduleButton.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    protected String getItemUuidPrefix() { return "REMINDER-"; }
-
 }

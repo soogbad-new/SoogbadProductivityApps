@@ -1,8 +1,11 @@
 package com.soogbad.sharedmodule;
 
+import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.IdRes;
@@ -41,6 +44,28 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
         Item<?> item = items.get(position);
         holder.titleTextView.setText(item.Title);
         holder.itemView.setTag(item.UUID);
+        holder.itemView.setOnLongClickListener(v -> showContextMenu(v, item));
+    }
+
+    private boolean showContextMenu(View view, Item<?> item) {
+        PopupMenu popup = new PopupMenu(view.getContext(), view);
+        popup.getMenuInflater().inflate(R.menu.item_overflow_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(menuItem -> onContextMenuItemClick(menuItem, item, view.getContext()));
+        popup.show();
+        return true;
+    }
+
+    private boolean onContextMenuItemClick(MenuItem menuItem, Item<?> item, Context context) {
+        if(menuItem.getItemId() == R.id.action_delete) {
+            Utility.getAppUtility(context).deleteItem(item);
+            notifyDataSetChanged();
+            return true;
+        }
+        else if(menuItem.getItemId() == R.id.action_copy_uuid) {
+            Utility.getAppUtility(context).copyItemUuid(context, item);
+            return true;
+        }
+        return false;
     }
 
     @Override
