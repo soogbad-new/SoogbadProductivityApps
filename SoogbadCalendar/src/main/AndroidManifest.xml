@@ -19,6 +19,7 @@
         </activity>
 
         <activity android:name=".EventActivity" android:exported="true" />
+        <activity android:name="com.soogbad.sharedmodule.RecycleBinActivity" android:exported="false" />
 
     </application>
 

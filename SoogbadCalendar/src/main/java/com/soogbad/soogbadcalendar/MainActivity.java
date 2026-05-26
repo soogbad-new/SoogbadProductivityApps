@@ -3,6 +3,8 @@ package com.soogbad.soogbadcalendar;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.soogbad.sharedmodule.ItemListAdapter;
 import com.soogbad.sharedmodule.ItemsManager;
+import com.soogbad.sharedmodule.RecycleBinActivity;
 import com.soogbad.sharedmodule.Schedule;
 import com.soogbad.sharedmodule.Utility;
 
@@ -59,6 +62,21 @@ public class MainActivity extends AppCompatActivity {
         view.getRootView().findViewById(R.id.toolbar).setPadding(0, systemBars.top, 0, 0);
         view.setPadding(0, 0, 0, systemBars.bottom);
         return insets;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(com.soogbad.sharedmodule.R.menu.toolbar_menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == com.soogbad.sharedmodule.R.id.action_recycle_bin) {
+            startActivity(new Intent(this, RecycleBinActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
