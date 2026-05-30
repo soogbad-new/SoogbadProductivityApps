@@ -1,5 +1,6 @@
 package com.soogbad.soogbadreminders;
 
+import com.soogbad.sharedmodule.ItemActivity;
 import com.soogbad.sharedmodule.ItemApplication;
 import com.soogbad.sharedmodule.ItemsManager;
 import com.soogbad.sharedmodule.StorageManager;
@@ -17,6 +18,7 @@ public class SoogbadRemindersApplication extends ItemApplication<Reminder, Remin
     public AppUtility getAppUtility() {
         return new AppUtility() {
             @Override public String getItemUuidPrefix() { return "REMINDER-"; }
+            @Override public Class<? extends ItemActivity> getItemActivityClass() { return ReminderActivity.class; }
         };
     }
 

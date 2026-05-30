@@ -47,7 +47,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     private HashSet<RichParagraphStyle<?>> activeParagraphStyles = new HashSet<>();
     private ActionMode currentSelectionActionMode = null;
 
-    private boolean itemDeleted = false;
+    private boolean itemDeletedGuard = false;
     private boolean contentTouched = false;
     private boolean optionsChanged = false;
     public void markOptionsChanged() { optionsChanged = true; }
@@ -66,17 +66,22 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         });
     }
 
-    public void init(ItemActionBar itemActionBar, ItemsManager<?, ?> itemsManager, Item<?> item) {
+    public void init(ItemActionBar itemActionBar, ItemsManager<?, ?> itemsManager, Item<?> item, boolean readOnly) {
         this.itemActionBar = itemActionBar; this.itemsManager = itemsManager; this.item = item;
-        itemActionBar.init(this, item);
+        itemActionBar.init(this, item, readOnly);
         contentEditText.setStyleStateListener(this);
         itemsManager.loadItemContent(item);
         contentEditText.setIgnoreTextChanges(true); contentEditText.setText(item.Content); contentEditText.setIgnoreTextChanges(false);
         contentEditText.setOnFocusChangeListener((v, hasFocus) -> { if(hasFocus) contentTouched = true; });
+        if(readOnly) {
+            contentEditText.setFocusable(false); contentEditText.setFocusableInTouchMode(false); contentEditText.setCursorVisible(false);
+            formattingToolbar.setVisibility(GONE);
+            itemDeletedGuard = true;
+        }
     }
 
     public void save() {
-        if(itemDeleted)
+        if(itemDeletedGuard)
             return;
         String oldTitle = item.Title;
         item.Title = itemActionBar.getTitleEditText().getText().toString();
@@ -90,7 +95,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     }
 
     public void delete() {
-        itemDeleted = true;
+        itemDeletedGuard = true;
         itemsManager.deleteItem(item);
     }
 

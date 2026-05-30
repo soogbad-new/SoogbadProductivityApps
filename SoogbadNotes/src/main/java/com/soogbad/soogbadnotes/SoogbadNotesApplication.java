@@ -1,5 +1,6 @@
 package com.soogbad.soogbadnotes;
 
+import com.soogbad.sharedmodule.ItemActivity;
 import com.soogbad.sharedmodule.ItemApplication;
 import com.soogbad.sharedmodule.ItemsManager;
 import com.soogbad.sharedmodule.StorageManager;
@@ -19,6 +20,7 @@ public class SoogbadNotesApplication extends ItemApplication<Note, Note.NoteOpti
     public AppUtility getAppUtility() {
         return new AppUtility() {
             @Override public String getItemUuidPrefix() { return "NOTE-"; }
+            @Override public Class<? extends ItemActivity> getItemActivityClass() { return NoteActivity.class; }
         };
     }
 

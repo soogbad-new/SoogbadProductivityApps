@@ -16,6 +16,7 @@ public abstract class ItemApplication<T extends Item<O>, O extends Item.ItemOpti
     public interface AppUtility {
 
         String getItemUuidPrefix();
+        Class<? extends ItemActivity> getItemActivityClass();
         default void copyItemUuid(Context context, Item<?> item) {
             ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
             clipboard.setPrimaryClip(ClipData.newPlainText("UUID", getItemUuidPrefix() + item.UUID));

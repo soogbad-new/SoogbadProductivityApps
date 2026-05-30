@@ -29,9 +29,13 @@ public abstract class ItemActionBar extends ConstraintLayout {
         overflowMenuButton.setOnClickListener(this::showOverflowMenu);
     }
 
-    public void init(ItemLayout itemLayout, Item<?> item) {
+    public void init(ItemLayout itemLayout, Item<?> item, boolean readOnly) {
         this.itemLayout = itemLayout; this.item = item;
         titleEditText.setText(item.Title);
+        if(!readOnly) {
+            titleEditText.setFocusable(false); titleEditText.setFocusableInTouchMode(false); titleEditText.setCursorVisible(false);
+            overflowMenuButton.setVisibility(View.GONE);
+        }
     }
 
     private void showOverflowMenu(View view) {

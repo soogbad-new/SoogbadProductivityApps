@@ -12,6 +12,7 @@ public abstract class Item<O extends Item.ItemOptions> {
     public String Title;
     public SpannedString Content;
     public O Options;
+    public long DeletedAt;
 
     @FunctionalInterface
     public interface Creator<T extends Item<O>, O extends ItemOptions> {
