@@ -14,8 +14,8 @@ public class EventActionBar extends ItemActionBar {
     }
 
     @Override
-    public void init(ItemLayout itemLayout, Item<?> item) {
-        super.init(itemLayout, item);
+    public void init(ItemLayout itemLayout, Item<?> item, boolean readOnly) {
+        super.init(itemLayout, item, readOnly);
         //scheduleButton.setVisibility(View.VISIBLE);
     }
 
