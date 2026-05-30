@@ -1,52 +1,19 @@
 package com.soogbad.soogbadcalendar;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.soogbad.sharedmodule.ItemActionBar;
-import com.soogbad.sharedmodule.ItemLayout;
-import com.soogbad.sharedmodule.ItemsManager;
+import com.soogbad.sharedmodule.ItemActivity;
 import com.soogbad.sharedmodule.Utility;
 
-public class EventActivity extends AppCompatActivity {
-
-    private ItemLayout eventLayout;
+public class EventActivity extends ItemActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.activity_event, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
-        eventLayout = findViewById(R.id.eventLayout); ItemActionBar eventActionBar = findViewById(R.id.itemActionBar);
-        ItemsManager<Event, Event.EventOptions> eventsManager = ((SoogbadCalendarApplication)getApplication()).getItemsManager();
-        Event event = eventsManager.getItem(getIntent().getStringExtra("item_uuid"));
-        if(event == null) {
-            Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();
-            finishAndRemoveTask();
-            return;
-        }
-        eventLayout.init(eventActionBar, eventsManager, event);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        eventLayout.save();
-    }
-
-    public WindowInsetsCompat onApplyWindowInsetsListener(View view, WindowInsetsCompat insets) {
-        Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-        view.getRootView().findViewById(R.id.toolbar).setPadding(0, systemBars.top, 0, 0);
-        view.setPadding(0, 0, 0, systemBars.bottom);
-        Insets keyboard = insets.getInsets(WindowInsetsCompat.Type.ime());
-        eventLayout.getFormattingToolbar().setPadding(0, 0, 0, keyboard.bottom - systemBars.bottom);
-        return insets;
     }
 
 }
