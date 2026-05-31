@@ -31,7 +31,6 @@ public abstract class ItemActivity extends AppCompatActivity {
         itemLayout.init(itemActionBar, itemsManager, item, previewMode);
         onItemLoaded(item);
     }
-
     protected void onItemLoaded(Item<?> item) {}
 
     @Override
@@ -43,7 +42,7 @@ public abstract class ItemActivity extends AppCompatActivity {
 
     public WindowInsetsCompat onApplyWindowInsetsListener(View view, WindowInsetsCompat insets) {
         Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-        view.getRootView().findViewById(R.id.toolbar).setPadding(0, systemBars.top, 0, 0);
+        getToolbar().setPadding(0, systemBars.top, 0, 0);
         view.setPadding(0, 0, 0, systemBars.bottom);
         if(!previewMode) {
             Insets keyboard = insets.getInsets(WindowInsetsCompat.Type.ime());
@@ -51,5 +50,6 @@ public abstract class ItemActivity extends AppCompatActivity {
         }
         return insets;
     }
+    protected abstract View getToolbar();
 
 }

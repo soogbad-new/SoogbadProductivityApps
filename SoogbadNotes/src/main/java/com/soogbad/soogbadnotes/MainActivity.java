@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == com.soogbad.sharedmodule.R.id.action_recycle_bin) {
+        if(item.getItemId() == com.soogbad.sharedmodule.R.id.action_recycle_bin) {
             startActivity(new Intent(this, RecycleBinActivity.class));
             return true;
         }

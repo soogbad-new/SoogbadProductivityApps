@@ -1,6 +1,7 @@
 package com.soogbad.soogbadnotes;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.core.view.ViewCompat;
 
@@ -22,5 +23,7 @@ public class NoteActivity extends ItemActivity {
         ((Note)item).Options.LastViewed = System.currentTimeMillis();
         itemsManager.saveItemMetadata(item);
     }
+
+    @Override protected View getToolbar() { return findViewById(R.id.toolbar); }
 
 }

@@ -1,6 +1,7 @@
 package com.soogbad.soogbadcalendar;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.core.view.ViewCompat;
 
@@ -15,5 +16,7 @@ public class EventActivity extends ItemActivity {
         Utility.setWindowProperties(this, R.layout.activity_event, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
     }
+
+    @Override protected View getToolbar() { return findViewById(R.id.toolbar); }
 
 }

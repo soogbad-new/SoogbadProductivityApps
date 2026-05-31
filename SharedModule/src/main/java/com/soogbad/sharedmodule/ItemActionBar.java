@@ -32,7 +32,7 @@ public abstract class ItemActionBar extends ConstraintLayout {
     public void init(ItemLayout itemLayout, Item<?> item, boolean readOnly) {
         this.itemLayout = itemLayout; this.item = item;
         titleEditText.setText(item.Title);
-        if(!readOnly) {
+        if(readOnly) {
             titleEditText.setFocusable(false); titleEditText.setFocusableInTouchMode(false); titleEditText.setCursorVisible(false);
             overflowMenuButton.setVisibility(View.GONE);
         }

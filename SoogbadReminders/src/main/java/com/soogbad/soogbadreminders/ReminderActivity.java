@@ -1,6 +1,7 @@
 package com.soogbad.soogbadreminders;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.core.view.ViewCompat;
 
@@ -15,5 +16,7 @@ public class ReminderActivity extends ItemActivity {
         Utility.setWindowProperties(this, R.layout.activity_reminder, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
     }
+
+    @Override protected View getToolbar() { return findViewById(R.id.toolbar); }
 
 }
