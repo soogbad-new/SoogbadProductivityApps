@@ -11,6 +11,11 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
 
     private final ArrayList<T> items = new ArrayList<>();
     public ArrayList<T> getItems() { return items; }
+    public T getItem(String uuid) { return items.stream().filter(i -> i.UUID.equals(uuid)).findFirst().orElse(null); }
+
+    private final ArrayList<T> recycleBinItems = new ArrayList<>();
+    public ArrayList<T> getRecycleBinItems() { return recycleBinItems; }
+    public T getRecycleBinItem(String uuid) { return recycleBinItems.stream().filter(i -> i.UUID.equals(uuid)).findFirst().orElse(null); }
 
     private final StorageManager storageManager;
     private final Item.Creator<T, O> itemCreator;
@@ -20,15 +25,26 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
         this.storageManager = storageManager; this.itemCreator = itemCreator; this.optionsParser = optionsParser;
     }
 
+    private T loadItemData(String uuid, boolean deleted) {
+        try {
+            JSONObject metadata = storageManager.loadMetadata(deleted ? "deleted_" + uuid : uuid);
+            String title = metadata.getString("title");
+            O options = optionsParser.parse(metadata.getJSONObject("options"));
+            T item = itemCreator.create(uuid, title, options);
+            if(deleted) item.DeletedAt = storageManager.getRecycleBinItemDeletionTime(uuid);
+            return item;
+        } catch(JSONException e) { throw new RuntimeException(e); }
+    }
+
     public void loadItems() {
-        for(String uuid : storageManager.loadItemUUIDs()) {
-            try {
-                JSONObject metadata = storageManager.loadMetadata(uuid);
-                String title = metadata.getString("title");
-                O options = optionsParser.parse(metadata.getJSONObject("options"));
-                items.add(itemCreator.create(uuid, title, options));
-            } catch(JSONException e) { throw new RuntimeException(e); }
-        }
+        for(String uuid : storageManager.loadItemUUIDs(false))
+            items.add(loadItemData(uuid, false));
+    }
+    public void loadRecycleBinItems() {
+        storageManager.cleanExpiredRecycleBinItems();
+        for(String uuid : storageManager.loadItemUUIDs(true))
+            recycleBinItems.add(loadItemData(uuid, true));
+        recycleBinItems.sort((a, b) -> Long.compare(b.DeletedAt, a.DeletedAt));
     }
 
     public void loadItemContent(Item<?> item) { item.Content = storageManager.loadContent(item.UUID); }
@@ -43,16 +59,28 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
         return uuid;
     }
 
-    public void deleteItem(Item<?> item) {
-        items.removeIf(i -> i.UUID.equals(item.UUID));
-        storageManager.deleteItemFiles(item.UUID);
+    public void moveItemToRecycleBin(String uuid) {
+        T item = getItem(uuid);
+        items.removeIf(i -> i.UUID.equals(uuid));
+        storageManager.moveToRecycleBin(uuid);
+        item.DeletedAt = System.currentTimeMillis();
+        recycleBinItems.add(0, item);
+    }
+    public void restoreRecycleBinItem(String uuid) {
+        T item = getRecycleBinItem(uuid);
+        recycleBinItems.removeIf(i -> i.UUID.equals(uuid));
+        storageManager.restoreFromRecycleBin(uuid);
+        item.DeletedAt = 0;
+        items.add(0, item);
     }
 
-    public T getItem(String uuid) {
-        for(T item : items)
-            if(item.UUID.equals(uuid))
-                return item;
-        return null;
+    public void permanentlyDeleteRecycleBinItem(String uuid) {
+        storageManager.permanentlyDeleteFromRecycleBin(uuid);
+        recycleBinItems.removeIf(item -> item.UUID.equals(uuid));
+    }
+    public void emptyRecycleBin() {
+        storageManager.emptyRecycleBin();
+        recycleBinItems.clear();
     }
 
 }

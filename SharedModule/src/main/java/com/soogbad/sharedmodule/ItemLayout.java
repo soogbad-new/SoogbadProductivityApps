@@ -96,7 +96,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
 
     public void delete() {
         itemDeletedGuard = true;
-        itemsManager.deleteItem(item);
+        itemsManager.moveItemToRecycleBin(item.UUID);
     }
 
     private void onBoldButtonClick() { contentEditText.toggleCharacterStyle(RichCharacterStyle.BOLD); }

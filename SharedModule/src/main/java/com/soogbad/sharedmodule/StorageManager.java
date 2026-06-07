@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 
 @SuppressWarnings("ReadWriteStringCanBeUsed")
@@ -26,10 +27,17 @@ public class StorageManager {
         }
     }
 
-    public ArrayList<String> loadItemUUIDs() {
+    public ArrayList<String> loadItemUUIDs(boolean recycleBin) {
         ArrayList<String> uuids = new ArrayList<>();
-        try(DirectoryStream<Path> stream = Files.newDirectoryStream(directory, "*.metadata.json")) {
-            stream.forEach(path -> uuids.add(path.getFileName().toString().replace(".metadata.json", "")));
+        String glob = recycleBin ? "deleted_*.metadata.json" : "*.metadata.json";
+        try(DirectoryStream<Path> stream = Files.newDirectoryStream(directory, glob)) {
+            stream.forEach(path -> {
+                String filename = path.getFileName().toString().replace(".metadata.json", "");
+                if(recycleBin)
+                    uuids.add(filename.replace("deleted_", ""));
+                else if(!filename.startsWith("deleted_"))
+                    uuids.add(filename);
+            });
         } catch(IOException e) { throw new RuntimeException(e); }
         return uuids;
     }
@@ -63,11 +71,48 @@ public class StorageManager {
         } catch(JSONException | IOException e) { throw new RuntimeException(e); }
     }
 
-    public void deleteItemFiles(String uuid) {
+    // ===== Recycle Bin =====
+
+    public void moveToRecycleBin(String uuid) {
         try {
-            Files.delete(directory.resolve(uuid + ".content.json"));
-            Files.delete(directory.resolve(uuid + ".metadata.json"));
+            Files.move(directory.resolve(uuid + ".content.json"), directory.resolve("deleted_" + uuid + ".content.json"));
+            Files.move(directory.resolve(uuid + ".metadata.json"), directory.resolve("deleted_" + uuid + ".metadata.json"));
+            Files.setLastModifiedTime(directory.resolve("deleted_" + uuid + ".metadata.json"), FileTime.fromMillis(System.currentTimeMillis()));
         } catch(IOException e) { throw new RuntimeException(e); }
+    }
+
+    public void restoreFromRecycleBin(String uuid) {
+        try {
+            Files.move(directory.resolve("deleted_" + uuid + ".content.json"), directory.resolve(uuid + ".content.json"));
+            Files.move(directory.resolve("deleted_" + uuid + ".metadata.json"), directory.resolve(uuid + ".metadata.json"));
+        } catch(IOException e) { throw new RuntimeException(e); }
+    }
+
+    public void permanentlyDeleteFromRecycleBin(String uuid) {
+        try {
+            Files.deleteIfExists(directory.resolve("deleted_" + uuid + ".content.json"));
+            Files.deleteIfExists(directory.resolve("deleted_" + uuid + ".metadata.json"));
+        } catch(IOException e) { throw new RuntimeException(e); }
+    }
+
+    public void emptyRecycleBin() {
+        try(DirectoryStream<Path> stream = Files.newDirectoryStream(directory, "deleted_*")) {
+            for(Path path : stream)
+                Files.delete(path);
+        } catch(IOException e) { throw new RuntimeException(e); }
+    }
+
+    private final long RECYCLE_BIN_ITEM_MAX_AGE_MS = 30L * 24 * 60 * 60 * 1000;
+    public void cleanExpiredRecycleBinItems() {
+        long now = System.currentTimeMillis();
+        for(String uuid : loadItemUUIDs(true))
+            if(now - getRecycleBinItemDeletionTime(uuid) >= RECYCLE_BIN_ITEM_MAX_AGE_MS)
+                permanentlyDeleteFromRecycleBin(uuid);
+    }
+    
+    public long getRecycleBinItemDeletionTime(String uuid) {
+        try { return Files.getLastModifiedTime(directory.resolve("deleted_" + uuid + ".metadata.json")).toMillis(); }
+        catch(IOException e) { throw new RuntimeException(e); }
     }
 
 }
