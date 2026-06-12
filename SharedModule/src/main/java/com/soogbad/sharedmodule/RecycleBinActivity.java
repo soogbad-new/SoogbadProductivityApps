@@ -5,8 +5,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,8 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 public class RecycleBinActivity extends AppCompatActivity {
 
     private RecyclerView recycleBinList;
-    private ImageButton emptyBinButton;
-
     private ItemsManager<?, ?> itemsManager;
 
     @Override
@@ -28,7 +24,7 @@ public class RecycleBinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.activity_recycle_bin, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
-        recycleBinList = findViewById(R.id.recycleBinList); emptyBinButton = findViewById(R.id.emptyBinButton);
+        recycleBinList = findViewById(R.id.recycleBinList);
         itemsManager = ((ItemApplication<?, ?>)getApplication()).getItemsManager();
         itemsManager.loadRecycleBinItems();
         recycleBinList.setLayoutManager(new LinearLayoutManager(this));
@@ -47,7 +43,7 @@ public class RecycleBinActivity extends AppCompatActivity {
         new AlertDialog.Builder(this).setTitle("Empty Recycle Bin").setMessage("Are you sure you want to empty the recycle bin?")
                 .setPositiveButton("Empty", (dialog, which) -> {
                     itemsManager.emptyRecycleBin();
-                    recycleBinList.getAdapter().notifyDataSetChanged();
+                    if(recycleBinList.getAdapter() != null) recycleBinList.getAdapter().notifyDataSetChanged();
                     Toast.makeText(this, "Recycle bin emptied", Toast.LENGTH_SHORT).show();
                 }).setNegativeButton("Cancel", null).show();
     }

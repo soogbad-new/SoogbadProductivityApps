@@ -50,7 +50,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     private boolean itemDeletedGuard = false;
     private boolean contentTouched = false;
     private boolean optionsChanged = false;
-    public void markOptionsChanged() { optionsChanged = true; }
+    public void markOptionsChanged() { optionsChanged = true; } // call this when setting options
 
     public ItemLayout(Context context, AttributeSet attrs) {
         super(context, attrs);

@@ -1,7 +1,6 @@
 package com.soogbad.sharedmodule;
 
 import android.content.Context;
-import android.content.Intent;
 import android.annotation.SuppressLint;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -16,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 
 public class RecycleBinAdapter extends RecyclerView.Adapter<RecycleBinAdapter.ViewHolder> {
@@ -44,7 +44,7 @@ public class RecycleBinAdapter extends RecyclerView.Adapter<RecycleBinAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Item<?> item = items.get(position);
         holder.titleTextView.setText(item.Title);
-        holder.deletedAtTextView.setText("Deleted " + (System.currentTimeMillis() - item.DeletedAt) / (1000 * 60 * 60 * 24) + " days ago");
+        holder.deletedAtTextView.setText(MessageFormat.format("Deleted {0} days ago", (System.currentTimeMillis() - item.DeletedAt) / (1000 * 60 * 60 * 24)));
         holder.itemView.setTag(item.UUID);
         holder.itemView.setOnCreateContextMenuListener((menu, view, menuInfo) -> showContextMenu(menu, holder, item));
     }
@@ -76,9 +76,7 @@ public class RecycleBinAdapter extends RecyclerView.Adapter<RecycleBinAdapter.Vi
     }
     private void permanentlyDeleteItem(Item<?> item, Context context, ItemsManager<?, ?> itemsManager) {
         new AlertDialog.Builder(context).setTitle("Delete Permanently").setMessage("Are you sure you want to permanently delete this item?")
-                .setPositiveButton("Delete", (dialog, which) -> {
-                    itemsManager.permanentlyDeleteRecycleBinItem(item.UUID);
-                }).setNegativeButton("Cancel", null).show();
+                .setPositiveButton("Delete", (dialog, which) -> itemsManager.permanentlyDeleteRecycleBinItem(item.UUID)).setNegativeButton("Cancel", null).show();
     }
     @SuppressLint("NotifyDataSetChanged")
     private void notifyItemRemoved(ViewHolder itemHolder) {

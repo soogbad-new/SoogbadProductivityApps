@@ -102,8 +102,8 @@ public class StorageManager {
         } catch(IOException e) { throw new RuntimeException(e); }
     }
 
-    private final long RECYCLE_BIN_ITEM_MAX_AGE_MS = 30L * 24 * 60 * 60 * 1000;
     public void cleanExpiredRecycleBinItems() {
+        final long RECYCLE_BIN_ITEM_MAX_AGE_MS = 30L * 24 * 60 * 60 * 1000;
         long now = System.currentTimeMillis();
         for(String uuid : loadItemUUIDs(true))
             if(now - getRecycleBinItemDeletionTime(uuid) >= RECYCLE_BIN_ITEM_MAX_AGE_MS)
