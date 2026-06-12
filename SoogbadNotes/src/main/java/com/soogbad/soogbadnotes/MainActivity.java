@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(com.soogbad.sharedmodule.R.menu.toolbar_menu_main, menu);
+        getMenuInflater().inflate(com.soogbad.sharedmodule.R.menu.toolbar_menu_activity_main, menu);
         return true;
     }
 

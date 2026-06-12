@@ -40,7 +40,7 @@ public abstract class ItemActionBar extends ConstraintLayout {
 
     private void showOverflowMenu(View view) {
         PopupMenu popup = new PopupMenu(getContext(), view);
-        popup.getMenuInflater().inflate(R.menu.item_overflow_menu, popup.getMenu());
+        popup.getMenuInflater().inflate(R.menu.item_context_menu, popup.getMenu());
         popup.setOnMenuItemClickListener(this::onOverflowMenuItemClick);
         popup.show();
     }
