@@ -57,7 +57,7 @@ public class RecycleBinAdapter extends RecyclerView.Adapter<RecycleBinAdapter.Vi
 
     private boolean onContextMenuItemClick(MenuItem menuItem, Item<?> item, ViewHolder itemHolder) {
         Context context = itemHolder.itemView.getContext();
-        ItemsManager<?, ?> itemsManager = ((ItemApplication<?, ?>)context.getApplicationContext()).getItemsManager();
+        ItemsManager<?, ?> itemsManager = Utility.getItemsManager(context);
         if(menuItem.getItemId() == R.id.action_restore) {
             itemsManager.restoreRecycleBinItem(item.UUID);
             Toast.makeText(context, "Item restored", Toast.LENGTH_SHORT).show();

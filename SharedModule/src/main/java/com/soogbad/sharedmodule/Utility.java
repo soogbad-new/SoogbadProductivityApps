@@ -23,6 +23,9 @@ public class Utility {
         throw new RuntimeException("Could not find Activity From Context");
     }
 
+    public static ItemsManager<?, ?> getItemsManager(Context context) {
+        return ((ItemApplication<?, ?>)context.getApplicationContext()).getItemsManager();
+    }
     public static ItemApplication.AppUtility getAppUtility(Context context) {
         return ((ItemApplication<?, ?>)context.getApplicationContext()).getAppUtility();
     }

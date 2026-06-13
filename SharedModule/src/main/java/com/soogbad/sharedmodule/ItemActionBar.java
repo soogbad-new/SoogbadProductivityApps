@@ -60,7 +60,7 @@ public class ItemActionBar extends ConstraintLayout {
 
     private boolean onContextMenuItemClick(MenuItem menuItem) {
         Context context = getContext();
-        ItemsManager<?, ?> itemsManager = ((ItemApplication<?, ?>)context.getApplicationContext()).getItemsManager();
+        ItemsManager<?, ?> itemsManager = Utility.getItemsManager(context);
         if(menuItem.getItemId() == R.id.action_restore) {
             itemsManager.restoreRecycleBinItem(item.UUID);
             Toast.makeText(context, "Item restored", Toast.LENGTH_SHORT).show();

@@ -56,7 +56,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
 
     private boolean onContextMenuItemClick(MenuItem menuItem, Item<?> item, ViewHolder itemHolder) {
         Context context = itemHolder.itemView.getContext();
-        ItemsManager<?, ?> itemsManager = ((ItemApplication<?, ?>)context.getApplicationContext()).getItemsManager();
+        ItemsManager<?, ?> itemsManager = Utility.getItemsManager(context);
         if(menuItem.getItemId() == R.id.action_delete) {
             itemsManager.moveItemToRecycleBin(item.UUID);
             notifyItemRemoved(itemHolder);

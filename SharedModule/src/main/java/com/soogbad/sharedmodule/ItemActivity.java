@@ -20,7 +20,7 @@ public abstract class ItemActivity extends AppCompatActivity {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         itemLayout = findViewById(R.id.itemLayout); ItemActionBar itemActionBar = findViewById(R.id.itemActionBar);
-        itemsManager = ((ItemApplication<?, ?>)getApplication()).getItemsManager();
+        itemsManager = Utility.getItemsManager(this);
         String uuid = getIntent().getStringExtra("item_uuid"); previewMode = getIntent().getBooleanExtra("preview_mode", false);
         Item<?> item = previewMode ? itemsManager.getRecycleBinItem(uuid) : itemsManager.getItem(uuid);
         if(item == null) {

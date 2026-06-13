@@ -27,9 +27,8 @@ public class RecycleBinActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_recycle_bin, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
         recycleBinList = findViewById(R.id.recycleBinList);
-        ItemApplication<?, ?> app = (ItemApplication<?, ?>)getApplication();
-        ((MaterialToolbar)findViewById(R.id.toolbar)).setTitle(app.getAppUtility().getAppName());
-        itemsManager = app.getItemsManager();
+        ((MaterialToolbar)findViewById(R.id.toolbar)).setTitle(Utility.getAppUtility(this).getAppName());
+        itemsManager = Utility.getItemsManager(this);
         itemsManager.loadRecycleBinItems();
         recycleBinList.setLayoutManager(new LinearLayoutManager(this));
         recycleBinList.setAdapter(new RecycleBinAdapter(itemsManager.getRecycleBinItems()));
