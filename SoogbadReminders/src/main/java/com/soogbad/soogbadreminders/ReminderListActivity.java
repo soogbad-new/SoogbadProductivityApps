@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.core.view.ViewCompat;
 
 import com.soogbad.sharedmodule.ItemListActivity;
+import com.soogbad.sharedmodule.ItemsManager;
 import com.soogbad.sharedmodule.Utility;
 import com.soogbad.sharedmodule.Schedule;
 
@@ -20,9 +21,10 @@ public class ReminderListActivity extends ItemListActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
     }
 
-    @Override
-    protected String createItem() {
-        return ((SoogbadRemindersApplication)getApplication()).getItemsManager().createItem(new Reminder.ReminderOptions(new Date(), Schedule.NONE));
+    public void onAddButtonClick(View view) {
+        ItemsManager<Reminder, Reminder.ReminderOptions> itemsManager = ((SoogbadRemindersApplication)getApplication()).getItemsManager();
+        String uuid = itemsManager.createItem(new Reminder.ReminderOptions(new Date(), Schedule.NONE));
+        super.onAddButtonClick(uuid);
     }
 
     @Override protected View getToolbar() { return findViewById(R.id.toolbar); }

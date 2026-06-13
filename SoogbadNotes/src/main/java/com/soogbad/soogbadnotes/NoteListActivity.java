@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.core.view.ViewCompat;
 
 import com.soogbad.sharedmodule.ItemListActivity;
+import com.soogbad.sharedmodule.ItemsManager;
 import com.soogbad.sharedmodule.Utility;
 
 public class NoteListActivity extends ItemListActivity {
@@ -17,9 +18,10 @@ public class NoteListActivity extends ItemListActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
     }
 
-    @Override
-    protected String createItem() {
-        return ((SoogbadNotesApplication)getApplication()).getItemsManager().createItem(new Note.NoteOptions(System.currentTimeMillis()));
+    public void onAddButtonClick(View view) {
+        ItemsManager<Note, Note.NoteOptions> itemsManager = ((SoogbadNotesApplication)getApplication()).getItemsManager();
+        String uuid = itemsManager.createItem(new Note.NoteOptions(System.currentTimeMillis()));
+        super.onAddButtonClick(uuid);
     }
 
     @Override protected View getToolbar() { return findViewById(R.id.toolbar); }

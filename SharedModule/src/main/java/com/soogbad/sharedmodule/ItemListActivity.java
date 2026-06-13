@@ -17,27 +17,26 @@ import androidx.recyclerview.widget.RecyclerView;
 public abstract class ItemListActivity extends AppCompatActivity {
 
     private RecyclerView itemList;
-    private ItemsManager<?, ?> itemsManager;
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         itemList = findViewById(R.id.itemList);
-        itemsManager = Utility.getItemsManager(this);
+        ItemsManager<?, ?> itemsManager = Utility.getItemsManager(this);
         itemList.setLayoutManager(new LinearLayoutManager(this));
         itemList.setAdapter(new ItemListAdapter(itemsManager.getItems(), R.layout.item_list_item, R.id.itemListItemTitleTextView));
     }
 
-    public void onAddButtonClick(View view) {
-        String uuid = createItem();
+    protected void onAddButtonClick(String uuid) {
         if(itemList.getAdapter() != null)
             itemList.getAdapter().notifyItemInserted(0);
-        startActivity(new Intent(this, Utility.getAppUtility(this).getItemActivityClass()).putExtra("item_uuid", uuid));
+        launchItem(uuid);
     }
-    protected abstract String createItem();
-
     public void onItemListItemClick(View view) {
-        startActivity(new Intent(this, Utility.getAppUtility(this).getItemActivityClass()).putExtra("item_uuid", view.getTag().toString()));
+        launchItem(view.getTag().toString());
+    }
+    protected void launchItem(String uuid) {
+        startActivity(new Intent(this, Utility.getAppUtility(this).getItemActivityClass()).putExtra("item_uuid", uuid));
     }
 
     @SuppressLint("NotifyDataSetChanged")
