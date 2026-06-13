@@ -24,15 +24,12 @@
                 android:id="@+id/emptyBinButton"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_margin="16dp"
                 android:src="@android:drawable/ic_menu_delete"
                 android:scaleType="centerInside"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Empty Bin"
                 android:onClick="onEmptyBinButtonClick"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                android:layout_gravity="right|center_vertical" />
 
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>

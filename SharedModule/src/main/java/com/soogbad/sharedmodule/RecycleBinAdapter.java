@@ -59,24 +59,18 @@ public class RecycleBinAdapter extends RecyclerView.Adapter<RecycleBinAdapter.Vi
         Context context = itemHolder.itemView.getContext();
         ItemsManager<?, ?> itemsManager = ((ItemApplication<?, ?>)context.getApplicationContext()).getItemsManager();
         if(menuItem.getItemId() == R.id.action_restore) {
-            restoreItem(item, context, itemsManager);
+            itemsManager.restoreRecycleBinItem(item.UUID);
+            Toast.makeText(context, "Item restored", Toast.LENGTH_SHORT).show();
             notifyItemRemoved(itemHolder);
             return true;
         }
         else if(menuItem.getItemId() == R.id.action_delete_permanently) {
-            permanentlyDeleteItem(item, context, itemsManager);
+            new AlertDialog.Builder(context).setTitle("Delete Permanently").setMessage("Are you sure you want to permanently delete this item?")
+                    .setPositiveButton("Delete", (dialog, which) -> itemsManager.permanentlyDeleteRecycleBinItem(item.UUID)).setNegativeButton("Cancel", null).show();
             notifyItemRemoved(itemHolder);
             return true;
         }
         return false;
-    }
-    private void restoreItem(Item<?> item, Context context, ItemsManager<?, ?> itemsManager) {
-        itemsManager.restoreRecycleBinItem(item.UUID);
-        Toast.makeText(context, "Item restored", Toast.LENGTH_SHORT).show();
-    }
-    private void permanentlyDeleteItem(Item<?> item, Context context, ItemsManager<?, ?> itemsManager) {
-        new AlertDialog.Builder(context).setTitle("Delete Permanently").setMessage("Are you sure you want to permanently delete this item?")
-                .setPositiveButton("Delete", (dialog, which) -> itemsManager.permanentlyDeleteRecycleBinItem(item.UUID)).setNegativeButton("Cancel", null).show();
     }
     @SuppressLint("NotifyDataSetChanged")
     private void notifyItemRemoved(ViewHolder itemHolder) {

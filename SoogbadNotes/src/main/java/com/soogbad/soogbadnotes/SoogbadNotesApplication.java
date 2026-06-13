@@ -19,6 +19,7 @@ public class SoogbadNotesApplication extends ItemApplication<Note, Note.NoteOpti
     @Override
     public AppUtility getAppUtility() {
         return new AppUtility() {
+            @Override public String getAppName() { return "SoogbadNotes"; }
             @Override public String getItemUuidPrefix() { return "NOTE-"; }
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return NoteActivity.class; }
         };

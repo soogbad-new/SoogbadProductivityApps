@@ -25,17 +25,6 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
         this.storageManager = storageManager; this.itemCreator = itemCreator; this.optionsParser = optionsParser;
     }
 
-    private T loadItemData(String uuid, boolean deleted) {
-        try {
-            JSONObject metadata = storageManager.loadMetadata(deleted ? "deleted_" + uuid : uuid);
-            String title = metadata.getString("title");
-            O options = optionsParser.parse(metadata.getJSONObject("options"));
-            T item = itemCreator.create(uuid, title, options);
-            if(deleted) item.DeletedAt = storageManager.getRecycleBinItemDeletionTime(uuid);
-            return item;
-        } catch(JSONException e) { throw new RuntimeException(e); }
-    }
-
     public void loadItems() {
         for(String uuid : storageManager.loadItemUUIDs(false))
             items.add(loadItemData(uuid, false));
@@ -46,8 +35,18 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
             recycleBinItems.add(loadItemData(uuid, true));
         recycleBinItems.sort((a, b) -> Long.compare(b.DeletedAt, a.DeletedAt));
     }
+    private T loadItemData(String uuid, boolean isInRecycleBin) {
+        try {
+            JSONObject metadata = storageManager.loadMetadata(uuid, isInRecycleBin);
+            String title = metadata.getString("title");
+            O options = optionsParser.parse(metadata.getJSONObject("options"));
+            T item = itemCreator.create(uuid, title, options);
+            if(isInRecycleBin) item.DeletedAt = storageManager.getRecycleBinItemDeletionTime(uuid);
+            return item;
+        } catch(JSONException e) { throw new RuntimeException(e); }
+    }
 
-    public void loadItemContent(Item<?> item) { item.Content = storageManager.loadContent(item.UUID); }
+    public void loadItemContent(Item<?> item) { item.Content = storageManager.loadContent(item.UUID, item.DeletedAt > 0); }
     public void saveItemContent(Item<?> item) { storageManager.saveContent(item.UUID, item.Content); }
     public void saveItemMetadata(Item<?> item) { storageManager.saveMetadata(item.UUID, item.Title, item.Options); }
 

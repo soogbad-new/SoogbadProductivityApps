@@ -48,9 +48,9 @@ public class StorageManager {
         catch(IOException e) { throw new RuntimeException(e); }
     }
 
-    public SpannedString loadContent(String uuid) {
+    public SpannedString loadContent(String uuid, boolean isInRecycleBin) {
         String json;
-        try { json = new String(Files.readAllBytes(directory.resolve(uuid + ".content.json")), StandardCharsets.UTF_16); }
+        try { json = new String(Files.readAllBytes(directory.resolve((isInRecycleBin ? "deleted_" : "") + uuid + ".content.json")), StandardCharsets.UTF_16); }
         catch(IOException e) { throw new RuntimeException(e); }
         return RichTextSerializer.deserialize(json);
     }
@@ -64,9 +64,9 @@ public class StorageManager {
         } catch(JSONException | IOException e) { throw new RuntimeException(e); }
     }
 
-    public JSONObject loadMetadata(String uuid) {
+    public JSONObject loadMetadata(String uuid, boolean isInRecycleBin) {
         try {
-            String json = new String(Files.readAllBytes(directory.resolve(uuid + ".metadata.json")), StandardCharsets.UTF_16);
+            String json = new String(Files.readAllBytes(directory.resolve((isInRecycleBin ? "deleted_" : "") + uuid + ".metadata.json")), StandardCharsets.UTF_16);
             return new JSONObject(json);
         } catch(JSONException | IOException e) { throw new RuntimeException(e); }
     }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -13,6 +14,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.appbar.MaterialToolbar;
 
 public class RecycleBinActivity extends AppCompatActivity {
 
@@ -25,7 +28,9 @@ public class RecycleBinActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.activity_recycle_bin, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
         recycleBinList = findViewById(R.id.recycleBinList);
-        itemsManager = ((ItemApplication<?, ?>)getApplication()).getItemsManager();
+        ItemApplication<?, ?> app = (ItemApplication<?, ?>)getApplication();
+        ((MaterialToolbar)findViewById(R.id.toolbar)).setTitle(app.getAppUtility().getAppName());
+        itemsManager = app.getItemsManager();
         itemsManager.loadRecycleBinItems();
         recycleBinList.setLayoutManager(new LinearLayoutManager(this));
         recycleBinList.setAdapter(new RecycleBinAdapter(itemsManager.getRecycleBinItems()));

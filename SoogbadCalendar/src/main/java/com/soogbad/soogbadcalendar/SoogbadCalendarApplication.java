@@ -17,6 +17,7 @@ public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Eve
     @Override
     public AppUtility getAppUtility() {
         return new AppUtility() {
+            @Override public String getAppName() { return "SoogbadCalendar"; }
             @Override public String getItemUuidPrefix() { return "EVENT-"; }
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return EventActivity.class; }
         };

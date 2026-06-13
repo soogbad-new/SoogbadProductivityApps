@@ -21,6 +21,7 @@ public abstract class ItemActionBar extends ConstraintLayout {
 
     private ItemLayout itemLayout;
     private Item<?> item;
+    private boolean readOnly;
 
     public ItemActionBar(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -30,18 +31,17 @@ public abstract class ItemActionBar extends ConstraintLayout {
     }
 
     public void init(ItemLayout itemLayout, Item<?> item, boolean readOnly) {
-        this.itemLayout = itemLayout; this.item = item;
+        this.itemLayout = itemLayout; this.item = item; this.readOnly = readOnly;
         titleEditText.setText(item.Title);
         if(readOnly) {
             titleEditText.setFocusable(false); titleEditText.setFocusableInTouchMode(false); titleEditText.setCursorVisible(false);
-            overflowMenuButton.setVisibility(View.GONE);
         }
     }
 
     private void showOverflowMenu(View view) {
         PopupMenu popup = new PopupMenu(getContext(), view);
-        popup.getMenuInflater().inflate(R.menu.item_context_menu, popup.getMenu());
-        popup.setOnMenuItemClickListener(this::onOverflowMenuItemClick);
+        popup.getMenuInflater().inflate(readOnly ? R.menu.recycle_bin_item_context_menu : R.menu.item_context_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(readOnly ? this::onOverflowMenuItemClick : this::onOverflowMenuItemClick);
         popup.show();
     }
 
