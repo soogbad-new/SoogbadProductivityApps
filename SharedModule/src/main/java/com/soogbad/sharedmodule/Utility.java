@@ -1,5 +1,7 @@
 package com.soogbad.sharedmodule;
 
+import android.app.Activity;
+import android.content.ContextWrapper;
 import android.graphics.Color;
 import android.content.Context;
 import android.util.Patterns;
@@ -11,6 +13,15 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class Utility {
+
+    public static Activity getActivity(Context context) {
+        while(context instanceof ContextWrapper) {
+            if(context instanceof Activity)
+                return (Activity)context;
+            context = ((ContextWrapper)context).getBaseContext();
+        }
+        throw new RuntimeException("Could not find Activity From Context");
+    }
 
     public static ItemApplication.AppUtility getAppUtility(Context context) {
         return ((ItemApplication<?, ?>)context.getApplicationContext()).getAppUtility();

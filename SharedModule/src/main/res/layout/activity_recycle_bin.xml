@@ -29,7 +29,8 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Empty Bin"
                 android:onClick="onEmptyBinButtonClick"
-                android:layout_gravity="right|center_vertical" />
+                android:layout_gravity="right|center_vertical"
+                tools:ignore="RtlHardcoded" />
 
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>

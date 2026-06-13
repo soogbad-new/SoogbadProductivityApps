@@ -80,6 +80,12 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
         }
     }
 
+    public void disableReadOnly() {
+        contentEditText.setFocusable(true); contentEditText.setFocusableInTouchMode(true); contentEditText.setCursorVisible(true);
+        formattingToolbar.setVisibility(VISIBLE);
+        itemDeletedGuard = false;
+    }
+
     public void save() {
         if(itemDeletedGuard)
             return;
