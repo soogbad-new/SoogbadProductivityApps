@@ -29,11 +29,12 @@ public abstract class ItemListActivity extends AppCompatActivity {
     }
 
     public void onAddButtonClick(View view) {
-        String uuid = itemsManager.createItem(getItemCreationDefaultOptions());
+        String uuid = createItem();
         if(itemList.getAdapter() != null)
             itemList.getAdapter().notifyItemInserted(0);
         startActivity(new Intent(this, Utility.getAppUtility(this).getItemActivityClass()).putExtra("item_uuid", uuid));
     }
+    protected abstract String createItem();
 
     public void onItemListItemClick(View view) {
         startActivity(new Intent(this, Utility.getAppUtility(this).getItemActivityClass()).putExtra("item_uuid", view.getTag().toString()));

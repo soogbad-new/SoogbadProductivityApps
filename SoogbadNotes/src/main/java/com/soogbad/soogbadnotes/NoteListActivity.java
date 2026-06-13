@@ -17,6 +17,11 @@ public class NoteListActivity extends ItemListActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
     }
 
+    @Override
+    protected String createItem() {
+        return ((SoogbadNotesApplication)getApplication()).getItemsManager().createItem(new Note.NoteOptions(System.currentTimeMillis()));
+    }
+
     @Override protected View getToolbar() { return findViewById(R.id.toolbar); }
 
 }
