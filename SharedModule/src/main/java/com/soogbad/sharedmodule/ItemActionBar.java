@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-public abstract class ItemActionBar extends ConstraintLayout {
+public class ItemActionBar extends ConstraintLayout {
 
     private final EditText titleEditText;
     public EditText getTitleEditText() { return titleEditText; }

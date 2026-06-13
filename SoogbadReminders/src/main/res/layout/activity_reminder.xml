@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.soogbad.soogbadreminders.ReminderActionBar
+            <com.soogbad.sharedmodule.ItemActionBar
                 android:id="@id/itemActionBar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
