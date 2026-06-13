@@ -30,7 +30,7 @@ public class RecycleBinAdapter extends RecyclerView.Adapter<RecycleBinAdapter.Vi
         private final TextView titleTextView, deletedAtTextView;
         public ViewHolder(View item) {
             super(item);
-            titleTextView = item.findViewById(R.id.itemTitleTextView); deletedAtTextView = item.findViewById(R.id.deletedAtTextView);
+            titleTextView = item.findViewById(R.id.recycleBinItemTitleTextView); deletedAtTextView = item.findViewById(R.id.recycleBinItemDeletedAtTextView);
         }
     }
 
