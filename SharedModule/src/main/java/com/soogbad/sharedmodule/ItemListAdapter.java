@@ -55,9 +55,9 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
                 itemsManager.moveItemToRecycleBin(item.UUID);
                 notifyItemRemoved(itemHolder);
             }),
-            Map.entry(R.id.action_copy_uuid, () -> {
-                Utility.getAppUtility(context).copyItemUuid(context, item);
-            })
+            Map.entry(R.id.action_copy_uuid, () ->
+                Utility.getAppUtility(context).copyItemUuid(context, item)
+            )
         )).showContextMenu(menu, R.menu.item_context_menu);
     }
     @SuppressLint("NotifyDataSetChanged")

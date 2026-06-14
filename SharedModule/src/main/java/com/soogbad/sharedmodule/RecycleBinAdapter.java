@@ -57,13 +57,13 @@ public class RecycleBinAdapter extends RecyclerView.Adapter<RecycleBinAdapter.Vi
                 Toast.makeText(context, "Item restored", Toast.LENGTH_SHORT).show();
                 notifyItemRemoved(itemHolder);
             }),
-            Map.entry(R.id.action_delete_permanently, () -> {
+            Map.entry(R.id.action_delete_permanently, () ->
                 new AlertDialog.Builder(context).setTitle("Delete Permanently").setMessage("Are you sure you want to permanently delete this item?")
                         .setPositiveButton("Delete", (dialog, which) -> {
                             itemsManager.permanentlyDeleteRecycleBinItem(item.UUID);
                             notifyItemRemoved(itemHolder);
-                        }).setNegativeButton("Cancel", null).show();
-            })
+                        }).setNegativeButton("Cancel", null).show()
+            )
         )).showContextMenu(menu, R.menu.recycle_bin_item_context_menu);
     }
     @SuppressLint("NotifyDataSetChanged")

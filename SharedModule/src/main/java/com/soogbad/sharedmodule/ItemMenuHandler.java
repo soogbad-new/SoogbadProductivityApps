@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 
-import androidx.annotation.LayoutRes;
+import androidx.annotation.MenuRes;
 
 public class ItemMenuHandler {
 
@@ -19,13 +19,13 @@ public class ItemMenuHandler {
         this.context = context; this.actions = actions;
     }
 
-    public void showContextMenu(ContextMenu menu, @LayoutRes int menuRes) {
+    public void showContextMenu(ContextMenu menu, @MenuRes int menuRes) {
         new MenuInflater(context).inflate(menuRes, menu);
         for(int i = 0; i < menu.size(); i++)
             menu.getItem(i).setOnMenuItemClickListener(this::handleMenuItem);
     }
 
-    public void showOverflowMenu(View anchor, @LayoutRes int menuRes) {
+    public void showOverflowMenu(View anchor, @MenuRes int menuRes) {
         PopupMenu popup = new PopupMenu(context, anchor);
         popup.getMenuInflater().inflate(menuRes, popup.getMenu());
         popup.setOnMenuItemClickListener(this::handleMenuItem);

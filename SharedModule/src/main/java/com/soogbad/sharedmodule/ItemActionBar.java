@@ -44,9 +44,9 @@ public class ItemActionBar extends ConstraintLayout {
                 itemLayout.delete();
                 Utility.getActivity(getContext()).finish();
             }),
-            Map.entry(R.id.action_copy_uuid, () -> {
-                Utility.getAppUtility(getContext()).copyItemUuid(getContext(), item);
-            })
+            Map.entry(R.id.action_copy_uuid, () ->
+                Utility.getAppUtility(getContext()).copyItemUuid(getContext(), item)
+            )
         )).showOverflowMenu(view, R.menu.item_context_menu);
     }
 
