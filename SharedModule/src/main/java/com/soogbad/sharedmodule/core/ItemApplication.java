@@ -1,10 +1,12 @@
-package com.soogbad.sharedmodule;
+package com.soogbad.sharedmodule.core;
 
 import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.widget.Toast;
+
+import com.soogbad.sharedmodule.ui.ItemActivity;
 
 public abstract class ItemApplication<T extends Item<O>, O extends Item.ItemOptions> extends Application {
 

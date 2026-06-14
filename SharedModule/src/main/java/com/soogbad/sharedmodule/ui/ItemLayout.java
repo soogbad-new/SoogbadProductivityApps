@@ -1,4 +1,4 @@
-package com.soogbad.sharedmodule;
+package com.soogbad.sharedmodule.ui;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -27,6 +27,14 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+
+import com.soogbad.sharedmodule.core.Item;
+import com.soogbad.sharedmodule.core.ItemsManager;
+import com.soogbad.sharedmodule.R;
+import com.soogbad.sharedmodule.core.Utility;
+import com.soogbad.sharedmodule.richtext.RichCharacterStyle;
+import com.soogbad.sharedmodule.richtext.RichEditText;
+import com.soogbad.sharedmodule.richtext.RichParagraphStyle;
 
 import java.util.HashSet;
 import java.util.function.IntConsumer;

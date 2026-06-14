@@ -1,9 +1,9 @@
 package com.soogbad.soogbadcalendar;
 
-import com.soogbad.sharedmodule.ItemActivity;
-import com.soogbad.sharedmodule.ItemApplication;
-import com.soogbad.sharedmodule.ItemsManager;
-import com.soogbad.sharedmodule.StorageManager;
+import com.soogbad.sharedmodule.ui.ItemActivity;
+import com.soogbad.sharedmodule.core.ItemApplication;
+import com.soogbad.sharedmodule.core.ItemsManager;
+import com.soogbad.sharedmodule.core.StorageManager;
 
 public class SoogbadCalendarApplication extends ItemApplication<Event, Event.EventOptions> {
 

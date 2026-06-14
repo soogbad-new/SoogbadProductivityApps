@@ -1,4 +1,4 @@
-package com.soogbad.sharedmodule;
+package com.soogbad.sharedmodule.richtext;
 
 import android.graphics.Typeface;
 import android.text.style.AbsoluteSizeSpan;

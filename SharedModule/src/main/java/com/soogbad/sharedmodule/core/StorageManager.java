@@ -1,7 +1,9 @@
-package com.soogbad.sharedmodule;
+package com.soogbad.sharedmodule.core;
 
 import android.text.Spanned;
 import android.text.SpannedString;
+
+import com.soogbad.sharedmodule.richtext.RichTextSerializer;
 
 import org.json.JSONException;
 import org.json.JSONObject;

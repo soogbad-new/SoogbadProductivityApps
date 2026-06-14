@@ -1,4 +1,4 @@
-package com.soogbad.sharedmodule;
+package com.soogbad.sharedmodule.ui;
 
 import android.content.Context;
 import java.util.Map;

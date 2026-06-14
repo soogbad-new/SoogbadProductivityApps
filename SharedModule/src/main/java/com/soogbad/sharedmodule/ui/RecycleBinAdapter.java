@@ -1,4 +1,4 @@
-package com.soogbad.sharedmodule;
+package com.soogbad.sharedmodule.ui;
 
 import android.content.Context;
 import android.annotation.SuppressLint;
@@ -12,6 +12,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.soogbad.sharedmodule.core.Item;
+import com.soogbad.sharedmodule.core.ItemsManager;
+import com.soogbad.sharedmodule.R;
+import com.soogbad.sharedmodule.core.Utility;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

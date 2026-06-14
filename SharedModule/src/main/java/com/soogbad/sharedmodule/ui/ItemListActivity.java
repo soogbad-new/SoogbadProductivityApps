@@ -1,4 +1,4 @@
-package com.soogbad.sharedmodule;
+package com.soogbad.sharedmodule.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -13,6 +13,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.soogbad.sharedmodule.core.ItemsManager;
+import com.soogbad.sharedmodule.R;
+import com.soogbad.sharedmodule.core.Utility;
 
 public abstract class ItemListActivity extends AppCompatActivity {
 

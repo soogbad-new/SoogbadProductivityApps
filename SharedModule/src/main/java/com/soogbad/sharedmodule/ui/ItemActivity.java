@@ -1,4 +1,4 @@
-package com.soogbad.sharedmodule;
+package com.soogbad.sharedmodule.ui;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +8,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.soogbad.sharedmodule.core.Item;
+import com.soogbad.sharedmodule.core.ItemsManager;
+import com.soogbad.sharedmodule.R;
+import com.soogbad.sharedmodule.core.Utility;
 
 public abstract class ItemActivity extends AppCompatActivity {
 

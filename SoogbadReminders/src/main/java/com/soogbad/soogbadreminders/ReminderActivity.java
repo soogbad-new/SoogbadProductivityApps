@@ -5,8 +5,8 @@ import android.view.View;
 
 import androidx.core.view.ViewCompat;
 
-import com.soogbad.sharedmodule.ItemActivity;
-import com.soogbad.sharedmodule.Utility;
+import com.soogbad.sharedmodule.ui.ItemActivity;
+import com.soogbad.sharedmodule.core.Utility;
 
 public class ReminderActivity extends ItemActivity {
 

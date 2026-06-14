@@ -1,4 +1,4 @@
-package com.soogbad.sharedmodule;
+package com.soogbad.sharedmodule.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -10,6 +10,11 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.soogbad.sharedmodule.core.Item;
+import com.soogbad.sharedmodule.core.ItemsManager;
+import com.soogbad.sharedmodule.R;
+import com.soogbad.sharedmodule.core.Utility;
 
 import java.util.Map;
 

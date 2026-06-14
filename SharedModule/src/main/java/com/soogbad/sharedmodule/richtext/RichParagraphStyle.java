@@ -1,4 +1,4 @@
-package com.soogbad.sharedmodule;
+package com.soogbad.sharedmodule.richtext;
 
 import android.text.Layout;
 import android.text.style.BulletSpan;

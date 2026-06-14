@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.soogbad.sharedmodule.ItemActionBar
+            <com.soogbad.sharedmodule.ui.ItemActionBar
                 android:id="@id/itemActionBar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -25,7 +25,7 @@
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.soogbad.sharedmodule.ItemLayout
+    <com.soogbad.sharedmodule.ui.ItemLayout
         android:id="@id/itemLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -1,7 +1,7 @@
 package com.soogbad.soogbadcalendar;
 
-import com.soogbad.sharedmodule.Item;
-import com.soogbad.sharedmodule.Schedule;
+import com.soogbad.sharedmodule.core.Item;
+import com.soogbad.sharedmodule.core.Schedule;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,6 +1,6 @@
 package com.soogbad.soogbadnotes;
 
-import com.soogbad.sharedmodule.Item;
+import com.soogbad.sharedmodule.core.Item;
 
 import org.json.JSONException;
 import org.json.JSONObject;

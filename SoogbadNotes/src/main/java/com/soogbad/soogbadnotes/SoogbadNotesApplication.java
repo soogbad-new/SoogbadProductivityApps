@@ -1,10 +1,10 @@
 package com.soogbad.soogbadnotes;
 
-import com.soogbad.sharedmodule.ItemActivity;
-import com.soogbad.sharedmodule.ItemApplication;
-import com.soogbad.sharedmodule.ItemsManager;
-import com.soogbad.sharedmodule.StorageManager;
-import com.soogbad.sharedmodule.RichCharacterStyle;
+import com.soogbad.sharedmodule.ui.ItemActivity;
+import com.soogbad.sharedmodule.core.ItemApplication;
+import com.soogbad.sharedmodule.core.ItemsManager;
+import com.soogbad.sharedmodule.core.StorageManager;
+import com.soogbad.sharedmodule.richtext.RichCharacterStyle;
 
 public class SoogbadNotesApplication extends ItemApplication<Note, Note.NoteOptions> {
 

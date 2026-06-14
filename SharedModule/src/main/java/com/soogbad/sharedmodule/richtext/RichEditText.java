@@ -1,4 +1,4 @@
-package com.soogbad.sharedmodule;
+package com.soogbad.sharedmodule.richtext;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -27,6 +27,8 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 
 import androidx.appcompat.widget.AppCompatEditText;
+
+import com.soogbad.sharedmodule.core.Utility;
 
 import java.util.ArrayList;
 import java.util.Arrays;
