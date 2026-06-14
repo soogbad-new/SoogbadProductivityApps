@@ -2,14 +2,12 @@ package com.soogbad.sharedmodule;
 
 import android.content.Context;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.app.AlertDialog;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class RecycleBinAdapter extends RecyclerView.Adapter<RecycleBinAdapter.ViewHolder> {
 
@@ -50,27 +49,22 @@ public class RecycleBinAdapter extends RecyclerView.Adapter<RecycleBinAdapter.Vi
     }
 
     private void showContextMenu(ContextMenu menu, ViewHolder itemHolder, Item<?> item) {
-        new MenuInflater(itemHolder.itemView.getContext()).inflate(R.menu.recycle_bin_item_context_menu, menu);
-        for(int i = 0; i < menu.size(); i++)
-            menu.getItem(i).setOnMenuItemClickListener(menuItem -> onContextMenuItemClick(menuItem, item, itemHolder));
-    }
-
-    private boolean onContextMenuItemClick(MenuItem menuItem, Item<?> item, ViewHolder itemHolder) {
         Context context = itemHolder.itemView.getContext();
         ItemsManager<?, ?> itemsManager = Utility.getItemsManager(context);
-        if(menuItem.getItemId() == R.id.action_restore) {
-            itemsManager.restoreRecycleBinItem(item.UUID);
-            Toast.makeText(context, "Item restored", Toast.LENGTH_SHORT).show();
-            notifyItemRemoved(itemHolder);
-            return true;
-        }
-        else if(menuItem.getItemId() == R.id.action_delete_permanently) {
-            new AlertDialog.Builder(context).setTitle("Delete Permanently").setMessage("Are you sure you want to permanently delete this item?")
-                    .setPositiveButton("Delete", (dialog, which) -> itemsManager.permanentlyDeleteRecycleBinItem(item.UUID)).setNegativeButton("Cancel", null).show();
-            notifyItemRemoved(itemHolder);
-            return true;
-        }
-        return false;
+        new ItemMenuHandler(context, Map.ofEntries(
+            Map.entry(R.id.action_restore, () -> {
+                itemsManager.restoreRecycleBinItem(item.UUID);
+                Toast.makeText(context, "Item restored", Toast.LENGTH_SHORT).show();
+                notifyItemRemoved(itemHolder);
+            }),
+            Map.entry(R.id.action_delete_permanently, () -> {
+                new AlertDialog.Builder(context).setTitle("Delete Permanently").setMessage("Are you sure you want to permanently delete this item?")
+                        .setPositiveButton("Delete", (dialog, which) -> {
+                            itemsManager.permanentlyDeleteRecycleBinItem(item.UUID);
+                            notifyItemRemoved(itemHolder);
+                        }).setNegativeButton("Cancel", null).show();
+            })
+        )).showContextMenu(menu, R.menu.recycle_bin_item_context_menu);
     }
     @SuppressLint("NotifyDataSetChanged")
     private void notifyItemRemoved(ViewHolder itemHolder) {

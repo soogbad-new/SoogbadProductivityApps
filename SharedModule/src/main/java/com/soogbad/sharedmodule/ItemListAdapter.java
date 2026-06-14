@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -16,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHolder> {
 
@@ -49,24 +48,17 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
     }
 
     private void showContextMenu(ContextMenu menu, ViewHolder itemHolder, Item<?> item) {
-        new MenuInflater(itemHolder.itemView.getContext()).inflate(R.menu.item_context_menu, menu);
-        for(int i = 0; i < menu.size(); i++)
-            menu.getItem(i).setOnMenuItemClickListener(menuItem -> onContextMenuItemClick(menuItem, item, itemHolder));
-    }
-
-    private boolean onContextMenuItemClick(MenuItem menuItem, Item<?> item, ViewHolder itemHolder) {
         Context context = itemHolder.itemView.getContext();
         ItemsManager<?, ?> itemsManager = Utility.getItemsManager(context);
-        if(menuItem.getItemId() == R.id.action_delete) {
-            itemsManager.moveItemToRecycleBin(item.UUID);
-            notifyItemRemoved(itemHolder);
-            return true;
-        }
-        else if(menuItem.getItemId() == R.id.action_copy_uuid) {
-            Utility.getAppUtility(context).copyItemUuid(context, item);
-            return true;
-        }
-        return false;
+        new ItemMenuHandler(context, Map.ofEntries(
+            Map.entry(R.id.action_delete, () -> {
+                itemsManager.moveItemToRecycleBin(item.UUID);
+                notifyItemRemoved(itemHolder);
+            }),
+            Map.entry(R.id.action_copy_uuid, () -> {
+                Utility.getAppUtility(context).copyItemUuid(context, item);
+            })
+        )).showContextMenu(menu, R.menu.item_context_menu);
     }
     @SuppressLint("NotifyDataSetChanged")
     private void notifyItemRemoved(ViewHolder itemHolder) {
