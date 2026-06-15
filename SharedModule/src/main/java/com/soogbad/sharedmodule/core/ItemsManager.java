@@ -30,9 +30,9 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
             items.add(loadItemData(uuid, false));
     }
     public void loadRecycleBinItems() {
-        storageManager.cleanExpiredRecycleBinItems();
         for(String uuid : storageManager.loadItemUUIDs(true))
             recycleBinItems.add(loadItemData(uuid, true));
+        cleanExpiredRecycleBinItems();
         recycleBinItems.sort((a, b) -> Long.compare(b.DeletedAt, a.DeletedAt));
     }
     private T loadItemData(String uuid, boolean isInRecycleBin) {
@@ -80,6 +80,16 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
     public void emptyRecycleBin() {
         storageManager.emptyRecycleBin();
         recycleBinItems.clear();
+    }
+
+    public void cleanExpiredRecycleBinItems() {
+        final long RECYCLE_BIN_ITEM_MAX_AGE_MS = 30L * 24 * 60 * 60 * 1000;
+        long now = System.currentTimeMillis();
+        for(T item : recycleBinItems)
+            if(now - storageManager.getRecycleBinItemDeletionTime(item.UUID) >= RECYCLE_BIN_ITEM_MAX_AGE_MS) {
+                recycleBinItems.remove(item);
+                storageManager.permanentlyDeleteFromRecycleBin(item.UUID);
+            }
     }
 
 }

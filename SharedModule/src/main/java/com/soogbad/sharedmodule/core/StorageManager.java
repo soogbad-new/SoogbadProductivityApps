@@ -102,14 +102,6 @@ public class StorageManager {
                 Files.delete(path);
         } catch(IOException e) { throw new RuntimeException(e); }
     }
-
-    public void cleanExpiredRecycleBinItems() {
-        final long RECYCLE_BIN_ITEM_MAX_AGE_MS = 30L * 24 * 60 * 60 * 1000;
-        long now = System.currentTimeMillis();
-        for(String uuid : loadItemUUIDs(true))
-            if(now - getRecycleBinItemDeletionTime(uuid) >= RECYCLE_BIN_ITEM_MAX_AGE_MS)
-                permanentlyDeleteFromRecycleBin(uuid);
-    }
     
     public long getRecycleBinItemDeletionTime(String uuid) {
         try { return Files.getLastModifiedTime(directory.resolve("deleted_" + uuid + ".metadata.json")).toMillis(); }
