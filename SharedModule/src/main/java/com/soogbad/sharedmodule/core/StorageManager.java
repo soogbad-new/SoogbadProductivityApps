@@ -31,13 +31,11 @@ public class StorageManager {
 
     public ArrayList<String> loadItemUUIDs(boolean recycleBin) {
         ArrayList<String> uuids = new ArrayList<>();
-        try(DirectoryStream<Path> stream = Files.newDirectoryStream(directory, "*.metadata.json")) {
+        String glob = recycleBin ? "deleted_*.metadata.json" : "*.metadata.json";
+        try(DirectoryStream<Path> stream = Files.newDirectoryStream(directory, glob)) {
             stream.forEach(path -> {
                 String uuid = path.getFileName().toString().replace(".metadata.json", "");
-                if(recycleBin)
-                    uuids.add(uuid.replace("deleted_", ""));
-                else if(!uuid.startsWith("deleted_"))
-                    uuids.add(uuid);
+                uuids.add(recycleBin ? uuid.replace("deleted_", "") : uuid);
             });
         } catch(IOException e) { throw new RuntimeException(e); }
         return uuids;
