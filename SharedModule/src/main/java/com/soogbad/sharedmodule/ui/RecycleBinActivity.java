@@ -54,6 +54,14 @@ public class RecycleBinActivity extends AppCompatActivity {
                 }).setNegativeButton("Cancel", null).show();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(recycleBinList != null && recycleBinList.getAdapter() != null)
+            recycleBinList.getAdapter().notifyDataSetChanged();
+    }
+
     public WindowInsetsCompat onApplyWindowInsetsListener(View view, WindowInsetsCompat insets) {
         Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
         view.getRootView().findViewById(R.id.toolbar).setPadding(0, systemBars.top, 0, 0);

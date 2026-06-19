@@ -20,6 +20,7 @@ public abstract class ItemActivity extends AppCompatActivity {
     protected ItemsManager<?, ?> itemsManager;
 
     private boolean previewMode = false;
+    public void disablePreviewMode() { previewMode = false; }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {

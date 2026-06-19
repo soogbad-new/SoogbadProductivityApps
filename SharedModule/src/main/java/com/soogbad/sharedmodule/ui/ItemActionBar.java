@@ -63,7 +63,7 @@ public class ItemActionBar extends ConstraintLayout {
                 Toast.makeText(context, "Item restored", Toast.LENGTH_SHORT).show();
                 overflowMenuButton.setOnClickListener(this::showOverflowMenu);
                 titleEditText.setFocusable(true); titleEditText.setFocusableInTouchMode(true); titleEditText.setCursorVisible(true);
-                itemLayout.disableReadOnly();
+                itemLayout.disableReadOnly(); ((ItemActivity)Utility.getActivity(context)).disablePreviewMode();
             }),
             Map.entry(R.id.action_delete_permanently, () ->
                 new AlertDialog.Builder(context).setTitle("Delete Permanently").setMessage("Are you sure you want to permanently delete this item?")
