@@ -63,7 +63,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
             Map.entry(R.id.action_copy_uuid, () ->
                 Utility.getAppUtility(context).copyItemUuid(context, item)
             )
-        )).showContextMenu(menu, R.menu.item_context_menu);
+        )).showContextMenu(menu, R.menu.item_menu);
     }
     @SuppressLint("NotifyDataSetChanged")
     private void notifyItemRemoved(ViewHolder itemHolder) {

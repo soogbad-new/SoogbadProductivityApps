@@ -32,12 +32,12 @@ public class ItemActionBar extends ConstraintLayout {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.item_action_bar_content, this, true);
         titleEditText = findViewById(R.id.titleEditText); overflowMenuButton = findViewById(R.id.overflowMenuButton);
-        overflowMenuButton.setOnClickListener(readOnly ? this::showRecycleBinOverflowMenu : this::showOverflowMenu);
     }
 
     public void init(ItemLayout itemLayout, Item<?> item, boolean readOnly) {
         this.itemLayout = itemLayout; this.item = item; this.readOnly = readOnly;
         titleEditText.setText(item.Title);
+        overflowMenuButton.setOnClickListener(readOnly ? this::showRecycleBinOverflowMenu : this::showOverflowMenu);
         if(readOnly) {
             titleEditText.setFocusable(false); titleEditText.setFocusableInTouchMode(false); titleEditText.setCursorVisible(false);
         }
@@ -52,7 +52,7 @@ public class ItemActionBar extends ConstraintLayout {
             Map.entry(R.id.action_copy_uuid, () ->
                 Utility.getAppUtility(getContext()).copyItemUuid(getContext(), item)
             )
-        )).showOverflowMenu(view, R.menu.item_context_menu);
+        )).showOverflowMenu(view, R.menu.item_menu);
     }
 
     private void showRecycleBinOverflowMenu(View view) {
@@ -69,7 +69,7 @@ public class ItemActionBar extends ConstraintLayout {
             Map.entry(R.id.action_delete_permanently, () ->
                 new AlertDialog.Builder(context).setTitle("Delete Permanently").setMessage("Are you sure you want to permanently delete this item?")
                         .setPositiveButton("Delete", (dialog, which) -> { itemsManager.permanentlyDeleteRecycleBinItem(item.UUID); Utility.getActivity(context).finish(); }).setNegativeButton("Cancel", null).show())
-        )).showOverflowMenu(view, R.menu.recycle_bin_item_context_menu);
+        )).showOverflowMenu(view, R.menu.recycle_bin_item_menu);
     }
 
 }

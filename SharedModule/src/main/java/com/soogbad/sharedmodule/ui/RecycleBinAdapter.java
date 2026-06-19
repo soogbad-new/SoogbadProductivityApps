@@ -69,7 +69,7 @@ public class RecycleBinAdapter extends RecyclerView.Adapter<RecycleBinAdapter.Vi
                             notifyItemRemoved(itemHolder);
                         }).setNegativeButton("Cancel", null).show()
             )
-        )).showContextMenu(menu, R.menu.recycle_bin_item_context_menu);
+        )).showContextMenu(menu, R.menu.recycle_bin_item_menu);
     }
     @SuppressLint("NotifyDataSetChanged")
     private void notifyItemRemoved(ViewHolder itemHolder) {
