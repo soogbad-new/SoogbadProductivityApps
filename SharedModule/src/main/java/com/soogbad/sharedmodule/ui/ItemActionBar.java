@@ -26,7 +26,6 @@ public class ItemActionBar extends ConstraintLayout {
 
     private ItemLayout itemLayout;
     private Item<?> item;
-    private boolean readOnly;
 
     public ItemActionBar(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -35,7 +34,7 @@ public class ItemActionBar extends ConstraintLayout {
     }
 
     public void init(ItemLayout itemLayout, Item<?> item, boolean readOnly) {
-        this.itemLayout = itemLayout; this.item = item; this.readOnly = readOnly;
+        this.itemLayout = itemLayout; this.item = item;
         titleEditText.setText(item.Title);
         overflowMenuButton.setOnClickListener(readOnly ? this::showRecycleBinOverflowMenu : this::showOverflowMenu);
         if(readOnly) {
@@ -62,7 +61,7 @@ public class ItemActionBar extends ConstraintLayout {
             Map.entry(R.id.action_restore, () -> {
                 itemsManager.restoreRecycleBinItem(item.UUID);
                 Toast.makeText(context, "Item restored", Toast.LENGTH_SHORT).show();
-                readOnly = false;
+                overflowMenuButton.setOnClickListener(this::showOverflowMenu);
                 titleEditText.setFocusable(true); titleEditText.setFocusableInTouchMode(true); titleEditText.setCursorVisible(true);
                 itemLayout.disableReadOnly();
             }),
