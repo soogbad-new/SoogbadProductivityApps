@@ -34,7 +34,9 @@ public class StorageManager {
         String glob = recycleBin ? "deleted_*.metadata.json" : "*.metadata.json";
         try(DirectoryStream<Path> stream = Files.newDirectoryStream(directory, glob)) {
             stream.forEach(path -> {
-                String uuid = path.getFileName().toString().replace(".metadata.json", "");
+                String filename = path.getFileName().toString();
+                if(!recycleBin && filename.startsWith("deleted_")) return;
+                String uuid = filename.replace(".metadata.json", "");
                 uuids.add(recycleBin ? uuid.replace("deleted_", "") : uuid);
             });
         } catch(IOException e) { throw new RuntimeException(e); }

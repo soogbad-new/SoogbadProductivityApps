@@ -110,6 +110,7 @@ public class ItemLayout extends ConstraintLayout implements RichEditText.StyleSt
     }
 
     public void delete() {
+        save();
         itemDeletedGuard = true;
         itemsManager.moveItemToRecycleBin(item.UUID);
     }
