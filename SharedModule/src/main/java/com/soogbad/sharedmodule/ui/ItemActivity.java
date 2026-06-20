@@ -53,6 +53,10 @@ public abstract class ItemActivity extends AppCompatActivity {
         if(!previewMode) {
             Insets keyboard = insets.getInsets(WindowInsetsCompat.Type.ime());
             itemLayout.getFormattingToolbar().setPadding(0, 0, 0, keyboard.bottom - systemBars.bottom);
+            if(keyboard.bottom == 0) {
+                View focusedView = getCurrentFocus();
+                if(focusedView != null) focusedView.clearFocus();
+            }
         }
         return insets;
     }
