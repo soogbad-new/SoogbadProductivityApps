@@ -53,7 +53,7 @@ public abstract class ItemListActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu_activity_main, menu);
+        getMenuInflater().inflate(R.menu.item_list_activity_toolbar_menu, menu);
         return true;
     }
     @Override

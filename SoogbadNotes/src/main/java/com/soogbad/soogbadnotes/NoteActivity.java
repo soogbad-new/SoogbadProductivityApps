@@ -14,7 +14,7 @@ public class NoteActivity extends ItemActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utility.setWindowProperties(this, R.layout.activity_note, R.id.toolbar);
+        Utility.setWindowProperties(this, R.layout.note_activity, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
     }
 

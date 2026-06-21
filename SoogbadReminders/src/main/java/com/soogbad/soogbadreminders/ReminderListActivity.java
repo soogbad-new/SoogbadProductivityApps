@@ -17,7 +17,7 @@ public class ReminderListActivity extends ItemListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utility.setWindowProperties(this, R.layout.activity_reminder_list, R.id.toolbar);
+        Utility.setWindowProperties(this, R.layout.reminder_list_activity, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
     }
 

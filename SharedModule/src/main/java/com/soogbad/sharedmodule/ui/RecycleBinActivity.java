@@ -27,7 +27,7 @@ public class RecycleBinActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utility.setWindowProperties(this, R.layout.activity_recycle_bin, R.id.toolbar);
+        Utility.setWindowProperties(this, R.layout.recycle_bin_activity, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
         recycleBinList = findViewById(R.id.recycleBinList);
         ((MaterialToolbar)findViewById(R.id.toolbar)).setTitle(Utility.getAppUtility(this).getAppName());
