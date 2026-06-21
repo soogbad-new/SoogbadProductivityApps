@@ -26,17 +26,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.soogbad.sharedmodule.ui.FormattingToolbar
             android:id="@+id/formattingToolbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingVertical="4dp"
-            android:paddingHorizontal="4dp">
-
-            <include
-                layout="@layout/formatting_toolbar_content" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:paddingHorizontal="4dp" />
 
     </HorizontalScrollView>
 
