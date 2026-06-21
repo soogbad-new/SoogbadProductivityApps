@@ -1,9 +1,12 @@
 package com.soogbad.sharedmodule.ui;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -17,6 +20,7 @@ import com.soogbad.sharedmodule.core.Utility;
 public abstract class ItemActivity extends AppCompatActivity {
 
     protected ItemLayout itemLayout;
+    protected ItemActionBar itemActionBar;
     protected ItemsManager<?, ?> itemsManager;
 
     private boolean previewMode = false;
@@ -25,7 +29,7 @@ public abstract class ItemActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        itemLayout = findViewById(R.id.itemLayout); ItemActionBar itemActionBar = findViewById(R.id.itemActionBar);
+        itemLayout = findViewById(R.id.itemLayout); itemActionBar = findViewById(R.id.itemActionBar);
         itemsManager = Utility.getItemsManager(this);
         String uuid = getIntent().getStringExtra("item_uuid"); previewMode = getIntent().getBooleanExtra("preview_mode", false);
         Item<?> item = previewMode ? itemsManager.getRecycleBinItem(uuid) : itemsManager.getItem(uuid);
@@ -44,6 +48,16 @@ public abstract class ItemActivity extends AppCompatActivity {
         super.onPause();
         if(!previewMode)
             itemLayout.save();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(previewMode ? R.menu.recycle_bin_item_menu : R.menu.item_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return itemActionBar.onOptionsItemSelected(item);
     }
 
     public WindowInsetsCompat onApplyWindowInsetsListener(View view, WindowInsetsCompat insets) {
