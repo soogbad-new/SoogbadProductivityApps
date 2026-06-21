@@ -3,7 +3,10 @@ package com.soogbad.sharedmodule.core;
 import android.app.Activity;
 import android.content.ContextWrapper;
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.Patterns;
+import android.view.MotionEvent;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
@@ -20,6 +23,12 @@ public class Utility {
             context = ((ContextWrapper)context).getBaseContext();
         }
         throw new RuntimeException("Could not find Activity From Context");
+    }
+
+    public static boolean isMotionEventInsideView(MotionEvent motionEvent, View view) {
+        Rect rect = new Rect();
+        view.getGlobalVisibleRect(rect);
+        return rect.contains((int)motionEvent.getRawX(), (int)motionEvent.getRawY());
     }
 
     public static ItemsManager<?, ?> getItemsManager(Context context) {
