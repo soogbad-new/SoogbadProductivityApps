@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
 
-    <com.soogbad.sharedmodule.richtext.RichEditText
-        android:id="@+id/contentEditText"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/contentScrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/almostBlack"
-        android:textSize="18dp"
-        android:textColor="@color/white"
-        android:inputType="textMultiLine|textCapSentences"
-        android:gravity="top"
-        android:paddingStart="20dp"
-        android:paddingEnd="16dp"
+        android:paddingTop="16dp"
+        android:clipToPadding="false"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/formattingToolbarScrollView"
-        app:layout_constraintLeft_toLeftOf="parent"
-        tools:ignore="SpUsage" />
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <com.soogbad.sharedmodule.richtext.RichEditText
+            android:id="@+id/contentEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/almostBlack"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            android:inputType="textMultiLine|textCapSentences"
+            android:gravity="top"
+            android:paddingStart="20dp"
+            android:paddingEnd="16dp"
+            android:isScrollContainer="false"
+            tools:ignore="SpUsage" />
+
+    </androidx.core.widget.NestedScrollView>
 
     <HorizontalScrollView
         android:id="@+id/formattingToolbarScrollView"
