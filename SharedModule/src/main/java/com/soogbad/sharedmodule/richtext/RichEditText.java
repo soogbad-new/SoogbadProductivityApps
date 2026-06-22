@@ -50,6 +50,7 @@ public class RichEditText extends AppCompatEditText {
         arrowPaint = new Paint(Paint.ANTI_ALIAS_FLAG); arrowPaint.setColor(Color.WHITE); arrowPaint.setStyle(Paint.Style.FILL);
         regionBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG); regionBorderPaint.setColor(Color.GRAY); regionBorderPaint.setStyle(Paint.Style.STROKE); regionBorderPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
         arrowSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
+        selectionClipPaint = new Paint(); selectionClipPaint.setColor(0xFFFF0000); selectionClipPaint.setStyle(Paint.Style.FILL); // DIAGNOSTIC: change to 0xFF05050F once confirmed
     }
 
     public interface StyleStateListener {
@@ -562,10 +563,37 @@ public class RichEditText extends AppCompatEditText {
     private final Paint regionBorderPaint;
     private final Paint arrowPaint;
     private final float arrowSize;
+    private final Paint selectionClipPaint;
+    private void clipSelectionToTextBounds(Canvas canvas) {
+        int selStart = getSelectionStart();
+        int selEnd = getSelectionEnd();
+        if(selStart == selEnd) return;
+        android.text.Layout layout = getLayout();
+        if(layout == null) return;
+        int paddingLeft = getTotalPaddingLeft();
+        int paddingTop = getTotalPaddingTop();
+        int firstLine = layout.getLineForOffset(selStart);
+        int lastLine = layout.getLineForOffset(selEnd);
+        for(int line = firstLine; line <= lastLine; line++) {
+            int lineStart = layout.getLineStart(line);
+            int lineVisibleEnd = layout.getLineVisibleEnd(line);
+            int lineSelStart = Math.max(selStart, lineStart);
+            int lineSelEnd = Math.min(selEnd, lineVisibleEnd);
+            float textRight = layout.getPrimaryHorizontal(lineSelEnd > lineSelStart ? lineSelEnd : lineStart) + paddingLeft;
+            float lineRight = layout.getWidth() + paddingLeft;
+            if(textRight < lineRight) {
+                float top = layout.getLineTop(line) + paddingTop;
+                float bottom = layout.getLineBottom(line) + paddingTop;
+                canvas.drawRect(textRight, top, lineRight, bottom, selectionClipPaint);
+            }
+        }
+    }
+
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        clipSelectionToTextBounds(canvas);
         Editable editable = getText();
         if(editable == null || getLayout() == null) return;
         CollapsibleRegionSpan[] spans = editable.getSpans(0, editable.length(), CollapsibleRegionSpan.class);
