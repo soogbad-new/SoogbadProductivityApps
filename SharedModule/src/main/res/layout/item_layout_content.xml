@@ -6,8 +6,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/almostBlack"
-        android:paddingTop="16dp"
-        android:clipToPadding="false"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/formattingToolbarScrollView"
         app:layout_constraintLeft_toLeftOf="parent">
@@ -21,6 +19,7 @@
             android:textColor="@color/white"
             android:inputType="textMultiLine|textCapSentences"
             android:gravity="top"
+            android:paddingTop="16dp"
             android:paddingStart="20dp"
             android:paddingEnd="16dp"
             android:isScrollContainer="false"
