@@ -14,15 +14,18 @@ import java.util.Date;
 
 public class EventListActivity extends ItemListActivity {
 
+    private ItemsManager<Event, Event.EventOptions> typedItemsManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.event_list_activity, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
+        typedItemsManager = ((SoogbadCalendarApplication)getApplication()).getItemsManager();
     }
 
     public void onAddButtonClick(View view) {
-        String uuid = ((ItemsManager<Event, Event.EventOptions>)itemsManager).createItem(new Event.EventOptions(new Date(), Schedule.NONE));
+        String uuid = typedItemsManager.createItem(new Event.EventOptions(new Date(), Schedule.NONE));
         super.onAddButtonClick(uuid);
     }
 

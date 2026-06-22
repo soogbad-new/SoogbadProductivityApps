@@ -14,15 +14,18 @@ import java.util.Date;
 
 public class ReminderListActivity extends ItemListActivity {
 
+    private ItemsManager<Reminder, Reminder.ReminderOptions> typedItemsManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.reminder_list_activity, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
+        typedItemsManager = ((SoogbadRemindersApplication)getApplication()).getItemsManager();
     }
 
     public void onAddButtonClick(View view) {
-        String uuid = ((ItemsManager<Reminder, Reminder.ReminderOptions>)itemsManager).createItem(new Reminder.ReminderOptions(new Date(), Schedule.NONE));
+        String uuid = typedItemsManager.createItem(new Reminder.ReminderOptions(new Date(), Schedule.NONE));
         super.onAddButtonClick(uuid);
     }
 
