@@ -12,6 +12,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.Material3.Dark" />
 
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.Material3.Dark">
+        <item name="colorSurfaceContainer">@color/darkGreen</item>
+    </style>
+
     <style name="ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
         <item name="android:textSize">20sp</item>
     </style>
