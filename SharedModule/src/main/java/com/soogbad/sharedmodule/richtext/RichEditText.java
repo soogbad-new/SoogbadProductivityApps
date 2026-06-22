@@ -560,25 +560,17 @@ public class RichEditText extends AppCompatEditText {
         invalidate();
     }
 
-    private final Paint regionBorderPaint;
-    private final Paint arrowPaint;
-    private final float arrowSize;
     private final Paint selectionClipPaint;
     private void clipSelectionToTextBounds(Canvas canvas) {
-        int selStart = getSelectionStart();
-        int selEnd = getSelectionEnd();
+        int selStart = getSelectionStart(); int selEnd = getSelectionEnd();
         if(selStart == selEnd) return;
         android.text.Layout layout = getLayout();
         if(layout == null) return;
-        int paddingLeft = getTotalPaddingLeft();
-        int paddingTop = getTotalPaddingTop();
-        int firstLine = layout.getLineForOffset(selStart);
-        int lastLine = layout.getLineForOffset(selEnd);
+        int paddingLeft = getTotalPaddingLeft(); int paddingTop = getTotalPaddingTop();
+        int firstLine = layout.getLineForOffset(selStart); int lastLine = layout.getLineForOffset(selEnd);
         for(int line = firstLine; line <= lastLine; line++) {
-            int lineStart = layout.getLineStart(line);
-            int lineVisibleEnd = layout.getLineVisibleEnd(line);
-            int lineSelStart = Math.max(selStart, lineStart);
-            int lineSelEnd = Math.min(selEnd, lineVisibleEnd);
+            int lineStart = layout.getLineStart(line); int lineVisibleEnd = layout.getLineVisibleEnd(line);
+            int lineSelStart = Math.max(selStart, lineStart); int lineSelEnd = Math.min(selEnd, lineVisibleEnd);
             float textRight = layout.getPrimaryHorizontal(lineSelEnd > lineSelStart ? lineSelEnd : lineStart) + paddingLeft;
             float lineRight = layout.getWidth() + paddingLeft;
             if(textRight < lineRight) {
@@ -589,6 +581,9 @@ public class RichEditText extends AppCompatEditText {
         }
     }
 
+    private final Paint regionBorderPaint;
+    private final Paint arrowPaint;
+    private final float arrowSize;
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
