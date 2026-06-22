@@ -18,9 +18,15 @@ public class NoteListActivity extends ItemListActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((ItemsManager<Note, Note.NoteOptions>)itemsManager).getItems().sort((a, b) -> Long.compare(b.Options.LastViewed, a.Options.LastViewed));
+        notifyDataSetChanged();
+    }
+
     public void onAddButtonClick(View view) {
-        ItemsManager<Note, Note.NoteOptions> itemsManager = ((SoogbadNotesApplication)getApplication()).getItemsManager();
-        String uuid = itemsManager.createItem(new Note.NoteOptions(System.currentTimeMillis()));
+        String uuid = ((ItemsManager<Note, Note.NoteOptions>)itemsManager).createItem(new Note.NoteOptions(System.currentTimeMillis()));
         super.onAddButtonClick(uuid);
     }
 

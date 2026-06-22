@@ -14,6 +14,7 @@ public class SoogbadNotesApplication extends ItemApplication<Note, Note.NoteOpti
         RichCharacterStyle.DEFAULT_TEXT_SIZE = RichCharacterStyle.TextSize.SIZE_16;
         itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Note::create, Note.NoteOptions::fromJson);
         itemsManager.loadItems();
+        itemsManager.getItems().sort((a, b) -> Long.compare(b.Options.LastViewed, a.Options.LastViewed));
     }
 
     @Override

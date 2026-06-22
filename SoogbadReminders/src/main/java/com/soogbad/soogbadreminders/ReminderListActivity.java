@@ -22,8 +22,7 @@ public class ReminderListActivity extends ItemListActivity {
     }
 
     public void onAddButtonClick(View view) {
-        ItemsManager<Reminder, Reminder.ReminderOptions> itemsManager = ((SoogbadRemindersApplication)getApplication()).getItemsManager();
-        String uuid = itemsManager.createItem(new Reminder.ReminderOptions(new Date(), Schedule.NONE));
+        String uuid = ((ItemsManager<Reminder, Reminder.ReminderOptions>)itemsManager).createItem(new Reminder.ReminderOptions(new Date(), Schedule.NONE));
         super.onAddButtonClick(uuid);
     }
 

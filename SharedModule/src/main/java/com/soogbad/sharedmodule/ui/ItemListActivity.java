@@ -20,13 +20,14 @@ import com.soogbad.sharedmodule.core.Utility;
 
 public abstract class ItemListActivity extends AppCompatActivity {
 
-    private RecyclerView itemList;
+    protected RecyclerView itemList;
+    protected ItemsManager<?, ?> itemsManager;
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         itemList = findViewById(R.id.itemList);
-        ItemsManager<?, ?> itemsManager = Utility.getItemsManager(this);
+        itemsManager = Utility.getItemsManager(this);
         itemList.setLayoutManager(new LinearLayoutManager(this));
         itemList.setAdapter(new ItemListAdapter(itemsManager.getItems(), R.layout.item_list_item, R.id.itemListItemTitleTextView));
     }

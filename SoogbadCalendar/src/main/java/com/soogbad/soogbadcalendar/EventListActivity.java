@@ -22,8 +22,7 @@ public class EventListActivity extends ItemListActivity {
     }
 
     public void onAddButtonClick(View view) {
-        ItemsManager<Event, Event.EventOptions> itemsManager = ((SoogbadCalendarApplication)getApplication()).getItemsManager();
-        String uuid = itemsManager.createItem(new Event.EventOptions(new Date(), Schedule.NONE));
+        String uuid = ((ItemsManager<Event, Event.EventOptions>)itemsManager).createItem(new Event.EventOptions(new Date(), Schedule.NONE));
         super.onAddButtonClick(uuid);
     }
 
