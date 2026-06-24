@@ -615,15 +615,15 @@ public class RichEditText extends AppCompatEditText {
     // fix selection highlight to only cover the text and not the entire line width
     private final Paint selectionHighlightPaint;
     private void drawTightSelectionHighlight(Canvas canvas) {
-        int SelectionStart = Math.min(getSelectionStart(), getSelectionEnd()); int SelectionEnd = Math.max(getSelectionStart(), getSelectionEnd());
-        if(SelectionStart == SelectionEnd) return;
         Layout layout = getLayout();
         if(layout == null) return;
+        int selectionStart = Math.min(getSelectionStart(), getSelectionEnd()); int selectionEnd = Math.max(getSelectionStart(), getSelectionEnd());
+        if(selectionStart == selectionEnd) return;
         int paddingLeft = getTotalPaddingLeft(); int paddingTop = getTotalPaddingTop();
-        int firstLine = layout.getLineForOffset(SelectionStart); int lastLine = layout.getLineForOffset(SelectionEnd);
+        int firstLine = layout.getLineForOffset(selectionStart); int lastLine = layout.getLineForOffset(selectionEnd);
         for(int line = firstLine; line <= lastLine; line++) {
             int lineStart = layout.getLineStart(line); int lineVisibleEnd = layout.getLineVisibleEnd(line);
-            int lineSelectionStart = Math.max(SelectionStart, lineStart); int lineSelectionEnd = Math.min(SelectionEnd, lineVisibleEnd);
+            int lineSelectionStart = Math.max(selectionStart, lineStart); int lineSelectionEnd = Math.min(selectionEnd, lineVisibleEnd);
             if(lineSelectionStart >= lineSelectionEnd) continue;
             float x1 = layout.getPrimaryHorizontal(lineSelectionStart) + paddingLeft; float x2 = layout.getPrimaryHorizontal(lineSelectionEnd) + paddingLeft;
             float top = layout.getLineTop(line) + paddingTop; float bottom = layout.getLineBottom(line) + paddingTop;
