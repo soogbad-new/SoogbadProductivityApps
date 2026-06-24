@@ -7,8 +7,7 @@
         android:icon="@mipmap/ic_launcher"
         android:theme="@style/AppTheme"
         android:supportsRtl="true"
-        android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules">
+        android:hasFragileUserData="true">
 
         <activity
             android:name=".EventListActivity"

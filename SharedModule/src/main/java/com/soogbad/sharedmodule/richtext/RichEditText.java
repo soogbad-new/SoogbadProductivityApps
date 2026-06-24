@@ -625,9 +625,9 @@ public class RichEditText extends AppCompatEditText {
             int lineStart = layout.getLineStart(line); int lineVisibleEnd = layout.getLineVisibleEnd(line);
             int lineSelectionStart = Math.max(selectionStart, lineStart); int lineSelectionEnd = Math.min(selectionEnd, lineVisibleEnd);
             if(lineSelectionStart >= lineSelectionEnd) continue;
-            float x1 = layout.getPrimaryHorizontal(lineSelectionStart) + paddingLeft; float x2 = layout.getPrimaryHorizontal(lineSelectionEnd) + paddingLeft;
+            float selectionStartHorizontal = layout.getPrimaryHorizontal(lineSelectionStart) + paddingLeft; float selectionEndHorizontal = layout.getPrimaryHorizontal(lineSelectionEnd) + paddingLeft;
             float top = layout.getLineTop(line) + paddingTop; float bottom = layout.getLineBottom(line) + paddingTop;
-            canvas.drawRect(Math.min(x1, x2), top, Math.max(x1, x2), bottom, selectionHighlightPaint);
+            canvas.drawRect(Math.min(selectionStartHorizontal, selectionEndHorizontal), top, Math.max(selectionStartHorizontal, selectionEndHorizontal), bottom, selectionHighlightPaint);
         }
     }
 
