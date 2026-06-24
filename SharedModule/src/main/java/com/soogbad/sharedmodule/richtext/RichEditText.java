@@ -26,6 +26,7 @@ import android.util.AttributeSet;
 import android.util.Patterns;
 import android.util.TypedValue;
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 
 import androidx.appcompat.widget.AppCompatEditText;
 
@@ -68,15 +69,34 @@ public class RichEditText extends AppCompatEditText {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_DOWN)
+            trackTap(event);
         if(event.getAction() == MotionEvent.ACTION_UP) {
-            boolean handled = handleCollapsibleRegionClick(event);
-            if(handled) return true;
-        }
-        if(event.getAction() == MotionEvent.ACTION_UP && getSelectionStart() == getSelectionEnd()) {
-            boolean handled = handleHyperlinkClick(event);
-            if(handled) return true;
+            if(getSelectionStart() == getSelectionEnd() && handleHyperlinkClick(event)) return true;
+            if(handleCollapsibleRegionClick(event)) return true;
+            if(tapCount >= 3 && handleTripleClickLineSelect(event)) return true;
         }
         return super.onTouchEvent(event);
+    }
+    private int tapCount = 0;
+    private long lastTapTime = 0;
+    private float lastTapX = 0, lastTapY = 0;
+    private void trackTap(MotionEvent event) {
+        long now = event.getEventTime();
+        float x = event.getX(); float y = event.getY();
+        int slop = ViewConfiguration.get(getContext()).getScaledDoubleTapSlop();
+        if(now - lastTapTime <= ViewConfiguration.getDoubleTapTimeout() && Math.abs(x - lastTapX) <= slop && Math.abs(y - lastTapY) <= slop)
+            tapCount++;
+        else
+            tapCount = 1;
+        lastTapTime = now; lastTapX = x; lastTapY = y;
+    }
+    private boolean handleTripleClickLineSelect(MotionEvent event) {
+        Layout layout = getLayout();
+        if(layout == null) return false;
+        int line = layout.getLineForOffset(getOffsetForPosition(event.getX(), event.getY()));
+        setSelection(layout.getLineStart(line), layout.getLineEnd(line));
+        return true;
     }
 
     @Override
