@@ -613,16 +613,16 @@ public class RichEditText extends AppCompatEditText {
     // This fixes android's limitation of selection highlight not being clipped to text bounds, but stretching to the end of the line instead
     private final Paint selectionClipPaint;
     private void clipSelectionToTextBounds(Canvas canvas) {
-        int selStart = getSelectionStart(); int selEnd = getSelectionEnd();
-        if(selStart == selEnd) return;
+        int selectionStart = Math.min(getSelectionStart(), getSelectionEnd()); int selectionEnd = Math.max(getSelectionStart(), getSelectionEnd());
+        if(selectionStart == selectionEnd) return;
         android.text.Layout layout = getLayout();
         if(layout == null) return;
         int paddingLeft = getTotalPaddingLeft(); int paddingTop = getTotalPaddingTop();
-        int firstLine = layout.getLineForOffset(selStart); int lastLine = layout.getLineForOffset(selEnd);
+        int firstLine = layout.getLineForOffset(selectionStart); int lastLine = layout.getLineForOffset(selectionEnd);
         for(int line = firstLine; line <= lastLine; line++) {
             int lineStart = layout.getLineStart(line); int lineVisibleEnd = layout.getLineVisibleEnd(line);
-            int lineSelStart = Math.max(selStart, lineStart); int lineSelEnd = Math.min(selEnd, lineVisibleEnd);
-            float textEdge = layout.getPrimaryHorizontal(lineSelEnd > lineSelStart ? lineSelEnd : lineStart) + paddingLeft;
+            int lineSelectionStart = Math.max(selectionStart, lineStart); int lineSelectionEnd = Math.min(selectionEnd, lineVisibleEnd);
+            float textEdge = layout.getPrimaryHorizontal(lineSelectionEnd > lineSelectionStart ? lineSelectionEnd : lineStart) + paddingLeft;
             float top = layout.getLineTop(line) + paddingTop; float bottom = layout.getLineBottom(line) + paddingTop;
             if(layout.getParagraphDirection(line) == android.text.Layout.DIR_LEFT_TO_RIGHT) {
                 float lineRight = layout.getWidth() + paddingLeft;
