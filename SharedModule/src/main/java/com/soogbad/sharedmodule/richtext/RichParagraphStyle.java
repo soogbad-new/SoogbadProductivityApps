@@ -59,6 +59,7 @@ public class RichParagraphStyle<T extends ParagraphStyle> {
     public static RichParagraphStyle<AlignmentSpan.Standard> TEXT_ALIGNMENT(Layout.Alignment alignment) { return new RichParagraphStyle<>(AlignmentSpan.Standard.class, alignment.ordinal()); }
 
     public static final RichParagraphStyle<AlignmentSpan.Standard> DEFAULT_TEXT_ALIGNMENT = ALIGN_LEFT;
+    public static final float DEFAULT_LINE_SPACING_MULTIPLIER = 1.25f;
 
     private static final int BULLET_GAP_WIDTH = 20;
     private static final int BULLET_COLOR = 0xFFFFFFFF;

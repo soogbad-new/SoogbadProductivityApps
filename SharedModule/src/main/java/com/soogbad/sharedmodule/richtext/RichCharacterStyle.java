@@ -73,7 +73,7 @@ public class RichCharacterStyle<T extends CharacterStyle> {
     public static RichCharacterStyle<AbsoluteSizeSpan> TEXT_SIZE(TextSize size) { return new RichCharacterStyle<>(AbsoluteSizeSpan.class, size.size); }
     public static RichCharacterStyle<ForegroundColorSpan> TEXT_COLOR(TextColor color) { return new RichCharacterStyle<>(ForegroundColorSpan.class, color.color); }
 
-    public static TextSize DEFAULT_TEXT_SIZE = TextSize.SIZE_20;
+    public static TextSize DEFAULT_TEXT_SIZE = TextSize.SIZE_18;
     public static final TextColor DEFAULT_TEXT_COLOR = TextColor.WHITE;
 
     public enum TextSize {

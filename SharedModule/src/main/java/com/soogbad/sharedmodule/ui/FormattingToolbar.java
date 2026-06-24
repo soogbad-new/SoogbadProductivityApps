@@ -59,6 +59,7 @@ public class FormattingToolbar extends ConstraintLayout implements RichEditText.
     public void init(RichEditText contentEditText) {
         this.contentEditText = contentEditText;
         contentEditText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, RichCharacterStyle.DEFAULT_TEXT_SIZE.size);
+        contentEditText.setLineSpacing(0.0f, RichParagraphStyle.DEFAULT_LINE_SPACING_MULTIPLIER);
         contentEditText.setStyleStateListener(this);
         contentEditText.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
             @Override public boolean onCreateActionMode(ActionMode actionMode, Menu menu) { currentSelectionActionMode = actionMode; return true; }
