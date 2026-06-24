@@ -72,11 +72,13 @@ public class RichEditText extends AppCompatEditText {
         if(event.getAction() == MotionEvent.ACTION_DOWN)
             trackTap(event);
         if(event.getAction() == MotionEvent.ACTION_UP) {
-            if(getSelectionStart() == getSelectionEnd() && handleHyperlinkClick(event)) return true;
             if(handleCollapsibleRegionClick(event)) return true;
-            if(tapCount >= 3 && handleTripleClickLineSelect(event)) return true;
+            if(getSelectionStart() == getSelectionEnd() && handleHyperlinkClick(event)) return true;
         }
-        return super.onTouchEvent(event);
+        boolean superResult = super.onTouchEvent(event);
+        if(event.getAction() == MotionEvent.ACTION_UP && tapCount >= 3)
+            handleTripleClickLineSelect();
+        return superResult;
     }
     private int tapCount = 0;
     private long lastTapTime = 0;
@@ -91,12 +93,11 @@ public class RichEditText extends AppCompatEditText {
             tapCount = 1;
         lastTapTime = now; lastTapX = x; lastTapY = y;
     }
-    private boolean handleTripleClickLineSelect(MotionEvent event) {
+    private void handleTripleClickLineSelect() {
         Layout layout = getLayout();
-        if(layout == null) return false;
-        int line = layout.getLineForOffset(getOffsetForPosition(event.getX(), event.getY()));
+        if(layout == null) return;
+        int line = layout.getLineForOffset(getSelectionStart());
         setSelection(layout.getLineStart(line), layout.getLineEnd(line));
-        return true;
     }
 
     @Override
