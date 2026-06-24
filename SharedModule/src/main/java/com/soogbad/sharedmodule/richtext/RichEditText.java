@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.text.Layout;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -50,7 +51,8 @@ public class RichEditText extends AppCompatEditText {
         arrowPaint = new Paint(Paint.ANTI_ALIAS_FLAG); arrowPaint.setColor(Color.WHITE); arrowPaint.setStyle(Paint.Style.FILL);
         regionBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG); regionBorderPaint.setColor(Color.GRAY); regionBorderPaint.setStyle(Paint.Style.STROKE); regionBorderPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
         arrowSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
-        selectionClipPaint = new Paint(); selectionClipPaint.setColor(0xFF05050F); selectionClipPaint.setStyle(Paint.Style.FILL);
+        selectionHighlightPaint = new Paint(); selectionHighlightPaint.setColor(getHighlightColor()); selectionHighlightPaint.setStyle(Paint.Style.FILL);
+        setHighlightColor(Color.TRANSPARENT);
     }
 
     public interface StyleStateListener {
@@ -585,8 +587,8 @@ public class RichEditText extends AppCompatEditText {
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
+        drawTightSelectionHighlight(canvas);
         super.onDraw(canvas);
-        clipSelectionToTextBounds(canvas);
         Editable editable = getText();
         if(editable == null || getLayout() == null) return;
         CollapsibleRegionSpan[] spans = editable.getSpans(0, editable.length(), CollapsibleRegionSpan.class);
@@ -610,28 +612,22 @@ public class RichEditText extends AppCompatEditText {
         }
     }
 
-    // This fixes android's limitation of selection highlight not being clipped to text bounds, but stretching to the end of the line instead
-    private final Paint selectionClipPaint;
-    private void clipSelectionToTextBounds(Canvas canvas) {
-        int selectionStart = Math.min(getSelectionStart(), getSelectionEnd()); int selectionEnd = Math.max(getSelectionStart(), getSelectionEnd());
-        if(selectionStart == selectionEnd) return;
-        android.text.Layout layout = getLayout();
+    // fix selection highlight to only cover the text and not the entire line width
+    private final Paint selectionHighlightPaint;
+    private void drawTightSelectionHighlight(Canvas canvas) {
+        int SelectionStart = Math.min(getSelectionStart(), getSelectionEnd()); int SelectionEnd = Math.max(getSelectionStart(), getSelectionEnd());
+        if(SelectionStart == SelectionEnd) return;
+        Layout layout = getLayout();
         if(layout == null) return;
         int paddingLeft = getTotalPaddingLeft(); int paddingTop = getTotalPaddingTop();
-        int firstLine = layout.getLineForOffset(selectionStart); int lastLine = layout.getLineForOffset(selectionEnd);
+        int firstLine = layout.getLineForOffset(SelectionStart); int lastLine = layout.getLineForOffset(SelectionEnd);
         for(int line = firstLine; line <= lastLine; line++) {
             int lineStart = layout.getLineStart(line); int lineVisibleEnd = layout.getLineVisibleEnd(line);
-            int lineSelectionStart = Math.max(selectionStart, lineStart); int lineSelectionEnd = Math.min(selectionEnd, lineVisibleEnd);
-            float textEdge = layout.getPrimaryHorizontal(lineSelectionEnd > lineSelectionStart ? lineSelectionEnd : lineStart) + paddingLeft;
+            int lineSelectionStart = Math.max(SelectionStart, lineStart); int lineSelectionEnd = Math.min(SelectionEnd, lineVisibleEnd);
+            if(lineSelectionStart >= lineSelectionEnd) continue;
+            float x1 = layout.getPrimaryHorizontal(lineSelectionStart) + paddingLeft; float x2 = layout.getPrimaryHorizontal(lineSelectionEnd) + paddingLeft;
             float top = layout.getLineTop(line) + paddingTop; float bottom = layout.getLineBottom(line) + paddingTop;
-            if(layout.getParagraphDirection(line) == android.text.Layout.DIR_LEFT_TO_RIGHT) {
-                float lineRight = layout.getWidth() + paddingLeft;
-                if(textEdge < lineRight)
-                    canvas.drawRect(textEdge, top, lineRight, bottom, selectionClipPaint);
-            } else {
-                if(textEdge > paddingLeft)
-                    canvas.drawRect(paddingLeft, top, textEdge, bottom, selectionClipPaint);
-            }
+            canvas.drawRect(Math.min(x1, x2), top, Math.max(x1, x2), bottom, selectionHighlightPaint);
         }
     }
 
