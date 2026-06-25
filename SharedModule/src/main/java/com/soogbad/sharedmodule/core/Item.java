@@ -1,7 +1,5 @@
 package com.soogbad.sharedmodule.core;
 
-import android.text.SpannedString;
-
 import org.json.JSONObject;
 
 import java.util.Date;
@@ -10,7 +8,6 @@ public abstract class Item<O extends Item.ItemOptions> {
 
     public String UUID;
     public String Title;
-    public SpannedString Content;
     public O Options;
     public long DeletedAt;
 

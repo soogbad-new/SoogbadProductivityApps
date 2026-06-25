@@ -1,6 +1,8 @@
 package com.soogbad.sharedmodule.core;
 
+import android.text.Spanned;
 import android.text.SpannableString;
+import android.text.SpannedString;
 
 import java.util.ArrayList;
 
@@ -48,8 +50,8 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
         } catch(JSONException e) { throw new RuntimeException(e); }
     }
 
-    public void loadItemContent(Item<?> item) { item.Content = storageManager.loadContent(item.UUID, item.DeletedAt > 0); }
-    public void saveItemContent(Item<?> item) { storageManager.saveContent(item.UUID, item.Content); }
+    public SpannedString loadItemContent(Item<?> item) { return storageManager.loadContent(item.UUID, item.DeletedAt > 0); }
+    public void saveItemContent(Item<?> item, Spanned content) { storageManager.saveContent(item.UUID, content); }
     public void saveItemMetadata(Item<?> item) { storageManager.saveMetadata(item.UUID, item.Title, item.Options); }
 
     public String createItem(O defaultOptions) {

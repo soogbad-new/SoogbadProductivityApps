@@ -1,6 +1,7 @@
 package com.soogbad.sharedmodule.ui;
 
 import android.content.Context;
+import android.text.SpannedString;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -35,8 +36,8 @@ public class ItemLayout extends ConstraintLayout {
     public void init(ItemActionBar itemActionBar, ItemsManager<?, ?> itemsManager, Item<?> item, boolean readOnly) {
         this.itemActionBar = itemActionBar; this.itemsManager = itemsManager; this.item = item;
         itemActionBar.init(this, item, readOnly);
-        itemsManager.loadItemContent(item);
-        contentEditText.setIgnoreTextChanges(true); contentEditText.setText(item.Content); contentEditText.setIgnoreTextChanges(false);
+        SpannedString content = itemsManager.loadItemContent(item);
+        contentEditText.setIgnoreTextChanges(true); contentEditText.setText(content); contentEditText.setIgnoreTextChanges(false);
         contentEditText.setOnFocusChangeListener((view, hasFocus) -> { if(hasFocus) contentTouched = true; });
         if(readOnly) {
             contentEditText.setFocusable(false); contentEditText.setFocusableInTouchMode(false); contentEditText.setCursorVisible(false);
@@ -57,11 +58,10 @@ public class ItemLayout extends ConstraintLayout {
         String oldTitle = item.Title;
         item.Title = itemActionBar.getTitleEditText().getText().toString();
         if(item.Title.isEmpty()) item.Title = "Untitled";
-        item.Content = contentEditText.getTextIncludingHiddenContent();
         if(optionsChanged || !item.Title.equals(oldTitle))
             itemsManager.saveItemMetadata(item);
         if(contentTouched)
-            itemsManager.saveItemContent(item);
+            itemsManager.saveItemContent(item, contentEditText.getTextIncludingHiddenContent());
         optionsChanged = false;
         contentTouched = contentEditText.hasFocus();
     }
