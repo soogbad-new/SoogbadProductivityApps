@@ -65,6 +65,10 @@ public class RichEditText extends AppCompatEditText {
             styleStateListener.onStyleStateChanged(activeCharacterStyles, activeParagraphStyles);
     }
 
+    public void scrollToCursor() {
+        bringPointIntoView(getSelectionStart());
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {

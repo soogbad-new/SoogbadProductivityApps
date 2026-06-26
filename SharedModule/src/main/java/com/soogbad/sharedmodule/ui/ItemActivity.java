@@ -71,6 +71,9 @@ public abstract class ItemActivity extends AppCompatActivity {
                 View focusedView = getCurrentFocus();
                 if(focusedView != null) focusedView.clearFocus();
             }
+            else {
+                itemLayout.post(() -> itemLayout.getContentEditText().scrollToCursor());
+            }
         }
         return insets;
     }

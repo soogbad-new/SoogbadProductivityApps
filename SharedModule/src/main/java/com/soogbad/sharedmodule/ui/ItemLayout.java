@@ -14,6 +14,7 @@ import com.soogbad.sharedmodule.richtext.RichEditText;
 public class ItemLayout extends ConstraintLayout {
 
     private final RichEditText contentEditText;
+    public RichEditText getContentEditText() { return contentEditText; }
     private final FormattingToolbar formattingToolbar;
     public FormattingToolbar getFormattingToolbar() { return formattingToolbar; }
 
