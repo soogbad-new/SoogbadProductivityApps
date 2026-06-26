@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/darkBlue</item>
         <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.Material3.Dark" />
