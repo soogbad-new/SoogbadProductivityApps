@@ -26,7 +26,6 @@ import android.util.AttributeSet;
 import android.util.Patterns;
 import android.util.TypedValue;
 import android.view.MotionEvent;
-import android.view.ViewConfiguration;
 
 import androidx.appcompat.widget.AppCompatEditText;
 
@@ -69,36 +68,11 @@ public class RichEditText extends AppCompatEditText {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN)
-            trackTap(event);
         if(event.getAction() == MotionEvent.ACTION_UP) {
             if(handleCollapsibleRegionClick(event)) return true;
             if(getSelectionStart() == getSelectionEnd() && handleHyperlinkClick(event)) return true;
         }
-        boolean superResult = super.onTouchEvent(event);
-        if(event.getAction() == MotionEvent.ACTION_UP && tapCount >= 3)
-            handleTripleClickParagraphSelect();
-        return superResult;
-    }
-    private int tapCount = 0;
-    private long lastTapTime = 0;
-    private float lastTapX = 0, lastTapY = 0;
-    private void trackTap(MotionEvent event) {
-        long now = event.getEventTime();
-        float x = event.getX(); float y = event.getY();
-        int slop = ViewConfiguration.get(getContext()).getScaledDoubleTapSlop();
-        if(now - lastTapTime <= ViewConfiguration.getDoubleTapTimeout() && Math.abs(x - lastTapX) <= slop && Math.abs(y - lastTapY) <= slop)
-            tapCount++;
-        else
-            tapCount = 1;
-        lastTapTime = now; lastTapX = x; lastTapY = y;
-    }
-    private void handleTripleClickParagraphSelect() {
-        Editable editable = getText();
-        if(editable == null) return;
-        String text = editable.toString();
-        int cursor = getSelectionStart();
-        setSelection(getParagraphStart(text, cursor), getParagraphEnd(text, cursor));
+        return super.onTouchEvent(event);
     }
 
     @Override
