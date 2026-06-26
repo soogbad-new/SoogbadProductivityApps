@@ -7,6 +7,7 @@
         android:layout_height="48dp"
         style="?attr/materialIconButtonStyle"
         app:icon="@drawable/bold"
+        app:iconTint="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
@@ -41,7 +42,7 @@
         app:icon="@drawable/text_size_unset"
         app:iconTint="@color/white"
         android:backgroundTint="@color/black"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:textColor="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/underlineButton" />
