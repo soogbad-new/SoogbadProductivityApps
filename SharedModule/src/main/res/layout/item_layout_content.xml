@@ -24,6 +24,7 @@
             android:paddingStart="20dp"
             android:paddingEnd="16dp"
             android:isScrollContainer="false"
+            android:textCursorDrawable="@drawable/cursor_thin"
             tools:ignore="SpUsage" />
 
     </androidx.core.widget.NestedScrollView>
