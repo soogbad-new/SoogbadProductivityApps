@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -28,6 +27,7 @@ import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.button.MaterialButton;
 import com.soogbad.sharedmodule.R;
 import com.soogbad.sharedmodule.core.Utility;
 import com.soogbad.sharedmodule.richtext.RichCharacterStyle;
@@ -42,7 +42,7 @@ import java.util.function.IntConsumer;
 public class FormattingToolbar extends ConstraintLayout implements RichEditText.StyleStateListener {
 
     private RichEditText contentEditText;
-    private final Button boldButton, italicButton, underlineButton, textSizeButton, textColorButton, bulletListButton, textAlignmentButton, hyperlinkButton, regionButton, undoButton, redoButton;
+    private final MaterialButton boldButton, italicButton, underlineButton, textSizeButton, textColorButton, bulletListButton, textAlignmentButton, hyperlinkButton, regionButton, undoButton, redoButton;
 
     private HashSet<RichCharacterStyle<?>> activeCharacterStyles = new HashSet<>();
     private HashSet<RichParagraphStyle<?>> activeParagraphStyles = new HashSet<>();
@@ -145,7 +145,7 @@ public class FormattingToolbar extends ConstraintLayout implements RichEditText.
         else if(activeAlignment == RichParagraphStyle.ALIGN_RIGHT.value) textAlignmentButton.setText("R");
     }
 
-    private void toggleButton(Button button, boolean state) {
+    private void toggleButton(MaterialButton button, boolean state) {
         if(state)
             button.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.lightGreen));
         else
@@ -153,7 +153,7 @@ public class FormattingToolbar extends ConstraintLayout implements RichEditText.
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void showSelectionPopup(Button popupAnchor, int[] options, int selectedOption, Class<?> styleType, IntConsumer onSelect) {
+    private void showSelectionPopup(MaterialButton popupAnchor, int[] options, int selectedOption, Class<?> styleType, IntConsumer onSelect) {
         if(suppressNextPopup) {
             suppressNextPopup = false;
             return;

@@ -24,14 +24,15 @@
 
             <ImageButton
                 android:id="@+id/emptyBinButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@android:drawable/ic_menu_delete"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/empty_recycle_bin"
                 android:scaleType="centerInside"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Empty Bin"
                 android:onClick="onEmptyBinButtonClick"
-                android:layout_gravity="right|center_vertical"
                 tools:ignore="RtlHardcoded" />
 
         </com.google.android.material.appbar.MaterialToolbar>
