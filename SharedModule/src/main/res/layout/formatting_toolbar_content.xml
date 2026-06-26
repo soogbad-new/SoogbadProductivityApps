@@ -44,6 +44,7 @@
         android:backgroundTint="@color/black"
         android:textSize="14sp"
         android:textColor="@color/white"
+        android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/underlineButton" />
 
