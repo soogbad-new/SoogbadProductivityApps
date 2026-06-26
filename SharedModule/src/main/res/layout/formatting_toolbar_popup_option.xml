@@ -5,8 +5,6 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:textSize="16sp"
-    android:paddingLeft="30dp"
-    android:paddingRight="30dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:layout_margin="4dp"
+    android:padding="4dp">
 </TextView>

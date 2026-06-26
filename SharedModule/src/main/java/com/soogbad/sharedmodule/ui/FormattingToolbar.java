@@ -3,6 +3,7 @@ package com.soogbad.sharedmodule.ui;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -61,6 +62,13 @@ public class FormattingToolbar extends ConstraintLayout implements RichEditText.
         contentEditText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, RichCharacterStyle.DEFAULT_TEXT_SIZE.size);
         contentEditText.setLineSpacing(0.0f, RichParagraphStyle.DEFAULT_LINE_SPACING_MULTIPLIER);
         contentEditText.setStyleStateListener(this);
+        contentEditText.getViewTreeObserver().addOnGlobalFocusChangeListener((oldFocus, newFocus) -> {
+            if(oldFocus == contentEditText && newFocus != contentEditText) {
+                textSizeButton.setText(""); textSizeButton.setIconResource(R.drawable.text_size_unset);
+                textColorButton.setIconTint(ColorStateList.valueOf(RichCharacterStyle.DEFAULT_TEXT_COLOR.color));
+                textAlignmentButton.setIconResource(R.drawable.alignment_unset);
+            }
+        });
         contentEditText.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
             @Override public boolean onCreateActionMode(ActionMode actionMode, Menu menu) { currentSelectionActionMode = actionMode; return true; }
             @Override public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) { return false; }
@@ -132,7 +140,8 @@ public class FormattingToolbar extends ConstraintLayout implements RichEditText.
             else if(style.spanClass == ForegroundColorSpan.class) activeTextColor = style.value;
         }
         toggleButton(boldButton, boldActive); toggleButton(italicButton, italicActive); toggleButton(underlineButton, underlineActive);
-        textSizeButton.setText(String.valueOf(activeTextSize)); textColorButton.setTextColor(activeTextColor);
+        textSizeButton.setIcon(null); textSizeButton.setText(String.valueOf(activeTextSize));
+        textColorButton.setIconTint(ColorStateList.valueOf(activeTextColor));
         boolean bulletListActive = false;
         int activeAlignment = RichParagraphStyle.DEFAULT_TEXT_ALIGNMENT.value;
         for(RichParagraphStyle<?> style : activeParagraphStyles) {
@@ -140,9 +149,9 @@ public class FormattingToolbar extends ConstraintLayout implements RichEditText.
             else if(style.spanClass == AlignmentSpan.Standard.class) activeAlignment = style.value;
         }
         toggleButton(bulletListButton, bulletListActive);
-        if(activeAlignment == RichParagraphStyle.ALIGN_LEFT.value) textAlignmentButton.setText("L");
-        else if(activeAlignment == RichParagraphStyle.ALIGN_CENTER.value) textAlignmentButton.setText("C");
-        else if(activeAlignment == RichParagraphStyle.ALIGN_RIGHT.value) textAlignmentButton.setText("R");
+        if(activeAlignment == RichParagraphStyle.ALIGN_LEFT.value) textAlignmentButton.setIconResource(R.drawable.alignment_left);
+        else if(activeAlignment == RichParagraphStyle.ALIGN_CENTER.value) textAlignmentButton.setIconResource(R.drawable.alignment_center);
+        else if(activeAlignment == RichParagraphStyle.ALIGN_RIGHT.value) textAlignmentButton.setIconResource(R.drawable.alignment_right);
     }
 
     private void toggleButton(MaterialButton button, boolean state) {

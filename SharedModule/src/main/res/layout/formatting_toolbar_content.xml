@@ -17,6 +17,7 @@
         android:layout_height="48dp"
         style="?attr/materialIconButtonStyle"
         app:icon="@drawable/italic"
+        app:iconTint="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/boldButton" />
@@ -27,6 +28,7 @@
         android:layout_height="48dp"
         style="?attr/materialIconButtonStyle"
         app:icon="@drawable/underline"
+        app:iconTint="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/italicButton" />
@@ -37,7 +39,10 @@
         android:layout_height="48dp"
         style="?attr/materialIconButtonStyle"
         app:icon="@drawable/text_size_unset"
+        app:iconTint="@color/white"
         android:backgroundTint="@color/black"
+        android:textSize="12sp"
+        android:textColor="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/underlineButton" />
 
@@ -47,6 +52,7 @@
         android:layout_height="48dp"
         style="?attr/materialIconButtonStyle"
         app:icon="@drawable/text_color_unset"
+        app:iconTint="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/textSizeButton" />
@@ -57,6 +63,7 @@
         android:layout_height="48dp"
         style="?attr/materialIconButtonStyle"
         app:icon="@drawable/bullet_list"
+        app:iconTint="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/textColorButton" />
@@ -67,6 +74,7 @@
         android:layout_height="48dp"
         style="?attr/materialIconButtonStyle"
         app:icon="@drawable/alignment_unset"
+        app:iconTint="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/bulletListButton" />
@@ -77,6 +85,7 @@
         android:layout_height="48dp"
         style="?attr/materialIconButtonStyle"
         app:icon="@drawable/hyperlink"
+        app:iconTint="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/textAlignmentButton" />
@@ -87,6 +96,7 @@
         android:layout_height="48dp"
         style="?attr/materialIconButtonStyle"
         app:icon="@drawable/region"
+        app:iconTint="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/hyperlinkButton" />
@@ -97,6 +107,7 @@
         android:layout_height="48dp"
         style="?attr/materialIconButtonStyle"
         app:icon="@drawable/undo"
+        app:iconTint="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/regionButton" />
@@ -107,6 +118,7 @@
         android:layout_height="48dp"
         style="?attr/materialIconButtonStyle"
         app:icon="@drawable/redo"
+        app:iconTint="@color/white"
         android:backgroundTint="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/undoButton" />
