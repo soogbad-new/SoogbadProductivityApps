@@ -11,6 +11,7 @@
         android:textColor="@color/white"
         android:textAppearance="@style/ToolbarTitle"
         android:textStyle="bold"
+        android:letterSpacing="0.01"
         android:background="@android:color/transparent"
         android:hint="Type to enter title..."
         android:autofillHints=""
