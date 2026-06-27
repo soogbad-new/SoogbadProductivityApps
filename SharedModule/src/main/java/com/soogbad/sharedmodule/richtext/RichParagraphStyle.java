@@ -23,12 +23,12 @@ public class RichParagraphStyle<T extends ParagraphStyle> {
     }
 
     public ParagraphStyle createSpan() {
-        if(spanClass == BulletSpan.class) return new BulletSpan(BULLET_GAP_WIDTH, BULLET_COLOR);
+        if(spanClass == BulletSpan.class) return new BulletSpan(BULLET_GAP_WIDTH, BULLET_COLOR, BULLET_RADIUS);
         else if(spanClass == AlignmentSpan.Standard.class) return new AlignmentSpan.Standard(Layout.Alignment.values()[value]);
         return null;
     }
     public static ParagraphStyle cloneSpan(ParagraphStyle span) {
-        if(span instanceof BulletSpan) return new BulletSpan(BULLET_GAP_WIDTH, BULLET_COLOR);
+        if(span instanceof BulletSpan) return new BulletSpan(BULLET_GAP_WIDTH, BULLET_COLOR, BULLET_RADIUS);
         else if(span instanceof AlignmentSpan.Standard) return new AlignmentSpan.Standard(((AlignmentSpan.Standard)span).getAlignment());
         return null;
     }
@@ -63,5 +63,6 @@ public class RichParagraphStyle<T extends ParagraphStyle> {
 
     private static final int BULLET_GAP_WIDTH = 20;
     private static final int BULLET_COLOR = 0xFFFFFFFF;
+    private static final int BULLET_RADIUS = 6;
 
 }
