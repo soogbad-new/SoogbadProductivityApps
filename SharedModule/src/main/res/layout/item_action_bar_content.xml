@@ -10,6 +10,7 @@
         android:singleLine="true"
         android:textColor="@color/white"
         android:textAppearance="@style/ToolbarTitle"
+        android:textStyle="bold"
         android:background="@android:color/transparent"
         android:hint="Type to enter title..."
         android:autofillHints=""
