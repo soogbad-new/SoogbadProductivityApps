@@ -26,4 +26,9 @@ public abstract class Item<O extends Item.ItemOptions> {
         public JSONObject toJson() { return new JSONObject(); }
     }
 
+    public static class SchedulableItemOptions extends ItemOptions {
+        public Date Time;
+        public Schedule RepeatSchedule;
+    }
+
 }

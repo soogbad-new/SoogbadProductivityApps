@@ -18,12 +18,9 @@ public class Event extends Item<Event.EventOptions> {
         return new Event(uuid, title, options);
     }
 
-    public static class EventOptions extends Item.ItemOptions{
+    public static class EventOptions extends SchedulableItemOptions {
 
         public EventOptions(Date time, Schedule repeatSchedule) { Time = time; RepeatSchedule = repeatSchedule; }
-
-        public Date Time;
-        public Schedule RepeatSchedule;
 
         @Override
         public JSONObject toJson() {

@@ -26,7 +26,7 @@ public class ReminderListActivity extends ItemListActivity {
     }
 
     public void onAddButtonClick(View view) {
-        String uuid = typedItemsManager.createItem(new Reminder.ReminderOptions(new Date(), Schedule.NONE, , false));
+        String uuid = typedItemsManager.createItem(new Reminder.ReminderOptions(, false));
         super.onAddButtonClick(uuid);
     }
 
