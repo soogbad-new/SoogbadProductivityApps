@@ -12,6 +12,7 @@ public class SoogbadRemindersApplication extends ItemApplication<Reminder, Remin
         super.onCreate();
         itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Reminder::create, Reminder.ReminderOptions::fromJson);
         itemsManager.loadItems();
+        itemsManager.getItems().sort((a, b) -> Long.compare(b.Options.Time.getTime(), a.Options.Time.getTime()));
     }
 
     @Override

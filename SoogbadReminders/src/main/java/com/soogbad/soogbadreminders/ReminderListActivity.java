@@ -22,6 +22,7 @@ public class ReminderListActivity extends ItemListActivity {
         Utility.setWindowProperties(this, R.layout.reminder_list_activity, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
         typedItemsManager = ((SoogbadRemindersApplication)getApplication()).getItemsManager();
+        typedItemsManager.getItems().sort((a, b) -> Long.compare(b.Options.Time.getTime(), a.Options.Time.getTime()));
     }
 
     public void onAddButtonClick(View view) {
