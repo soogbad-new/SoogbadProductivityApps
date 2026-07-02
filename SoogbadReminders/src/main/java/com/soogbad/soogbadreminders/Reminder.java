@@ -2,6 +2,9 @@ package com.soogbad.soogbadreminders;
 
 import com.soogbad.sharedmodule.core.Item;
 import com.soogbad.sharedmodule.core.Schedule;
+import com.soogbad.sharedmodule.richtext.RichTextSerializer;
+
+import android.text.SpannedString;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,9 +21,14 @@ public class Reminder extends Item<Reminder.ReminderOptions> {
         return new Reminder(uuid, title, options);
     }
 
-    public static class ReminderOptions extends SchedulableItemOptions {
+    public static class ReminderOptions extends Item.ItemOptions {
 
-        public ReminderOptions(Date time, Schedule repeatSchedule) { Time = time; RepeatSchedule = repeatSchedule; }
+        public ReminderOptions(Date time, Schedule repeatSchedule, SpannedString defaultText, boolean skipNextRun) { Time = time; RepeatSchedule = repeatSchedule; DefaultText = defaultText; SkipNextRun = skipNextRun; }
+
+        public Date Time;
+        public Schedule RepeatSchedule;
+        public SpannedString DefaultText;
+        public boolean SkipNextRun;
 
         @Override
         public JSONObject toJson() {
@@ -28,6 +36,8 @@ public class Reminder extends Item<Reminder.ReminderOptions> {
                 JSONObject json = new JSONObject();
                 json.put("time", Time.getTime());
                 json.put("repeatSchedule", RepeatSchedule.name());
+                json.put("skipNextRun", SkipNextRun);
+                json.put("defaultText", new JSONObject(RichTextSerializer.serialize(DefaultText)));
                 return json;
             } catch(JSONException e) { throw new RuntimeException(e); }
         }
@@ -36,7 +46,9 @@ public class Reminder extends Item<Reminder.ReminderOptions> {
             try {
                 Date time = new Date(json.getLong("time"));
                 Schedule repeatSchedule = Schedule.valueOf(json.getString("repeatSchedule"));
-                return new ReminderOptions(time, repeatSchedule);
+                boolean skipNextRun = json.getBoolean("skipNextRun");
+                SpannedString defaultText = RichTextSerializer.deserialize(json.getJSONObject("defaultText").toString());
+                return new ReminderOptions(time, repeatSchedule, defaultText, skipNextRun);
             } catch(JSONException e) { throw new RuntimeException(e); }
         }
     }
