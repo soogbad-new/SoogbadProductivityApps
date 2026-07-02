@@ -2,8 +2,6 @@ package com.soogbad.sharedmodule.core;
 
 import org.json.JSONObject;
 
-import java.util.Date;
-
 public abstract class Item<O extends Item.ItemOptions> {
 
     public String UUID;

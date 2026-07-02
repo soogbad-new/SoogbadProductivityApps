@@ -66,7 +66,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
             return true;
         }
         else if(menuItem.getItemId() == R.id.action_copy_uuid) {
-            Utility.getAppUtility(context).copyItemUuid(context, item);
+            Utility.copyItemUuid(context, item);
             return true;
         }
         else if(menuItem.getItemId() == R.id.action_delete) {

@@ -1,12 +1,15 @@
 package com.soogbad.sharedmodule.core;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ContextWrapper;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
@@ -50,6 +53,12 @@ public class Utility {
             return generateUniqueUUID(items);
         else
             return uuid;
+    }
+
+    public static void copyItemUuid(Context context, Item<?> item) {
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        clipboard.setPrimaryClip(ClipData.newPlainText("UUID", getAppUtility(context.getApplicationContext()).getItemName().toUpperCase() + "-" + item.UUID));
+        Toast.makeText(context, "Item UUID copied to clipboard", Toast.LENGTH_SHORT).show();
     }
 
     public static boolean isLinkUrlValid(String url) {

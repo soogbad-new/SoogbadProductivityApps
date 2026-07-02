@@ -8,9 +8,6 @@ import androidx.core.view.ViewCompat;
 import com.soogbad.sharedmodule.ui.ItemListActivity;
 import com.soogbad.sharedmodule.core.ItemsManager;
 import com.soogbad.sharedmodule.core.Utility;
-import com.soogbad.sharedmodule.core.Schedule;
-
-import java.util.Date;
 
 public class EventListActivity extends ItemListActivity {
 

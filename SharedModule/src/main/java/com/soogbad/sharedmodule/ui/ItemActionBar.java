@@ -45,7 +45,7 @@ public class ItemActionBar extends ConstraintLayout {
             return true;
         }
         else if(menuItem.getItemId() == R.id.action_copy_uuid) {
-            Utility.getAppUtility(getContext()).copyItemUuid(getContext(), item);
+            Utility.copyItemUuid(getContext(), item);
             return true;
         }
         else if(menuItem.getItemId() == R.id.action_delete) {
