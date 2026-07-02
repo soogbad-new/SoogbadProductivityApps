@@ -25,7 +25,8 @@ public class EventListActivity extends ItemListActivity {
     }
 
     public void onAddButtonClick(View view) {
-        String uuid = typedItemsManager.createItem(new Event.EventOptions(new Date(), Schedule.NONE));
+        Event.EventOptions options = launchCreateItemOptionsDialog();
+        String uuid = typedItemsManager.createItem(options);
         super.onAddButtonClick(uuid);
     }
 

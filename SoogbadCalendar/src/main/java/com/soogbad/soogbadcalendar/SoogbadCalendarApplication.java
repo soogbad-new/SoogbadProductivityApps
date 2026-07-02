@@ -20,6 +20,7 @@ public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Eve
             @Override public String getAppName() { return "SoogbadCalendar"; }
             @Override public String getItemUuidPrefix() { return "EVENT-"; }
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return EventActivity.class; }
+            @Override public boolean hasConfigurableOptions() { return true; }
         };
     }
 

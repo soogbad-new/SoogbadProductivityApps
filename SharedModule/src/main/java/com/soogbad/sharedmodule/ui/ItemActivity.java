@@ -52,7 +52,13 @@ public abstract class ItemActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(previewMode ? R.menu.recycle_bin_item_menu : R.menu.item_menu, menu);
+        if(previewMode)
+            getMenuInflater().inflate(R.menu.recycle_bin_item_menu, menu);
+        else {
+            if(!Utility.getAppUtility(this).hasConfigurableOptions())
+                menu.findItem(R.id.action_edit_options).setVisible(false);
+            getMenuInflater().inflate(R.menu.item_menu, menu);
+        }
         return true;
     }
     @Override

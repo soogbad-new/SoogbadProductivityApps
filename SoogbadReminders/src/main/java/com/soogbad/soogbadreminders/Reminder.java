@@ -21,10 +21,12 @@ public class Reminder extends Item<Reminder.ReminderOptions> {
         return new Reminder(uuid, title, options);
     }
 
-    public static class ReminderOptions extends SchedulableItemOptions {
+    public static class ReminderOptions extends Item.ItemOptions {
 
         public ReminderOptions(Date time, Schedule repeatSchedule, SpannedString defaultText, boolean skipNextRun) { Time = time; RepeatSchedule = repeatSchedule; DefaultText = defaultText; SkipNextRun = skipNextRun; }
 
+        public Date Time;
+        public Schedule RepeatSchedule;
         public SpannedString DefaultText;
         public boolean SkipNextRun;
 

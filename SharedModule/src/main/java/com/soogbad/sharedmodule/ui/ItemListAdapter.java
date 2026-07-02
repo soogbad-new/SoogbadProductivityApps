@@ -61,13 +61,17 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
     private boolean handleMenuItem(MenuItem menuItem, ViewHolder itemHolder, Item<?> item) {
         Context context = itemHolder.itemView.getContext();
         ItemsManager<?, ?> itemsManager = Utility.getItemsManager(context);
-        if(menuItem.getItemId() == R.id.action_delete) {
-            itemsManager.moveItemToRecycleBin(item.UUID);
-            notifyItemRemoved(itemHolder);
+        if(menuItem.getItemId() == R.id.action_edit_options) {
+            launchEditItemOptionsDialog();
             return true;
         }
         else if(menuItem.getItemId() == R.id.action_copy_uuid) {
             Utility.getAppUtility(context).copyItemUuid(context, item);
+            return true;
+        }
+        else if(menuItem.getItemId() == R.id.action_delete) {
+            itemsManager.moveItemToRecycleBin(item.UUID);
+            notifyItemRemoved(itemHolder);
             return true;
         }
         return false;
