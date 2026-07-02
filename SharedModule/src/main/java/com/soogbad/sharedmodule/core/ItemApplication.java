@@ -19,7 +19,7 @@ public abstract class ItemApplication<T extends Item<O>, O extends Item.ItemOpti
 
         String getAppName();
 
-        String getItemUuidPrefix();
+        String getItemName();
 
         Class<? extends ItemActivity> getItemActivityClass();
 
@@ -27,7 +27,7 @@ public abstract class ItemApplication<T extends Item<O>, O extends Item.ItemOpti
         
         default void copyItemUuid(Context context, Item<?> item) {
             ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setPrimaryClip(ClipData.newPlainText("UUID", getItemUuidPrefix() + item.UUID));
+            clipboard.setPrimaryClip(ClipData.newPlainText("UUID", getItemName().toUpperCase() + "-" + item.UUID));
             Toast.makeText(context, "Item UUID copied to clipboard", Toast.LENGTH_SHORT).show();
         }
 

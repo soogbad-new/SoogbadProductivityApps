@@ -19,7 +19,7 @@ public class SoogbadRemindersApplication extends ItemApplication<Reminder, Remin
     public AppUtility getAppUtility() {
         return new AppUtility() {
             @Override public String getAppName() { return "SoogbadReminders"; }
-            @Override public String getItemUuidPrefix() { return "REMINDER-"; }
+            @Override public String getItemName() { return "Reminder"; }
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return ReminderActivity.class; }
             @Override public boolean hasConfigurableOptions() { return true; }
         };
