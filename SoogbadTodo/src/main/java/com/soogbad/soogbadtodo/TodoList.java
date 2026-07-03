@@ -1,4 +1,4 @@
-package com.soogbad.soogbadreminders;
+package com.soogbad.soogbadtodo;
 
 import com.soogbad.sharedmodule.core.Item;
 import com.soogbad.sharedmodule.core.Schedule;
@@ -11,19 +11,19 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-public class Reminder extends Item<Reminder.ReminderOptions> {
+public class TodoList extends Item<TodoList.TodoListOptions> {
 
-    public Reminder(String uuid, String title, ReminderOptions options) {
+    public TodoList(String uuid, String title, TodoListOptions options) {
         UUID = uuid; Title = title; Options = options;
     }
 
-    public static Reminder create(String uuid, String title, ReminderOptions options) {
-        return new Reminder(uuid, title, options);
+    public static TodoList create(String uuid, String title, TodoListOptions options) {
+        return new TodoList(uuid, title, options);
     }
 
-    public static class ReminderOptions extends Item.ItemOptions {
+    public static class TodoListOptions extends Item.ItemOptions {
 
-        public ReminderOptions(Date time, Schedule repeatSchedule, SpannedString defaultText, boolean skipNextRun) { Time = time; RepeatSchedule = repeatSchedule; DefaultText = defaultText; SkipNextRun = skipNextRun; }
+        public TodoListOptions(Date time, Schedule repeatSchedule, SpannedString defaultText, boolean skipNextRun) { Time = time; RepeatSchedule = repeatSchedule; DefaultText = defaultText; SkipNextRun = skipNextRun; }
 
         public Date Time;
         public Schedule RepeatSchedule;
@@ -42,13 +42,13 @@ public class Reminder extends Item<Reminder.ReminderOptions> {
             } catch(JSONException e) { throw new RuntimeException(e); }
         }
 
-        public static ReminderOptions fromJson(JSONObject json) {
+        public static TodoListOptions fromJson(JSONObject json) {
             try {
                 Date time = new Date(json.getLong("time"));
                 Schedule repeatSchedule = Schedule.valueOf(json.getString("repeatSchedule"));
                 boolean skipNextRun = json.getBoolean("skipNextRun");
                 SpannedString defaultText = RichTextSerializer.deserialize(json.getJSONObject("defaultText").toString());
-                return new ReminderOptions(time, repeatSchedule, defaultText, skipNextRun);
+                return new TodoListOptions(time, repeatSchedule, defaultText, skipNextRun);
             } catch(JSONException e) { throw new RuntimeException(e); }
         }
     }

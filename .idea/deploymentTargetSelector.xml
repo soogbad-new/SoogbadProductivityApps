@@ -10,7 +10,7 @@
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="SoogbadReminders">
+      <SelectionState runConfigName="SoogbadTodo">
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>

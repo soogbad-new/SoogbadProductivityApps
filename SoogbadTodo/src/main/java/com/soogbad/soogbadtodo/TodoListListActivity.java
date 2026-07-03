@@ -1,4 +1,4 @@
-package com.soogbad.soogbadreminders;
+package com.soogbad.soogbadtodo;
 
 import android.os.Bundle;
 import android.view.View;
@@ -9,21 +9,21 @@ import com.soogbad.sharedmodule.ui.ItemListActivity;
 import com.soogbad.sharedmodule.core.ItemsManager;
 import com.soogbad.sharedmodule.core.Utility;
 
-public class ReminderListActivity extends ItemListActivity {
+public class TodoListListActivity extends ItemListActivity {
 
-    private ItemsManager<Reminder, Reminder.ReminderOptions> typedItemsManager;
+    private ItemsManager<TodoList, TodoList.TodoListOptions> typedItemsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utility.setWindowProperties(this, R.layout.reminder_list_activity, R.id.toolbar);
+        Utility.setWindowProperties(this, R.layout.todo_list_list_activity, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
-        typedItemsManager = ((SoogbadRemindersApplication)getApplication()).getItemsManager();
+        typedItemsManager = ((SoogbadTodoApplication)getApplication()).getItemsManager();
         typedItemsManager.getItems().sort((a, b) -> Long.compare(b.Options.Time.getTime(), a.Options.Time.getTime()));
     }
 
     public void onAddButtonClick(View view) {
-        Reminder.ReminderOptions options = (Reminder.ReminderOptions)Utility.getAppUtility(this).launchCreateItemOptionsDialog();
+        TodoList.TodoListOptions options = (TodoList.TodoListOptions)Utility.getAppUtility(this).launchCreateItemOptionsDialog();
         String uuid = typedItemsManager.createItem(options);
         super.onAddButtonClick(uuid);
     }

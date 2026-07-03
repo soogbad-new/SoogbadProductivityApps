@@ -28,4 +28,4 @@ rootProject.name = "SoogbadProductivityApps"
 include ':SharedModule'
 include ':SoogbadCalendar'
 include ':SoogbadNotes'
-include ':SoogbadReminders'
+include ':SoogbadTodo'

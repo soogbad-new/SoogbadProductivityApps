@@ -462,8 +462,8 @@ public class RichEditText extends AppCompatEditText {
                 openItemLink("com.soogbad.soogbadcalendar", "EventActivity", url.substring("EVENT-".length()));
             else if(url.startsWith("NOTE-"))
                 openItemLink("com.soogbad.soogbadnotes", "NoteActivity", url.substring("NOTE-".length()));
-            else if(url.startsWith("REMINDER-"))
-                openItemLink("com.soogbad.soogbadreminders", "ReminderActivity", url.substring("REMINDER-".length()));
+            else if(url.startsWith("TODO-"))
+                openItemLink("com.soogbad.soogbadtodo", "TodoListActivity", url.substring("TODO-".length()));
             else
                 return false;
             return true;

@@ -3,10 +3,10 @@ plugins {
 }
 
 android {
-    namespace = 'com.soogbad.soogbadreminders'
+    namespace = 'com.soogbad.soogbadtodo'
     compileSdkVersion = 37
     defaultConfig {
-        applicationId "com.soogbad.soogbadreminders"
+        applicationId "com.soogbad.soogbadtodo"
         minSdkVersion 33
         targetSdkVersion 37
         versionCode 1

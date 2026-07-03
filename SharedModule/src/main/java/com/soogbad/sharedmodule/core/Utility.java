@@ -62,7 +62,7 @@ public class Utility {
     }
 
     public static boolean isLinkUrlValid(String url) {
-        return Patterns.WEB_URL.matcher(url).matches() || url.startsWith("EVENT-") || url.startsWith("NOTE-") || url.startsWith("REMINDER-");
+        return Patterns.WEB_URL.matcher(url).matches() || url.startsWith("EVENT-") || url.startsWith("NOTE-") || url.startsWith("TODO-");
     }
 
 }
