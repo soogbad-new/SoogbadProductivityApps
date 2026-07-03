@@ -1,7 +1,6 @@
 package com.soogbad.soogbadcalendar;
 
 import com.soogbad.sharedmodule.core.Item;
-import com.soogbad.sharedmodule.core.Schedule;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +41,13 @@ public class Event extends Item<Event.EventOptions> {
                 return new EventOptions(time, repeatSchedule);
             } catch(JSONException e) { throw new RuntimeException(e); }
         }
+    }
+
+    public enum Schedule {
+        NONE,
+        DAILY,
+        WEEKLY,
+        MONTHLY
     }
 
 }
