@@ -41,7 +41,7 @@ public class ItemActionBar extends ConstraintLayout {
         Context context = getContext();
         ItemsManager<?, ?> itemsManager = Utility.getItemsManager(context);
         if(menuItem.getItemId() == R.id.action_edit_options) {
-            launchEditItemOptionsDialog();
+            Utility.getAppUtility(context).launchEditItemOptionsDialog();
             return true;
         }
         else if(menuItem.getItemId() == R.id.action_copy_uuid) {

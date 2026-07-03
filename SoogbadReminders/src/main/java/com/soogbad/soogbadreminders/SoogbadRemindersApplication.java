@@ -22,6 +22,12 @@ public class SoogbadRemindersApplication extends ItemApplication<Reminder, Remin
             @Override public String getItemName() { return "Reminder"; }
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return ReminderActivity.class; }
             @Override public boolean hasConfigurableOptions() { return true; }
+            @Override public void launchEditItemOptionsDialog() {
+
+            }
+            @Override public Reminder.ReminderOptions launchCreateItemOptionsDialog() {
+                return null;
+            }
         };
     }
 

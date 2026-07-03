@@ -12,15 +12,12 @@ public abstract class ItemApplication<T extends Item<O>, O extends Item.ItemOpti
     public abstract AppUtility getAppUtility();
 
     public interface AppUtility {
-
         String getAppName();
-
         String getItemName();
-
         Class<? extends ItemActivity> getItemActivityClass();
-
         boolean hasConfigurableOptions();
-
+        void launchEditItemOptionsDialog();
+        Item.ItemOptions launchCreateItemOptionsDialog();
     }
 
 }

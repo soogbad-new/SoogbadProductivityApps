@@ -22,7 +22,7 @@ public class EventListActivity extends ItemListActivity {
     }
 
     public void onAddButtonClick(View view) {
-        Event.EventOptions options = launchCreateItemOptionsDialog();
+        Event.EventOptions options = (Event.EventOptions)Utility.getAppUtility(this).launchCreateItemOptionsDialog();
         String uuid = typedItemsManager.createItem(options);
         super.onAddButtonClick(uuid);
     }

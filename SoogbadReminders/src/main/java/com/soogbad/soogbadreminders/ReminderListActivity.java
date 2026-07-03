@@ -23,7 +23,7 @@ public class ReminderListActivity extends ItemListActivity {
     }
 
     public void onAddButtonClick(View view) {
-        Reminder.ReminderOptions options = launchCreateItemOptionsDialog();
+        Reminder.ReminderOptions options = (Reminder.ReminderOptions)Utility.getAppUtility(this).launchCreateItemOptionsDialog();
         String uuid = typedItemsManager.createItem(options);
         super.onAddButtonClick(uuid);
     }
