@@ -2,17 +2,37 @@ package com.soogbad.soogbadtodo;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.text.SpannedString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
+import com.soogbad.sharedmodule.core.Item;
+import com.soogbad.sharedmodule.core.Utility;
+
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class TodoListOptionsDialog {
 
-    public static void show(Context context, TodoList.TodoListOptions initialOptions, Callback callback) {
+    public static void launchEditItemOptionsDialog(Context context, Item<?> item) {
+        TodoList todoList = (TodoList)item;
+        TodoListOptionsDialog.showOptionsDialog(context, todoList.Options, (day, hour, minute) -> {
+            todoList.Options.Day = day; todoList.Options.Hour = hour; todoList.Options.Minute = minute;
+            todoList.Options.DefaultText = launchEditDefaultTextActivity();
+            Utility.getItemsManager(context).saveItemMetadata(todoList.UUID, todoList.Title, todoList.Options);
+        });
+    }
+    public static void launchCreateItemOptionsDialog(Context context, Consumer<Item.ItemOptions> callback) {
+        TodoListOptionsDialog.showOptionsDialog(context, new TodoList.TodoListOptions(TodoList.DayOfWeek.SUNDAY, 9, 0, new SpannedString(""), false), (day, hour, minute) -> {
+            SpannedString defaultText = launchEditDefaultTextActivity();
+            callback.accept(new TodoList.TodoListOptions(day, hour, minute, defaultText, false));
+        });
+    }
+
+    private static void showOptionsDialog(Context context, TodoList.TodoListOptions initialOptions, Callback callback) {
         View view = LayoutInflater.from(context).inflate(R.layout.todo_list_options_dialog, null);
         ArrayList<String> dayNames = new ArrayList<>();
         for(TodoList.DayOfWeek day : TodoList.DayOfWeek.values())
@@ -30,6 +50,10 @@ public class TodoListOptionsDialog {
     }
     public interface Callback {
         void onConfirm(TodoList.DayOfWeek day, int hour, int minute);
+    }
+
+    private static SpannedString launchEditDefaultTextActivity() {
+        return new SpannedString("");
     }
 
 }

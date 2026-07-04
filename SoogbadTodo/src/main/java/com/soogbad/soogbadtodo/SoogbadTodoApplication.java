@@ -1,7 +1,6 @@
 package com.soogbad.soogbadtodo;
 
 import android.content.Context;
-import android.text.SpannedString;
 
 import com.soogbad.sharedmodule.core.Item;
 import com.soogbad.sharedmodule.core.ItemApplication;
@@ -29,23 +28,9 @@ public class SoogbadTodoApplication extends ItemApplication<TodoList, TodoList.T
             @Override public String getItemName() { return "TodoList"; }
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return TodoListActivity.class; }
             @Override public boolean hasConfigurableOptions() { return true; }
-            @Override public void launchEditItemOptionsDialog(Context context, Item<?> item) {
-                TodoList todoList = (TodoList)item;
-                TodoListOptionsDialog.show(context, todoList.Options, (day, hour, minute) -> {
-                    todoList.Options.Day = day; todoList.Options.Hour = hour; todoList.Options.Minute = minute;
-                    todoList.Options.DefaultText = launchEditDefaultTextActivity();
-                    itemsManager.saveItemMetadata(todoList.UUID, todoList.Title, todoList.Options);
-                });
-            }
-            @Override public void launchCreateItemOptionsDialog(Context context, Consumer<Item.ItemOptions> callback) {
-                TodoListOptionsDialog.show(context, new TodoList.TodoListOptions(TodoList.DayOfWeek.SUNDAY, 9, 0, new SpannedString(""), false), (day, hour, minute) -> {
-                    SpannedString defaultText = launchEditDefaultTextActivity();
-                    callback.accept(new TodoList.TodoListOptions(day, hour, minute, defaultText, false));
-                });
-            }
-            private SpannedString launchEditDefaultTextActivity() {
-                return new SpannedString("");
-            }
+            @Override public void launchEditItemOptionsDialog(Context context, Item<?> item) { TodoListOptionsDialog.launchEditItemOptionsDialog(context, item); }
+            @Override public void launchCreateItemOptionsDialog(Context context, Consumer<Item.ItemOptions> callback) { TodoListOptionsDialog.launchCreateItemOptionsDialog(context, callback); }
+
         };
     }
 
