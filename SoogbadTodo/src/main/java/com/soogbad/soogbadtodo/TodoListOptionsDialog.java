@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
 import com.soogbad.sharedmodule.core.Item;
 import com.soogbad.sharedmodule.core.Utility;
 
@@ -19,16 +21,16 @@ public class TodoListOptionsDialog {
 
     public static void launchEditItemOptionsDialog(Context context, Item<?> item) {
         TodoList todoList = (TodoList)item;
-        TodoListOptionsDialog.showOptionsDialog(context, todoList.Options, (day, hour, minute) -> {
-            todoList.Options.Day = day; todoList.Options.Hour = hour; todoList.Options.Minute = minute;
+        TodoListOptionsDialog.showOptionsDialog(context, todoList.Options, (day, hour, minute, skipNextRun) -> {
+            todoList.Options.Day = day; todoList.Options.Hour = hour; todoList.Options.Minute = minute; todoList.Options.SkipNextRun = skipNextRun;
             todoList.Options.DefaultText = launchEditDefaultTextActivity();
             Utility.getItemsManager(context).saveItemMetadata(todoList.UUID, todoList.Title, todoList.Options);
         });
     }
     public static void launchCreateItemOptionsDialog(Context context, Consumer<Item.Options> callback) {
-        TodoListOptionsDialog.showOptionsDialog(context, new TodoList.Options(TodoList.DayOfWeek.SUNDAY, 9, 0, new SpannedString(""), false), (day, hour, minute) -> {
+        TodoListOptionsDialog.showOptionsDialog(context, new TodoList.Options(TodoList.DayOfWeek.SUNDAY, 9, 0, new SpannedString(""), false), (day, hour, minute, skipNextRun) -> {
             SpannedString defaultText = launchEditDefaultTextActivity();
-            callback.accept(new TodoList.Options(day, hour, minute, defaultText, false));
+            callback.accept(new TodoList.Options(day, hour, minute, defaultText, skipNextRun));
         });
     }
 
@@ -43,13 +45,15 @@ public class TodoListOptionsDialog {
         TimePicker timePicker = view.findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
         timePicker.setHour(initialOptions.Hour); timePicker.setMinute(initialOptions.Minute);
+        SwitchMaterial skipNextRunSwitch = view.findViewById(R.id.skipNextRunSwitch);
+        skipNextRunSwitch.setChecked(initialOptions.SkipNextRun);
         new AlertDialog.Builder(context).setTitle("Edit Options").setView(view)
                 .setPositiveButton("OK", (dialog, which) ->
-                    callback.onConfirm(TodoList.DayOfWeek.values()[spinner.getSelectedItemPosition()], timePicker.getHour(), timePicker.getMinute()))
+                    callback.onConfirm(TodoList.DayOfWeek.values()[spinner.getSelectedItemPosition()], timePicker.getHour(), timePicker.getMinute(), skipNextRunSwitch.isChecked()))
                 .setNegativeButton("Cancel", null).show();
     }
     public interface Callback {
-        void onConfirm(TodoList.DayOfWeek day, int hour, int minute);
+        void onConfirm(TodoList.DayOfWeek day, int hour, int minute, boolean skipNextRun);
     }
 
     private static SpannedString launchEditDefaultTextActivity() {

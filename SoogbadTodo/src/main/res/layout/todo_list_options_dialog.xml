@@ -35,4 +35,11 @@
         android:layout_gravity="center_horizontal"
         android:timePickerMode="spinner" />
 
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/skipNextRunSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Skip Next Run" />
+
 </LinearLayout>
