@@ -24,8 +24,6 @@ public class ItemLayout extends ConstraintLayout {
 
     private boolean itemDeletedGuard = false;
     private boolean contentTouched = false;
-    private boolean optionsChanged = false;
-    public void markOptionsChanged() { optionsChanged = true; } // call this when setting options
 
     public ItemLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -37,7 +35,7 @@ public class ItemLayout extends ConstraintLayout {
     public void init(ItemActionBar itemActionBar, ItemsManager<?, ?> itemsManager, Item<?> item, boolean readOnly) {
         this.itemActionBar = itemActionBar; this.itemsManager = itemsManager; this.item = item;
         itemActionBar.init(this, item, readOnly);
-        SpannedString content = itemsManager.loadItemContent(item);
+        SpannedString content = itemsManager.getItemContent(item);
         contentEditText.setIgnoreTextChanges(true); contentEditText.setText(content); contentEditText.setIgnoreTextChanges(false);
         contentEditText.setOnFocusChangeListener((view, hasFocus) -> { if(hasFocus) contentTouched = true; });
         if(readOnly) {
@@ -59,11 +57,10 @@ public class ItemLayout extends ConstraintLayout {
         String oldTitle = item.Title;
         item.Title = itemActionBar.getTitleEditText().getText().toString();
         if(item.Title.isEmpty()) item.Title = "Untitled";
-        if(optionsChanged || !item.Title.equals(oldTitle))
-            itemsManager.saveItemMetadata(item);
+        if(!item.Title.equals(oldTitle))
+            itemsManager.saveItemMetadata(item.UUID, item.Title, item.Options);
         if(contentTouched)
-            itemsManager.saveItemContent(item, contentEditText.getTextIncludingHiddenContent());
-        optionsChanged = false;
+            itemsManager.saveItemContent(item.UUID, contentEditText.getTextIncludingHiddenContent());
         contentTouched = contentEditText.hasFocus();
     }
 

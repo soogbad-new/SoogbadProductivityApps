@@ -1,10 +1,15 @@
 package com.soogbad.soogbadnotes;
 
+import android.content.Context;
+
+import com.soogbad.sharedmodule.core.Item;
 import com.soogbad.sharedmodule.ui.ItemActivity;
 import com.soogbad.sharedmodule.core.ItemApplication;
 import com.soogbad.sharedmodule.core.ItemsManager;
 import com.soogbad.sharedmodule.core.StorageManager;
 import com.soogbad.sharedmodule.richtext.RichCharacterStyle;
+
+import java.util.function.Consumer;
 
 public class SoogbadNotesApplication extends ItemApplication<Note, Note.NoteOptions> {
 
@@ -24,8 +29,8 @@ public class SoogbadNotesApplication extends ItemApplication<Note, Note.NoteOpti
             @Override public String getItemName() { return "Note"; }
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return NoteActivity.class; }
             @Override public boolean hasConfigurableOptions() { return false; }
-            @Override public void launchEditItemOptionsDialog() { }
-            @Override public Note.NoteOptions launchCreateItemOptionsDialog() { return null; }
+            @Override public void launchEditItemOptionsDialog(Context context, Item<?> item) { }
+            @Override public void launchCreateItemOptionsDialog(Context context, Consumer<Item.ItemOptions> callback) { }
         };
     }
 

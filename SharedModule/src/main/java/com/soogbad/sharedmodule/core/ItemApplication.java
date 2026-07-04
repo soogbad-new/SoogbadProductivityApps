@@ -1,8 +1,11 @@
 package com.soogbad.sharedmodule.core;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.soogbad.sharedmodule.ui.ItemActivity;
+
+import java.util.function.Consumer;
 
 public abstract class ItemApplication<T extends Item<O>, O extends Item.ItemOptions> extends Application {
 
@@ -16,8 +19,8 @@ public abstract class ItemApplication<T extends Item<O>, O extends Item.ItemOpti
         String getItemName();
         Class<? extends ItemActivity> getItemActivityClass();
         boolean hasConfigurableOptions();
-        void launchEditItemOptionsDialog();
-        Item.ItemOptions launchCreateItemOptionsDialog();
+        void launchEditItemOptionsDialog(Context context, Item<?> item);
+        void launchCreateItemOptionsDialog(Context context, Consumer<Item.ItemOptions> callback);
     }
 
 }

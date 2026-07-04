@@ -1,5 +1,6 @@
 package com.soogbad.soogbadtodo;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 
@@ -9,23 +10,34 @@ import com.soogbad.sharedmodule.ui.ItemListActivity;
 import com.soogbad.sharedmodule.core.ItemsManager;
 import com.soogbad.sharedmodule.core.Utility;
 
+import java.util.Comparator;
+
 public class TodoListListActivity extends ItemListActivity {
 
-    private ItemsManager<TodoList, TodoList.TodoListOptions> typedItemsManager;
+    private ItemsManager<TodoList, TodoList.TodoListOptions> itemsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.todo_list_list_activity, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
-        typedItemsManager = ((SoogbadTodoApplication)getApplication()).getItemsManager();
-        typedItemsManager.getItems().sort((a, b) -> Long.compare(b.Options.Time.getTime(), a.Options.Time.getTime()));
+        itemsManager = ((SoogbadTodoApplication)getApplication()).getItemsManager();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    protected void onResume() {
+        super.onResume();
+        itemsManager.getItems().sort(Comparator.comparing((TodoList item) -> item.Options.Day).thenComparingInt(item -> item.Options.Hour).thenComparingInt(item -> item.Options.Minute));
+        if(itemList.getAdapter() != null)
+            itemList.getAdapter().notifyDataSetChanged();
     }
 
     public void onAddButtonClick(View view) {
-        TodoList.TodoListOptions options = (TodoList.TodoListOptions)Utility.getAppUtility(this).launchCreateItemOptionsDialog();
-        String uuid = typedItemsManager.createItem(options);
-        super.onAddButtonClick(uuid);
+        Utility.getAppUtility(this).launchCreateItemOptionsDialog(this, options -> {
+            String uuid = itemsManager.createItem((TodoList.TodoListOptions)options);
+            createItem(uuid);
+        });
     }
 
     @Override protected View getToolbar() { return findViewById(R.id.toolbar); }

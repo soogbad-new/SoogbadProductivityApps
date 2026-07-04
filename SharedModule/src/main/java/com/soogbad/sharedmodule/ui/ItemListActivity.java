@@ -31,13 +31,13 @@ public abstract class ItemListActivity extends AppCompatActivity {
         itemList.setAdapter(new ItemListAdapter(itemsManager.getItems(), R.layout.item_list_item, R.id.itemListItemTitleTextView));
     }
 
-    protected void onAddButtonClick(String uuid) {
+    public void onItemListItemClick(View view) {
+        launchItem(view.getTag().toString());
+    }
+    protected void createItem(String uuid) {
         if(itemList.getAdapter() != null)
             itemList.getAdapter().notifyItemInserted(0);
         launchItem(uuid);
-    }
-    public void onItemListItemClick(View view) {
-        launchItem(view.getTag().toString());
     }
     protected void launchItem(String uuid) {
         startActivity(new Intent(this, Utility.getAppUtility(this).getItemActivityClass()).putExtra("item_uuid", uuid));

@@ -30,16 +30,16 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
     public void loadItems() {
         items.clear();
         for(String uuid : storageManager.loadItemUUIDs(false))
-            items.add(loadItemData(uuid, false));
+            items.add(loadItem(uuid, false));
     }
     public void loadRecycleBinItems() {
         recycleBinItems.clear();
         for(String uuid : storageManager.loadItemUUIDs(true))
-            recycleBinItems.add(loadItemData(uuid, true));
+            recycleBinItems.add(loadItem(uuid, true));
         cleanExpiredRecycleBinItems();
         recycleBinItems.sort((a, b) -> Long.compare(b.DeletedAt, a.DeletedAt));
     }
-    private T loadItemData(String uuid, boolean isInRecycleBin) {
+    private T loadItem(String uuid, boolean isInRecycleBin) {
         try {
             JSONObject metadata = storageManager.loadMetadata(uuid, isInRecycleBin);
             String title = metadata.getString("title");
@@ -49,10 +49,10 @@ public class ItemsManager<T extends Item<O>, O extends Item.ItemOptions> {
             return item;
         } catch(JSONException e) { throw new RuntimeException(e); }
     }
+    public SpannedString getItemContent(Item<?> item) { return storageManager.loadContent(item.UUID, item.DeletedAt > 0); }
 
-    public SpannedString loadItemContent(Item<?> item) { return storageManager.loadContent(item.UUID, item.DeletedAt > 0); }
-    public void saveItemContent(Item<?> item, Spanned content) { storageManager.saveContent(item.UUID, content); }
-    public void saveItemMetadata(Item<?> item) { storageManager.saveMetadata(item.UUID, item.Title, item.Options); }
+    public void saveItemContent(String uuid, Spanned content) { storageManager.saveContent(uuid, content); }
+    public void saveItemMetadata(String uuid, String title, Item.ItemOptions options) { storageManager.saveMetadata(uuid, title, options); }
 
     public String createItem(O defaultOptions) {
         String uuid = Utility.generateUniqueUUID(items);

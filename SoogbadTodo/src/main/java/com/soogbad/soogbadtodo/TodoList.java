@@ -8,8 +8,6 @@ import android.text.SpannedString;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
-
 public class TodoList extends Item<TodoList.TodoListOptions> {
 
     public TodoList(String uuid, String title, TodoListOptions options) {
@@ -22,9 +20,13 @@ public class TodoList extends Item<TodoList.TodoListOptions> {
 
     public static class TodoListOptions extends Item.ItemOptions {
 
-        public TodoListOptions(Date time, SpannedString defaultText, boolean skipNextRun) { Time = time; DefaultText = defaultText; SkipNextRun = skipNextRun; }
+        public TodoListOptions(DayOfWeek day, int hour, int minute, SpannedString defaultText, boolean skipNextRun) {
+            Day = day; Hour = hour; Minute = minute; DefaultText = defaultText; SkipNextRun = skipNextRun;
+        }
 
-        public Date Time;
+        public DayOfWeek Day;
+        public int Hour;
+        public int Minute;
         public SpannedString DefaultText;
         public boolean SkipNextRun;
 
@@ -32,7 +34,9 @@ public class TodoList extends Item<TodoList.TodoListOptions> {
         public JSONObject toJson() {
             try {
                 JSONObject json = new JSONObject();
-                json.put("time", Time.getTime());
+                json.put("dayOfWeek", Day.ordinal());
+                json.put("hour", Hour);
+                json.put("minute", Minute);
                 json.put("skipNextRun", SkipNextRun);
                 json.put("defaultText", new JSONObject(RichTextSerializer.serialize(DefaultText)));
                 return json;
@@ -41,11 +45,22 @@ public class TodoList extends Item<TodoList.TodoListOptions> {
 
         public static TodoListOptions fromJson(JSONObject json) {
             try {
-                Date time = new Date(json.getLong("time"));
+                DayOfWeek day = DayOfWeek.values()[json.getInt("dayOfWeek")];
+                int hour = json.getInt("hour");
+                int minute = json.getInt("minute");
                 boolean skipNextRun = json.getBoolean("skipNextRun");
                 SpannedString defaultText = RichTextSerializer.deserialize(json.getJSONObject("defaultText").toString());
-                return new TodoListOptions(time, defaultText, skipNextRun);
+                return new TodoListOptions(day, hour, minute, defaultText, skipNextRun);
             } catch(JSONException e) { throw new RuntimeException(e); }
+        }
+    }
+
+    public enum DayOfWeek {
+        SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY;
+
+        public String displayName() {
+            String name = name();
+            return name.charAt(0) + name.substring(1).toLowerCase();
         }
     }
 

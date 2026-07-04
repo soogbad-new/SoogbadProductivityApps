@@ -11,20 +11,21 @@ import com.soogbad.sharedmodule.core.Utility;
 
 public class EventListActivity extends ItemListActivity {
 
-    private ItemsManager<Event, Event.EventOptions> typedItemsManager;
+    private ItemsManager<Event, Event.EventOptions> itemsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utility.setWindowProperties(this, R.layout.event_list_activity, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
-        typedItemsManager = ((SoogbadCalendarApplication)getApplication()).getItemsManager();
+        itemsManager = ((SoogbadCalendarApplication)getApplication()).getItemsManager();
     }
 
     public void onAddButtonClick(View view) {
-        Event.EventOptions options = (Event.EventOptions)Utility.getAppUtility(this).launchCreateItemOptionsDialog();
-        String uuid = typedItemsManager.createItem(options);
-        super.onAddButtonClick(uuid);
+        Utility.getAppUtility(this).launchCreateItemOptionsDialog(this, options -> {
+            String uuid = itemsManager.createItem((Event.EventOptions)options);
+            createItem(uuid);
+        });
     }
 
     @Override protected View getToolbar() { return findViewById(R.id.toolbar); }

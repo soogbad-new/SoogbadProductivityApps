@@ -1,9 +1,14 @@
 package com.soogbad.soogbadcalendar;
 
+import android.content.Context;
+
+import com.soogbad.sharedmodule.core.Item;
 import com.soogbad.sharedmodule.ui.ItemActivity;
 import com.soogbad.sharedmodule.core.ItemApplication;
 import com.soogbad.sharedmodule.core.ItemsManager;
 import com.soogbad.sharedmodule.core.StorageManager;
+
+import java.util.function.Consumer;
 
 public class SoogbadCalendarApplication extends ItemApplication<Event, Event.EventOptions> {
 
@@ -21,12 +26,8 @@ public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Eve
             @Override public String getItemName() { return "Event"; }
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return EventActivity.class; }
             @Override public boolean hasConfigurableOptions() { return true; }
-            @Override public void launchEditItemOptionsDialog() {
-
-            }
-            @Override public Event.EventOptions launchCreateItemOptionsDialog() {
-                return null;
-            }
+            @Override public void launchEditItemOptionsDialog(Context context, Item<?> item) { }
+            @Override public void launchCreateItemOptionsDialog(Context context, Consumer<Item.ItemOptions> callback) { }
         };
     }
 
