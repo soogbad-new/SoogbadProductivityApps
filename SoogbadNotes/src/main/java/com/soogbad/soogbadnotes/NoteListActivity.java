@@ -12,7 +12,7 @@ import com.soogbad.sharedmodule.core.Utility;
 
 public class NoteListActivity extends ItemListActivity {
 
-    private ItemsManager<Note, Note.NoteOptions> itemsManager;
+    private ItemsManager<Note, Note.Options> itemsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class NoteListActivity extends ItemListActivity {
     }
 
     public void onAddButtonClick(View view) {
-        String uuid = itemsManager.createItem(new Note.NoteOptions(System.currentTimeMillis()));
+        String uuid = itemsManager.createItem(new Note.Options(System.currentTimeMillis()));
         createItem(uuid);
     }
 

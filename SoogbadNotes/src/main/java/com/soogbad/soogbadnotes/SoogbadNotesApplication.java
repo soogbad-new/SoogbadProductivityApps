@@ -11,13 +11,13 @@ import com.soogbad.sharedmodule.richtext.RichCharacterStyle;
 
 import java.util.function.Consumer;
 
-public class SoogbadNotesApplication extends ItemApplication<Note, Note.NoteOptions> {
+public class SoogbadNotesApplication extends ItemApplication<Note, Note.Options> {
 
     @Override
     public void onCreate() {
         super.onCreate();
         RichCharacterStyle.DEFAULT_TEXT_SIZE = RichCharacterStyle.TextSize.SIZE_16;
-        itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Note::create, Note.NoteOptions::fromJson);
+        itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Note::create, Note.Options::fromJson);
         itemsManager.loadItems();
         itemsManager.getItems().sort((a, b) -> Long.compare(b.Options.LastViewed, a.Options.LastViewed));
     }
@@ -30,7 +30,7 @@ public class SoogbadNotesApplication extends ItemApplication<Note, Note.NoteOpti
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return NoteActivity.class; }
             @Override public boolean hasConfigurableOptions() { return false; }
             @Override public void launchEditItemOptionsDialog(Context context, Item<?> item) { }
-            @Override public void launchCreateItemOptionsDialog(Context context, Consumer<Item.ItemOptions> callback) { }
+            @Override public void launchCreateItemOptionsDialog(Context context, Consumer<Item.Options> callback) { }
         };
     }
 

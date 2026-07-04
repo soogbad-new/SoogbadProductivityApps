@@ -10,12 +10,12 @@ import com.soogbad.sharedmodule.core.StorageManager;
 
 import java.util.function.Consumer;
 
-public class SoogbadCalendarApplication extends ItemApplication<Event, Event.EventOptions> {
+public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Options> {
 
     @Override
     public void onCreate() {
         super.onCreate();
-        itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Event::create, Event.EventOptions::fromJson);
+        itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Event::create, Event.Options::fromJson);
         itemsManager.loadItems();
     }
 
@@ -27,7 +27,7 @@ public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Eve
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return EventActivity.class; }
             @Override public boolean hasConfigurableOptions() { return true; }
             @Override public void launchEditItemOptionsDialog(Context context, Item<?> item) { }
-            @Override public void launchCreateItemOptionsDialog(Context context, Consumer<Item.ItemOptions> callback) { }
+            @Override public void launchCreateItemOptionsDialog(Context context, Consumer<Item.Options> callback) { }
         };
     }
 

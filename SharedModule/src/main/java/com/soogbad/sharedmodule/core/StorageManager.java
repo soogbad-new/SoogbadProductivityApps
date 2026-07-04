@@ -55,7 +55,7 @@ public class StorageManager {
         return RichTextSerializer.deserialize(json);
     }
 
-    public void saveMetadata(String uuid, String title, Item.ItemOptions options) {
+    public void saveMetadata(String uuid, String title, Item.Options options) {
         try {
             JSONObject metadata = new JSONObject();
             metadata.put("title", title);

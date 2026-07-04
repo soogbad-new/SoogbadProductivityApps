@@ -14,7 +14,7 @@ import java.util.Comparator;
 
 public class TodoListListActivity extends ItemListActivity {
 
-    private ItemsManager<TodoList, TodoList.TodoListOptions> itemsManager;
+    private ItemsManager<TodoList, TodoList.Options> itemsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class TodoListListActivity extends ItemListActivity {
 
     public void onAddButtonClick(View view) {
         Utility.getAppUtility(this).launchCreateItemOptionsDialog(this, options -> {
-            String uuid = itemsManager.createItem((TodoList.TodoListOptions)options);
+            String uuid = itemsManager.createItem((TodoList.Options)options);
             createItem(uuid);
         });
     }

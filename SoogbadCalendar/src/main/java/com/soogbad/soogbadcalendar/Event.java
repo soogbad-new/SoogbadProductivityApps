@@ -7,19 +7,19 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-public class Event extends Item<Event.EventOptions> {
+public class Event extends Item<Event.Options> {
 
-    public Event(String uuid, String title, EventOptions options) {
+    public Event(String uuid, String title, Options options) {
         UUID = uuid; Title = title; Options = options;
     }
 
-    public static Event create(String uuid, String title, EventOptions options) {
+    public static Event create(String uuid, String title, Options options) {
         return new Event(uuid, title, options);
     }
 
-    public static class EventOptions extends Item.ItemOptions{
+    public static class Options extends Item.Options {
 
-        public EventOptions(Date time, Schedule repeatSchedule) { Time = time; RepeatSchedule = repeatSchedule; }
+        public Options(Date time, Schedule repeatSchedule) { Time = time; RepeatSchedule = repeatSchedule; }
 
         public Date Time;
         public Schedule RepeatSchedule;
@@ -34,11 +34,11 @@ public class Event extends Item<Event.EventOptions> {
             } catch(JSONException e) { throw new RuntimeException(e); }
         }
 
-        public static EventOptions fromJson(JSONObject json) {
+        public static Options fromJson(JSONObject json) {
             try {
                 Date time = new Date(json.getLong("time"));
                 Schedule repeatSchedule = Schedule.valueOf(json.getString("repeatSchedule"));
-                return new EventOptions(time, repeatSchedule);
+                return new Options(time, repeatSchedule);
             } catch(JSONException e) { throw new RuntimeException(e); }
         }
     }

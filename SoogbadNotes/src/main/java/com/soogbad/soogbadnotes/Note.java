@@ -5,20 +5,20 @@ import com.soogbad.sharedmodule.core.Item;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Note extends Item<Note.NoteOptions> {
+public class Note extends Item<Note.Options> {
 
-    public Note(String uuid, String title, NoteOptions options) {
+    public Note(String uuid, String title, Options options) {
         UUID = uuid; Title = title; Options = options;
     }
 
-    public static Note create(String uuid, String title, NoteOptions options) {
+    public static Note create(String uuid, String title, Options options) {
         return new Note(uuid, title, options);
     }
 
-    public static class NoteOptions extends ItemOptions {
+    public static class Options extends Item.Options {
         public long LastViewed;
 
-        public NoteOptions(long lastViewed) { LastViewed = lastViewed; }
+        public Options(long lastViewed) { LastViewed = lastViewed; }
 
         @Override
         public JSONObject toJson() {
@@ -29,10 +29,10 @@ public class Note extends Item<Note.NoteOptions> {
             } catch(JSONException e) { throw new RuntimeException(e); }
         }
 
-        public static NoteOptions fromJson(JSONObject json) {
+        public static Options fromJson(JSONObject json) {
             try {
                 long lastViewed = json.getLong("lastViewed");
-                return new NoteOptions(lastViewed);
+                return new Options(lastViewed);
             } catch(JSONException e) { throw new RuntimeException(e); }
         }
     }

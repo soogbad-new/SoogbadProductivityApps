@@ -25,14 +25,14 @@ public class TodoListOptionsDialog {
             Utility.getItemsManager(context).saveItemMetadata(todoList.UUID, todoList.Title, todoList.Options);
         });
     }
-    public static void launchCreateItemOptionsDialog(Context context, Consumer<Item.ItemOptions> callback) {
-        TodoListOptionsDialog.showOptionsDialog(context, new TodoList.TodoListOptions(TodoList.DayOfWeek.SUNDAY, 9, 0, new SpannedString(""), false), (day, hour, minute) -> {
+    public static void launchCreateItemOptionsDialog(Context context, Consumer<Item.Options> callback) {
+        TodoListOptionsDialog.showOptionsDialog(context, new TodoList.Options(TodoList.DayOfWeek.SUNDAY, 9, 0, new SpannedString(""), false), (day, hour, minute) -> {
             SpannedString defaultText = launchEditDefaultTextActivity();
-            callback.accept(new TodoList.TodoListOptions(day, hour, minute, defaultText, false));
+            callback.accept(new TodoList.Options(day, hour, minute, defaultText, false));
         });
     }
 
-    private static void showOptionsDialog(Context context, TodoList.TodoListOptions initialOptions, Callback callback) {
+    private static void showOptionsDialog(Context context, TodoList.Options initialOptions, Callback callback) {
         View view = LayoutInflater.from(context).inflate(R.layout.todo_list_options_dialog, null);
         ArrayList<String> dayNames = new ArrayList<>();
         for(TodoList.DayOfWeek day : TodoList.DayOfWeek.values())

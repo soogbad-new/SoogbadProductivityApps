@@ -11,7 +11,7 @@ import com.soogbad.sharedmodule.core.Utility;
 
 public class EventListActivity extends ItemListActivity {
 
-    private ItemsManager<Event, Event.EventOptions> itemsManager;
+    private ItemsManager<Event, Event.Options> itemsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,7 @@ public class EventListActivity extends ItemListActivity {
 
     public void onAddButtonClick(View view) {
         Utility.getAppUtility(this).launchCreateItemOptionsDialog(this, options -> {
-            String uuid = itemsManager.createItem((Event.EventOptions)options);
+            String uuid = itemsManager.createItem((Event.Options)options);
             createItem(uuid);
         });
     }

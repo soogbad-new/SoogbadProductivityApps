@@ -11,12 +11,12 @@ import com.soogbad.sharedmodule.ui.ItemActivity;
 import java.util.Comparator;
 import java.util.function.Consumer;
 
-public class SoogbadTodoApplication extends ItemApplication<TodoList, TodoList.TodoListOptions> {
+public class SoogbadTodoApplication extends ItemApplication<TodoList, TodoList.Options> {
 
     @Override
     public void onCreate() {
         super.onCreate();
-        itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), TodoList::create, TodoList.TodoListOptions::fromJson);
+        itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), TodoList::create, TodoList.Options::fromJson);
         itemsManager.loadItems();
         itemsManager.getItems().sort(Comparator.comparing((TodoList item) -> item.Options.Day).thenComparingInt(item -> item.Options.Hour).thenComparingInt(item -> item.Options.Minute));
     }
@@ -29,7 +29,7 @@ public class SoogbadTodoApplication extends ItemApplication<TodoList, TodoList.T
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return TodoListActivity.class; }
             @Override public boolean hasConfigurableOptions() { return true; }
             @Override public void launchEditItemOptionsDialog(Context context, Item<?> item) { TodoListOptionsDialog.launchEditItemOptionsDialog(context, item); }
-            @Override public void launchCreateItemOptionsDialog(Context context, Consumer<Item.ItemOptions> callback) { TodoListOptionsDialog.launchCreateItemOptionsDialog(context, callback); }
+            @Override public void launchCreateItemOptionsDialog(Context context, Consumer<Item.Options> callback) { TodoListOptionsDialog.launchCreateItemOptionsDialog(context, callback); }
 
         };
     }
