@@ -1,6 +1,5 @@
 package com.soogbad.sharedmodule.core;
 
-import android.text.Spanned;
 import android.text.SpannedString;
 
 import com.soogbad.sharedmodule.richtext.RichTextSerializer;
@@ -43,7 +42,7 @@ public class StorageManager {
         return uuids;
     }
 
-    public void saveContent(String uuid, Spanned spannedText) {
+    public void saveContent(String uuid, SpannedString spannedText) {
         String json = RichTextSerializer.serialize(spannedText);
         try { Files.write(directory.resolve(uuid + ".content.json"), json.getBytes(StandardCharsets.UTF_16)); }
         catch(IOException e) { throw new RuntimeException(e); }

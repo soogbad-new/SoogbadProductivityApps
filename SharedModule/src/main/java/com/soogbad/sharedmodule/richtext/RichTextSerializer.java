@@ -23,7 +23,7 @@ import java.util.List;
 @SuppressWarnings("IfCanBeSwitch")
 public class RichTextSerializer {
 
-    public static String serialize(Spanned spanned) {
+    public static String serialize(SpannedString spanned) {
         try {
             JSONObject document = new JSONObject();
             document.put("text", spanned.toString());
@@ -40,7 +40,7 @@ public class RichTextSerializer {
         } catch(JSONException e) { throw new RuntimeException(e); }
     }
 
-    private static JSONArray serializeSpans(Spanned spanned) throws JSONException {
+    private static JSONArray serializeSpans(SpannedString spanned) throws JSONException {
         JSONArray array = new JSONArray();
         for(Object span : spanned.getSpans(0, spanned.length(), Object.class)) {
             JSONObject spanJson = serializeSpan(spanned, span);
@@ -60,7 +60,7 @@ public class RichTextSerializer {
         return new SpannedString(spannableString);
     }
 
-    private static JSONObject serializeSpan(Spanned spanned, Object span) throws JSONException {
+    private static JSONObject serializeSpan(SpannedString spanned, Object span) throws JSONException {
         int start = spanned.getSpanStart(span); int end = spanned.getSpanEnd(span); int flags = spanned.getSpanFlags(span);
         JSONObject spanJson = new JSONObject();
         spanJson.put("start", start); spanJson.put("end", end); spanJson.put("flags", flags);
