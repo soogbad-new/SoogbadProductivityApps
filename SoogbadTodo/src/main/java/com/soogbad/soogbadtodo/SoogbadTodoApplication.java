@@ -16,7 +16,7 @@ public class SoogbadTodoApplication extends ItemApplication<TodoList, TodoList.O
     @Override
     public void onCreate() {
         super.onCreate();
-        itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), TodoList::create, TodoList.Options::fromJson);
+        itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), TodoList::create, TodoList::parseOptionsFromJson);
         itemsManager.loadItems();
         itemsManager.getItems().sort(Comparator.comparing((TodoList item) -> item.Options.Day).thenComparingInt(item -> item.Options.Hour).thenComparingInt(item -> item.Options.Minute));
     }

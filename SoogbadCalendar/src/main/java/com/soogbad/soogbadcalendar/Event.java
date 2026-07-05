@@ -34,13 +34,18 @@ public class Event extends Item<Event.Options> {
             } catch(JSONException e) { throw new RuntimeException(e); }
         }
 
-        public static Options fromJson(JSONObject json) {
-            try {
-                Date time = new Date(json.getLong("time"));
-                Schedule repeatSchedule = Schedule.valueOf(json.getString("repeatSchedule"));
-                return new Options(time, repeatSchedule);
-            } catch(JSONException e) { throw new RuntimeException(e); }
-        }
+    }
+
+    public static Options parseOptionsFromJson(JSONObject json) {
+        try {
+            Date time = new Date(json.getLong("time"));
+            Schedule repeatSchedule = Schedule.valueOf(json.getString("repeatSchedule"));
+            return new Options(time, repeatSchedule);
+        } catch(JSONException e) { throw new RuntimeException(e); }
+    }
+
+    public static Options getDefaultOptions() {
+        return new Options(new Date(), Schedule.NONE);
     }
 
     public enum Schedule {

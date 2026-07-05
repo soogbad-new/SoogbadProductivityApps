@@ -21,14 +21,14 @@ public class TodoListOptionsDialog {
 
     public static void launchEditItemOptionsDialog(Context context, Item<?> item) {
         TodoList todoList = (TodoList)item;
-        TodoListOptionsDialog.showOptionsDialog(context, todoList.Options, (day, hour, minute, skipNextRun) -> {
+        showOptionsDialog(context, todoList.Options, (day, hour, minute, skipNextRun) -> {
             todoList.Options.Day = day; todoList.Options.Hour = hour; todoList.Options.Minute = minute; todoList.Options.SkipNextRun = skipNextRun;
             todoList.Options.DefaultText = launchEditDefaultTextActivity();
             Utility.getItemsManager(context).saveItemMetadata(todoList.UUID, todoList.Title, todoList.Options);
         });
     }
     public static void launchCreateItemOptionsDialog(Context context, Consumer<Item.Options> callback) {
-        TodoListOptionsDialog.showOptionsDialog(context, new TodoList.Options(TodoList.DayOfWeek.SUNDAY, 9, 0, new SpannedString(""), false), (day, hour, minute, skipNextRun) -> {
+        showOptionsDialog(context, TodoList.getDefaultOptions(), (day, hour, minute, skipNextRun) -> {
             SpannedString defaultText = launchEditDefaultTextActivity();
             callback.accept(new TodoList.Options(day, hour, minute, defaultText, skipNextRun));
         });

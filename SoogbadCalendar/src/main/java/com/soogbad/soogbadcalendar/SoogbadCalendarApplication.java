@@ -15,7 +15,7 @@ public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Opt
     @Override
     public void onCreate() {
         super.onCreate();
-        itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Event::create, Event.Options::fromJson);
+        itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Event::create, Event::parseOptionsFromJson);
         itemsManager.loadItems();
     }
 

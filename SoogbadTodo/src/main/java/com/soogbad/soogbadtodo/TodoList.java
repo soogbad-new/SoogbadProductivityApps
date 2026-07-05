@@ -42,17 +42,22 @@ public class TodoList extends Item<TodoList.Options> {
                 return json;
             } catch(JSONException e) { throw new RuntimeException(e); }
         }
+        
+    }
 
-        public static Options fromJson(JSONObject json) {
-            try {
-                DayOfWeek day = DayOfWeek.values()[json.getInt("dayOfWeek")];
-                int hour = json.getInt("hour");
-                int minute = json.getInt("minute");
-                boolean skipNextRun = json.getBoolean("skipNextRun");
-                SpannedString defaultText = RichTextSerializer.deserialize(json.getJSONObject("defaultText").toString());
-                return new Options(day, hour, minute, defaultText, skipNextRun);
-            } catch(JSONException e) { throw new RuntimeException(e); }
-        }
+    public static Options parseOptionsFromJson(JSONObject json) {
+        try {
+            DayOfWeek day = DayOfWeek.values()[json.getInt("dayOfWeek")];
+            int hour = json.getInt("hour");
+            int minute = json.getInt("minute");
+            boolean skipNextRun = json.getBoolean("skipNextRun");
+            SpannedString defaultText = RichTextSerializer.deserialize(json.getJSONObject("defaultText").toString());
+            return new Options(day, hour, minute, defaultText, skipNextRun);
+        } catch(JSONException e) { throw new RuntimeException(e); }
+    }
+
+    public static Options getDefaultOptions() {
+        return new Options(DayOfWeek.MONDAY, 9, 0, new SpannedString(""), false);
     }
 
     public enum DayOfWeek {

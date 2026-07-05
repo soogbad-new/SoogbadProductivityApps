@@ -32,7 +32,7 @@ public class NoteListActivity extends ItemListActivity {
     }
 
     public void onAddButtonClick(View view) {
-        String uuid = itemsManager.createItem(new Note.Options(System.currentTimeMillis()));
+        String uuid = itemsManager.createItem(Note.getDefaultOptions());
         createItem(uuid);
     }
 

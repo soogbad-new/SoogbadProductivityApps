@@ -16,6 +16,7 @@ public class Note extends Item<Note.Options> {
     }
 
     public static class Options extends Item.Options {
+
         public long LastViewed;
 
         public Options(long lastViewed) { LastViewed = lastViewed; }
@@ -29,12 +30,17 @@ public class Note extends Item<Note.Options> {
             } catch(JSONException e) { throw new RuntimeException(e); }
         }
 
-        public static Options fromJson(JSONObject json) {
-            try {
-                long lastViewed = json.getLong("lastViewed");
-                return new Options(lastViewed);
-            } catch(JSONException e) { throw new RuntimeException(e); }
-        }
+    }
+
+    public static Options parseOptionsFromJson(JSONObject json) {
+        try {
+            long lastViewed = json.getLong("lastViewed");
+            return new Options(lastViewed);
+        } catch(JSONException e) { throw new RuntimeException(e); }
+    }
+
+    public static Options getDefaultOptions() {
+        return new Options(System.currentTimeMillis());
     }
 
 }
