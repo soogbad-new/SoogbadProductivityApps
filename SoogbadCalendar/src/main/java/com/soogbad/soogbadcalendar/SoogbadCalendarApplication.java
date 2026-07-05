@@ -26,7 +26,7 @@ public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Opt
             @Override public String getItemName() { return "Event"; }
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return EventActivity.class; }
             @Override public boolean hasConfigurableOptions() { return true; }
-            @Override public void launchEditItemOptionsDialog(Context context, Item<?> item) { }
+            @Override public void launchEditItemOptionsDialog(Context context, Item<?> item, Consumer<Item.Options> callback) { }
             @Override public void launchCreateItemOptionsDialog(Context context, Consumer<Item.Options> callback) { }
         };
     }

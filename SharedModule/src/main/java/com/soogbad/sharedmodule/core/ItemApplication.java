@@ -19,7 +19,7 @@ public abstract class ItemApplication<T extends Item<O>, O extends Item.Options>
         String getItemName();
         Class<? extends ItemActivity> getItemActivityClass();
         boolean hasConfigurableOptions();
-        void launchEditItemOptionsDialog(Context context, Item<?> item);
+        void launchEditItemOptionsDialog(Context context, Item<?> item, Consumer<Item.Options> callback);
         void launchCreateItemOptionsDialog(Context context, Consumer<Item.Options> callback);
     }
 

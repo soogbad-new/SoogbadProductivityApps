@@ -19,12 +19,12 @@ import java.util.function.Consumer;
 
 public class TodoListOptionsDialog {
 
-    public static void launchEditItemOptionsDialog(Context context, Item<?> item) {
+    public static void launchEditItemOptionsDialog(Context context, Item<?> item, Consumer<Item.Options> callback) {
         TodoList todoList = (TodoList)item;
         showOptionsDialog(context, todoList.Options, (day, hour, minute, skipNextRun) -> {
             todoList.Options.Day = day; todoList.Options.Hour = hour; todoList.Options.Minute = minute; todoList.Options.SkipNextRun = skipNextRun;
             todoList.Options.DefaultText = launchEditDefaultTextActivity();
-            Utility.getItemsManager(context).saveItemMetadata(todoList.UUID, todoList.Title, todoList.Options);
+            callback.accept(todoList.Options);
         });
     }
     public static void launchCreateItemOptionsDialog(Context context, Consumer<Item.Options> callback) {

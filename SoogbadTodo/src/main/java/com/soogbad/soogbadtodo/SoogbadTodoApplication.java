@@ -28,7 +28,7 @@ public class SoogbadTodoApplication extends ItemApplication<TodoList, TodoList.O
             @Override public String getItemName() { return "TodoList"; }
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return TodoListActivity.class; }
             @Override public boolean hasConfigurableOptions() { return true; }
-            @Override public void launchEditItemOptionsDialog(Context context, Item<?> item) { TodoListOptionsDialog.launchEditItemOptionsDialog(context, item); }
+            @Override public void launchEditItemOptionsDialog(Context context, Item<?> item, Consumer<Item.Options> callback) { TodoListOptionsDialog.launchEditItemOptionsDialog(context, item, callback); }
             @Override public void launchCreateItemOptionsDialog(Context context, Consumer<Item.Options> callback) { TodoListOptionsDialog.launchCreateItemOptionsDialog(context, callback); }
 
         };
