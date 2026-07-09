@@ -35,8 +35,7 @@ public class ItemLayout extends ConstraintLayout {
     public void init(ItemActionBar itemActionBar, ItemsManager<?, ?> itemsManager, Item<?> item, boolean readOnly) {
         this.itemActionBar = itemActionBar; this.itemsManager = itemsManager; this.item = item;
         itemActionBar.init(this, item, readOnly);
-        SpannedString content = itemsManager.getItemContent(item);
-        contentEditText.setIgnoreTextChanges(true); contentEditText.setText(content); contentEditText.setIgnoreTextChanges(false);
+        contentEditText.setTextSafely(itemsManager.getItemContent(item));
         contentEditText.setOnFocusChangeListener((view, hasFocus) -> { if(hasFocus) contentTouched = true; });
         if(readOnly) {
             contentEditText.setFocusable(false); contentEditText.setFocusableInTouchMode(false); contentEditText.setCursorVisible(false);

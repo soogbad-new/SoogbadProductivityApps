@@ -38,11 +38,9 @@ import java.util.HashSet;
 
 public class RichEditText extends AppCompatEditText {
 
-    private boolean ignoreTextChanges = false;
-    public void setIgnoreTextChanges(boolean ignoreTextChanges) { this.ignoreTextChanges = ignoreTextChanges; }
     private final HashSet<RichCharacterStyle<?>> activeCharacterStyles = new HashSet<>();
     private final HashSet<RichParagraphStyle<?>> activeParagraphStyles = new HashSet<>();
-    private boolean textChanging;
+    private boolean ignoreTextChanges = false, textChanging = false;
     private int changeStart, changeCount;
 
     public RichEditText(Context context, AttributeSet attrs) {
@@ -101,6 +99,9 @@ public class RichEditText extends AppCompatEditText {
         updateCurrentActiveParagraphStyles();
     }
 
+    public void setTextSafely(SpannedString text) {
+        ignoreTextChanges = true; setText(text); ignoreTextChanges = false;
+    }
     @SuppressWarnings("FieldCanBeLocal")
     private final TextWatcher textChangedListener = new TextWatcher() {
         @Override
