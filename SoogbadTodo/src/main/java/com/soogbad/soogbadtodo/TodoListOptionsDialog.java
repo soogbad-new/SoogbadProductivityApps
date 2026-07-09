@@ -1,7 +1,6 @@
 package com.soogbad.soogbadtodo;
 
 import android.content.Intent;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.text.SpannedString;
@@ -67,11 +66,9 @@ public class TodoListOptionsDialog {
     }
 
     private static void launchEditDefaultTextActivity(Context context, SpannedString initialDefaultText, Consumer<SpannedString> onResult) {
-        ActivityResultLauncher<Intent> launcher = ((ComponentActivity)context).registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if(result.getResultCode() == Activity.RESULT_OK)
-                onResult.accept(RichTextSerializer.deserialize(result.getData().getStringExtra("default_text")));
-        });
-        launcher.launch(new Intent(context, EditDefaultTextActivity.class).putExtra("default_text", RichTextSerializer.serialize(initialDefaultText)));
+        ActivityResultLauncher<Intent> launcher = ((ComponentActivity)context).registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->
+                onResult.accept(RichTextSerializer.deserialize(result.getData().getStringExtra("default_text"))));
+        launcher.launch(new Intent(context, EditDefaultTextActivity.class).putExtra("initial_default_text", RichTextSerializer.serialize(initialDefaultText)));
     }
 
 }

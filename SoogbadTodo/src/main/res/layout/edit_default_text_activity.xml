@@ -17,18 +17,14 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:theme="@style/AppTheme">
-
-            <com.soogbad.sharedmodule.ui.ItemActionBar
-                android:id="@id/itemActionBar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </com.google.android.material.appbar.MaterialToolbar>
+            android:theme="@style/AppTheme"
+            app:titleTextColor="@color/white"
+            app:titleTextAppearance="@style/ToolbarTitle"
+            app:title="Edit Default Text" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.soogbad.sharedmodule.ui.ItemLayout
-        android:id="@id/itemLayout"
+        android:id="@+id/itemLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
