@@ -22,14 +22,14 @@ public class TodoList extends Item<TodoList.Options> implements Item.Schedulable
 
     public static class Options extends Item.Options {
 
-        public Options(DayOfWeek day, int hour, int minute, SpannedString defaultText, boolean skipNextRun) {
-            Day = day; Hour = hour; Minute = minute; DefaultText = defaultText; SkipNextRun = skipNextRun;
+        public Options(DayOfWeek day, int hour, int minute, SpannedString defaultContent, boolean skipNextRun) {
+            Day = day; Hour = hour; Minute = minute; DefaultContent = defaultContent; SkipNextRun = skipNextRun;
         }
 
         public DayOfWeek Day;
         public int Hour;
         public int Minute;
-        public SpannedString DefaultText;
+        public SpannedString DefaultContent;
         public boolean SkipNextRun;
 
         @Override
@@ -40,7 +40,7 @@ public class TodoList extends Item<TodoList.Options> implements Item.Schedulable
                 json.put("hour", Hour);
                 json.put("minute", Minute);
                 json.put("skipNextRun", SkipNextRun);
-                json.put("defaultText", new JSONObject(RichTextSerializer.serialize(DefaultText)));
+                json.put("defaultContent", new JSONObject(RichTextSerializer.serialize(DefaultContent)));
                 return json;
             } catch(JSONException e) { throw new RuntimeException(e); }
         }
@@ -53,8 +53,8 @@ public class TodoList extends Item<TodoList.Options> implements Item.Schedulable
             int hour = json.getInt("hour");
             int minute = json.getInt("minute");
             boolean skipNextRun = json.getBoolean("skipNextRun");
-            SpannedString defaultText = RichTextSerializer.deserialize(json.getJSONObject("defaultText").toString());
-            return new Options(day, hour, minute, defaultText, skipNextRun);
+            SpannedString defaultContent = RichTextSerializer.deserialize(json.getJSONObject("defaultContent").toString());
+            return new Options(day, hour, minute, defaultContent, skipNextRun);
         } catch(JSONException e) { throw new RuntimeException(e); }
     }
 

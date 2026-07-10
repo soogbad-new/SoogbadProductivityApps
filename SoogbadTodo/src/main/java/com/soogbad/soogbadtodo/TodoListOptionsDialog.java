@@ -36,8 +36,8 @@ public class TodoListOptionsDialog {
         TodoList todoList = (TodoList)item;
         showOptionsDialog(context, todoList.Options, (day, hour, minute, skipNextRun) -> {
             todoList.Options.Day = day; todoList.Options.Hour = hour; todoList.Options.Minute = minute; todoList.Options.SkipNextRun = skipNextRun;
-            launchEditDefaultTextActivity(context, todoList.Options.DefaultText, defaultText -> {
-                todoList.Options.DefaultText = defaultText;
+            launchEditDefaultContentActivity(context, todoList.Options.DefaultContent, defaultContent -> {
+                todoList.Options.DefaultContent = defaultContent;
                 callback.accept(todoList.Options);
                 Utility.getAppUtility(context).getItemScheduler().scheduleItem(todoList);
             });
@@ -46,8 +46,8 @@ public class TodoListOptionsDialog {
     @SuppressLint("ScheduleExactAlarm")
     public static void launchCreateItemOptionsDialog(Context context, Function<Item.Options, String> callback) {
         showOptionsDialog(context, TodoList.getDefaultOptions(), (day, hour, minute, skipNextRun) ->
-            launchEditDefaultTextActivity(context, new SpannedString(""), defaultText -> {
-                String uuid = callback.apply(new TodoList.Options(day, hour, minute, defaultText, skipNextRun));
+            launchEditDefaultContentActivity(context, new SpannedString(""), defaultContent -> {
+                String uuid = callback.apply(new TodoList.Options(day, hour, minute, defaultContent, skipNextRun));
                 Utility.getAppUtility(context).getItemScheduler().scheduleItem((TodoList)Utility.getItemsManager(context).getItem(uuid));
             })
         );
@@ -72,12 +72,12 @@ public class TodoListOptionsDialog {
                 .setNegativeButton("Cancel", null).show();
     }
 
-    private static void launchEditDefaultTextActivity(Context context, SpannedString initialDefaultText, Consumer<SpannedString> onResult) {
+    private static void launchEditDefaultContentActivity(Context context, SpannedString initialDefaultContent, Consumer<SpannedString> onResult) {
         ActivityResultLauncher<Intent> launcher = ((ComponentActivity)context).registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if(result.getData() != null)
                 onResult.accept(RichTextSerializer.deserialize(result.getData().getStringExtra("default_text")));
         });
-        launcher.launch(new Intent(context, EditDefaultTextActivity.class).putExtra("initial_default_text", RichTextSerializer.serialize(initialDefaultText)));
+        launcher.launch(new Intent(context, EditDefaultContentActivity.class).putExtra("initial_default_text", RichTextSerializer.serialize(initialDefaultContent)));
     }
 
 }

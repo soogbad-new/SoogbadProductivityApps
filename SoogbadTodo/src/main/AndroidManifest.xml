@@ -24,7 +24,7 @@
         </activity>
 
         <activity android:name=".TodoListActivity" android:exported="true" />
-        <activity android:name=".EditDefaultTextActivity" android:exported="false" />
+        <activity android:name=".EditDefaultContentActivity" android:exported="false" />
         <activity android:name="com.soogbad.sharedmodule.ui.RecycleBinActivity" android:exported="false" />
 
         <receiver android:name=".TodoAlarmReceiver" android:exported="false" />

@@ -14,7 +14,7 @@ import com.soogbad.sharedmodule.richtext.RichTextSerializer;
 import com.soogbad.sharedmodule.ui.ItemLayout;
 import com.soogbad.sharedmodule.core.Utility;
 
-public class EditDefaultTextActivity extends AppCompatActivity {
+public class EditDefaultContentActivity extends AppCompatActivity {
 
     private ItemLayout itemLayout;
 
@@ -24,8 +24,8 @@ public class EditDefaultTextActivity extends AppCompatActivity {
         Utility.setWindowProperties(this, R.layout.edit_default_text_activity, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
         itemLayout = findViewById(R.id.itemLayout);
-        SpannedString initialDefaultText = RichTextSerializer.deserialize(getIntent().getStringExtra("initial_default_text"));
-        itemLayout.getContentEditText().setTextSafely(initialDefaultText);
+        SpannedString initialDefaultContent = RichTextSerializer.deserialize(getIntent().getStringExtra("initial_default_text"));
+        itemLayout.getContentEditText().setTextSafely(initialDefaultContent);
     }
 
     @Override

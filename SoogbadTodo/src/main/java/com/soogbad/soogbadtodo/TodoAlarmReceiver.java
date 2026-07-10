@@ -16,7 +16,7 @@ public class TodoAlarmReceiver extends ItemAlarmReceiver<TodoList> {
             itemsManager.saveItemMetadata(todoList.UUID, todoList.Title, todoList.Options);
         }
         else {
-            itemsManager.saveItemContent(todoList.UUID, todoList.Options.DefaultText);
+            itemsManager.saveItemContent(todoList.UUID, todoList.Options.DefaultContent);
             context.startActivity(new Intent(context, TodoListActivity.class).putExtra("item_uuid", todoList.UUID).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
         }        
     }
