@@ -1,6 +1,10 @@
 package com.soogbad.soogbadtodo;
 
+import android.app.AlarmManager;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.Settings;
 
 import com.soogbad.sharedmodule.core.Item;
 import com.soogbad.sharedmodule.core.ItemApplication;
@@ -25,6 +29,10 @@ public class SoogbadTodoApplication extends ItemApplication<TodoList, TodoList.O
         itemsManager.getItems().sort(Comparator.comparing((TodoList item) -> item.Options.Day).thenComparingInt(item -> item.Options.Hour).thenComparingInt(item -> item.Options.Minute));
         itemScheduler = new ItemScheduler(this, TodoAlarmReceiver.class);
         itemsManager.setItemScheduler(itemScheduler);
+        if(!getSystemService(AlarmManager.class).canScheduleExactAlarms())
+            startActivity(new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:" + getPackageName())));
+        if(!Settings.canDrawOverlays(this))
+            startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())));
         itemScheduler.scheduleAllItems();
     }
 

@@ -10,7 +10,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.soogbad.sharedmodule.richtext.RichEditText;
 import com.soogbad.sharedmodule.richtext.RichTextSerializer;
 import com.soogbad.sharedmodule.ui.ItemLayout;
 import com.soogbad.sharedmodule.core.Utility;

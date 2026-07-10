@@ -65,13 +65,13 @@ public class TodoList extends Item<TodoList.Options> implements Item.Schedulable
     @Override
     public Calendar getNextOccurrence() {
         Calendar now = Calendar.getInstance();
-        Calendar nextOccurence = (Calendar)now.clone();
-        nextOccurence.set(Calendar.DAY_OF_WEEK, Options.Day.calendarDay);
-        nextOccurence.set(Calendar.HOUR_OF_DAY, Options.Hour); nextOccurence.set(Calendar.MINUTE, Options.Minute);
-        nextOccurence.set(Calendar.SECOND, 0); nextOccurence.set(Calendar.MILLISECOND, 0);
-        if(!nextOccurence.after(now))
-            nextOccurence.add(Calendar.DAY_OF_YEAR, 7);
-        return nextOccurence;
+        Calendar nextOccurrence = (Calendar)now.clone();
+        nextOccurrence.set(Calendar.DAY_OF_WEEK, Options.Day.calendarDay);
+        nextOccurrence.set(Calendar.HOUR_OF_DAY, Options.Hour); nextOccurrence.set(Calendar.MINUTE, Options.Minute);
+        nextOccurrence.set(Calendar.SECOND, 0); nextOccurrence.set(Calendar.MILLISECOND, 0);
+        if(!nextOccurrence.after(now))
+            nextOccurrence.add(Calendar.DAY_OF_YEAR, 7);
+        return nextOccurrence;
     }
 
     public enum DayOfWeek {

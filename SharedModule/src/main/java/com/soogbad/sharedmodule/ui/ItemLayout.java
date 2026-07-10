@@ -1,7 +1,6 @@
 package com.soogbad.sharedmodule.ui;
 
 import android.content.Context;
-import android.text.SpannedString;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import androidx.constraintlayout.widget.ConstraintLayout;

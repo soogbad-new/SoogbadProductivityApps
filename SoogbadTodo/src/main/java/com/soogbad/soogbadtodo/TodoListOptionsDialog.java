@@ -1,5 +1,6 @@
 package com.soogbad.soogbadtodo;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -30,6 +31,7 @@ public class TodoListOptionsDialog {
         void onConfirm(TodoList.DayOfWeek day, int hour, int minute, boolean skipNextRun);
     }
 
+    @SuppressLint("ScheduleExactAlarm")
     public static void launchEditItemOptionsDialog(Context context, Item<?> item, Consumer<Item.Options> callback) {
         TodoList todoList = (TodoList)item;
         showOptionsDialog(context, todoList.Options, (day, hour, minute, skipNextRun) -> {
@@ -41,6 +43,7 @@ public class TodoListOptionsDialog {
             });
         });
     }
+    @SuppressLint("ScheduleExactAlarm")
     public static void launchCreateItemOptionsDialog(Context context, Function<Item.Options, String> callback) {
         showOptionsDialog(context, TodoList.getDefaultOptions(), (day, hour, minute, skipNextRun) ->
             launchEditDefaultTextActivity(context, new SpannedString(""), defaultText -> {
@@ -70,8 +73,10 @@ public class TodoListOptionsDialog {
     }
 
     private static void launchEditDefaultTextActivity(Context context, SpannedString initialDefaultText, Consumer<SpannedString> onResult) {
-        ActivityResultLauncher<Intent> launcher = ((ComponentActivity)context).registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->
-                onResult.accept(RichTextSerializer.deserialize(result.getData().getStringExtra("default_text"))));
+        ActivityResultLauncher<Intent> launcher = ((ComponentActivity)context).registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if(result.getData() != null)
+                onResult.accept(RichTextSerializer.deserialize(result.getData().getStringExtra("default_text")));
+        });
         launcher.launch(new Intent(context, EditDefaultTextActivity.class).putExtra("initial_default_text", RichTextSerializer.serialize(initialDefaultText)));
     }
 

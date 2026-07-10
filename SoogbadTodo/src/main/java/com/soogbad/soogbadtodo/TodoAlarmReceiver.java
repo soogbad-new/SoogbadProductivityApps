@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.soogbad.sharedmodule.scheduling.ItemAlarmReceiver;
-import com.soogbad.sharedmodule.scheduling.ItemScheduler;
 import com.soogbad.sharedmodule.core.ItemsManager;
 
 public class TodoAlarmReceiver extends ItemAlarmReceiver<TodoList> {
