@@ -1,7 +1,10 @@
 package com.soogbad.soogbadtodo;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 
 import androidx.core.view.ViewCompat;
@@ -22,6 +25,8 @@ public class TodoListListActivity extends ItemListActivity {
         Utility.setWindowProperties(this, R.layout.todo_list_list_activity, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
         itemsManager = ((SoogbadTodoApplication)getApplication()).getItemsManager();
+        if(!Settings.canDrawOverlays(this))
+            startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())));
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -37,6 +42,7 @@ public class TodoListListActivity extends ItemListActivity {
         Utility.getAppUtility(this).launchCreateItemOptionsDialog(this, options -> {
             String uuid = itemsManager.createItem((TodoList.Options)options);
             createItem(uuid);
+            return uuid;
         });
     }
 

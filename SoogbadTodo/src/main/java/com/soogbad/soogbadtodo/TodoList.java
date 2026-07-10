@@ -8,7 +8,9 @@ import android.text.SpannedString;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class TodoList extends Item<TodoList.Options> {
+import java.util.Calendar;
+
+public class TodoList extends Item<TodoList.Options> implements Item.SchedulableItem {
 
     public TodoList(String uuid, String title, Options options) {
         UUID = uuid; Title = title; Options = options;
@@ -60,8 +62,24 @@ public class TodoList extends Item<TodoList.Options> {
         return new Options(DayOfWeek.MONDAY, 9, 0, new SpannedString(""), false);
     }
 
+    @Override
+    public Calendar getNextOccurrence() {
+        Calendar now = Calendar.getInstance();
+        Calendar nextOccurence = (Calendar)now.clone();
+        nextOccurence.set(Calendar.DAY_OF_WEEK, Options.Day.calendarDay);
+        nextOccurence.set(Calendar.HOUR_OF_DAY, Options.Hour); nextOccurence.set(Calendar.MINUTE, Options.Minute);
+        nextOccurence.set(Calendar.SECOND, 0); nextOccurence.set(Calendar.MILLISECOND, 0);
+        if(!nextOccurence.after(now))
+            nextOccurence.add(Calendar.DAY_OF_YEAR, 7);
+        return nextOccurence;
+    }
+
     public enum DayOfWeek {
-        SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY;
+        SUNDAY(Calendar.SUNDAY), MONDAY(Calendar.MONDAY), TUESDAY(Calendar.TUESDAY), WEDNESDAY(Calendar.WEDNESDAY), THURSDAY(Calendar.THURSDAY), FRIDAY(Calendar.FRIDAY), SATURDAY(Calendar.SATURDAY);
+
+        DayOfWeek(int calendarDay) { this.calendarDay = calendarDay; }
+
+        public final int calendarDay;
 
         public String displayName() {
             String name = name();

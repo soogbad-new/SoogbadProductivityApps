@@ -5,11 +5,13 @@ import android.content.Context;
 import com.soogbad.sharedmodule.core.Item;
 import com.soogbad.sharedmodule.ui.ItemActivity;
 import com.soogbad.sharedmodule.core.ItemApplication;
+import com.soogbad.sharedmodule.scheduling.ItemScheduler;
 import com.soogbad.sharedmodule.core.ItemsManager;
 import com.soogbad.sharedmodule.core.StorageManager;
 import com.soogbad.sharedmodule.richtext.RichCharacterStyle;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class SoogbadNotesApplication extends ItemApplication<Note, Note.Options> {
 
@@ -30,7 +32,8 @@ public class SoogbadNotesApplication extends ItemApplication<Note, Note.Options>
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return NoteActivity.class; }
             @Override public boolean hasConfigurableOptions() { return false; }
             @Override public void launchEditItemOptionsDialog(Context context, Item<?> item, Consumer<Item.Options> callback) { }
-            @Override public void launchCreateItemOptionsDialog(Context context, Consumer<Item.Options> callback) { }
+            @Override public void launchCreateItemOptionsDialog(Context context, Function<Item.Options, String> callback) { }
+            @Override public ItemScheduler getItemScheduler() { return null; }
         };
     }
 

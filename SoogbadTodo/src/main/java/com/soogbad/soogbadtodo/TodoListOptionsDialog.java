@@ -17,10 +17,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import com.soogbad.sharedmodule.core.Item;
+import com.soogbad.sharedmodule.core.Utility;
 import com.soogbad.sharedmodule.richtext.RichTextSerializer;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class TodoListOptionsDialog {
 
@@ -35,14 +37,16 @@ public class TodoListOptionsDialog {
             launchEditDefaultTextActivity(context, todoList.Options.DefaultText, defaultText -> {
                 todoList.Options.DefaultText = defaultText;
                 callback.accept(todoList.Options);
+                Utility.getAppUtility(context).getItemScheduler().scheduleItem(todoList);
             });
         });
     }
-    public static void launchCreateItemOptionsDialog(Context context, Consumer<Item.Options> callback) {
+    public static void launchCreateItemOptionsDialog(Context context, Function<Item.Options, String> callback) {
         showOptionsDialog(context, TodoList.getDefaultOptions(), (day, hour, minute, skipNextRun) ->
-            launchEditDefaultTextActivity(context, new SpannedString(""), defaultText ->
-                callback.accept(new TodoList.Options(day, hour, minute, defaultText, skipNextRun))
-            )
+            launchEditDefaultTextActivity(context, new SpannedString(""), defaultText -> {
+                String uuid = callback.apply(new TodoList.Options(day, hour, minute, defaultText, skipNextRun));
+                Utility.getAppUtility(context).getItemScheduler().scheduleItem((TodoList)Utility.getItemsManager(context).getItem(uuid));
+            })
         );
     }
 

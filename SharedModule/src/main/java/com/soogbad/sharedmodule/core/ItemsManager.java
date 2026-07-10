@@ -2,6 +2,8 @@ package com.soogbad.sharedmodule.core;
 
 import android.text.SpannedString;
 
+import com.soogbad.sharedmodule.scheduling.ItemScheduler;
+
 import java.util.ArrayList;
 
 import org.json.JSONException;
@@ -20,6 +22,8 @@ public class ItemsManager<T extends Item<O>, O extends Item.Options> {
     private final StorageManager storageManager;
     private final Item.Creator<T, O> itemCreator;
     private final Item.OptionsParser<O> optionsParser;
+    private ItemScheduler itemScheduler;
+    public void setItemScheduler(ItemScheduler itemScheduler) { this.itemScheduler = itemScheduler; }
 
     public ItemsManager(StorageManager storageManager, Item.Creator<T, O> itemCreator, Item.OptionsParser<O> optionsParser) {
         this.storageManager = storageManager; this.itemCreator = itemCreator; this.optionsParser = optionsParser;
@@ -61,6 +65,7 @@ public class ItemsManager<T extends Item<O>, O extends Item.Options> {
     }
 
     public void moveItemToRecycleBin(String uuid) {
+        if(itemScheduler != null) itemScheduler.cancelItem(uuid);
         T item = getItem(uuid);
         items.removeIf(i -> i.UUID.equals(uuid));
         storageManager.moveToRecycleBin(uuid);

@@ -2,6 +2,8 @@ package com.soogbad.sharedmodule.core;
 
 import org.json.JSONObject;
 
+import java.util.Calendar;
+
 public abstract class Item<O extends Item.Options> {
 
     public String UUID;
@@ -22,6 +24,10 @@ public abstract class Item<O extends Item.Options> {
 
     public static class Options {
         public JSONObject toJson() { return new JSONObject(); }
+    }
+
+    public interface SchedulableItem {
+        Calendar getNextOccurrence();
     }
 
 }

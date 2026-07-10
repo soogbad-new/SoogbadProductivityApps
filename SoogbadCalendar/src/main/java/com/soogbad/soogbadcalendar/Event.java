@@ -6,8 +6,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.Calendar;
 
-public class Event extends Item<Event.Options> {
+public class Event extends Item<Event.Options> implements Item.SchedulableItem {
 
     public Event(String uuid, String title, Options options) {
         UUID = uuid; Title = title; Options = options;
@@ -46,6 +47,11 @@ public class Event extends Item<Event.Options> {
 
     public static Options getDefaultOptions() {
         return new Options(new Date(), Schedule.NONE);
+    }
+
+    @Override
+    public Calendar getNextOccurrence() {
+        return null;
     }
 
     public enum Schedule {

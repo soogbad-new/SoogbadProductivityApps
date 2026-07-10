@@ -7,8 +7,9 @@ import com.soogbad.sharedmodule.ui.ItemActivity;
 import com.soogbad.sharedmodule.core.ItemApplication;
 import com.soogbad.sharedmodule.core.ItemsManager;
 import com.soogbad.sharedmodule.core.StorageManager;
-
+import com.soogbad.sharedmodule.scheduling.ItemScheduler;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Options> {
 
@@ -27,7 +28,8 @@ public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Opt
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return EventActivity.class; }
             @Override public boolean hasConfigurableOptions() { return true; }
             @Override public void launchEditItemOptionsDialog(Context context, Item<?> item, Consumer<Item.Options> callback) { }
-            @Override public void launchCreateItemOptionsDialog(Context context, Consumer<Item.Options> callback) { }
+            @Override public void launchCreateItemOptionsDialog(Context context, Function<Item.Options, String> callback) { }
+            @Override public ItemScheduler getItemScheduler() { return null; }
         };
     }
 

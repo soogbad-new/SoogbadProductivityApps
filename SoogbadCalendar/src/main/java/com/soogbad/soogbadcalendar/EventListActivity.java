@@ -25,6 +25,7 @@ public class EventListActivity extends ItemListActivity {
         Utility.getAppUtility(this).launchCreateItemOptionsDialog(this, options -> {
             String uuid = itemsManager.createItem((Event.Options)options);
             createItem(uuid);
+            return uuid;
         });
     }
 
