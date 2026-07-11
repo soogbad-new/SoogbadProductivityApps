@@ -79,9 +79,9 @@ public class TodoListOptionsDialog {
         ActivityResultLauncher<Intent> launcher = registry.register(key, new ActivityResultContracts.StartActivityForResult(), result -> {
             registry.unregister(key);
             if(result.getData() != null)
-                onResult.accept(RichTextSerializer.deserialize(result.getData().getStringExtra("default_text")));
+                onResult.accept(RichTextSerializer.deserialize(result.getData().getStringExtra("default_content")));
         });
-        launcher.launch(new Intent(context, EditDefaultContentActivity.class).putExtra("initial_default_text", RichTextSerializer.serialize(initialDefaultContent)));
+        launcher.launch(new Intent(context, EditDefaultContentActivity.class).putExtra("initial_default_content", RichTextSerializer.serialize(initialDefaultContent)));
     }
 
 }

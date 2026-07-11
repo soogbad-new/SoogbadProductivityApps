@@ -21,10 +21,10 @@ public class EditDefaultContentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utility.setWindowProperties(this, R.layout.edit_default_text_activity, R.id.toolbar);
+        Utility.setWindowProperties(this, R.layout.edit_default_content_activity, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
         itemLayout = findViewById(R.id.itemLayout);
-        SpannedString initialDefaultContent = RichTextSerializer.deserialize(getIntent().getStringExtra("initial_default_text"));
+        SpannedString initialDefaultContent = RichTextSerializer.deserialize(getIntent().getStringExtra("initial_default_content"));
         itemLayout.getContentEditText().setTextSafely(initialDefaultContent);
     }
 
@@ -32,7 +32,7 @@ public class EditDefaultContentActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Intent result = new Intent();
-        result.putExtra("default_text", RichTextSerializer.serialize(itemLayout.getContentEditText().getTextIncludingHiddenContent()));
+        result.putExtra("default_content", RichTextSerializer.serialize(itemLayout.getContentEditText().getTextIncludingHiddenContent()));
         setResult(RESULT_OK, result);
     }
 
