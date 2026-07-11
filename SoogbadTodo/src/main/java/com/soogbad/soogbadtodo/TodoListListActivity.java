@@ -36,6 +36,7 @@ public class TodoListListActivity extends ItemListActivity {
     public void onAddButtonClick(View view) {
         Utility.getAppUtility(this).launchCreateItemOptionsDialog(this, options -> {
             String uuid = itemsManager.createItem((TodoList.Options)options);
+            itemsManager.saveItemContent(uuid, ((TodoList.Options)options).DefaultContent);
             createItem(uuid);
             return uuid;
         });

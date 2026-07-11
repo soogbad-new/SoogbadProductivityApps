@@ -76,8 +76,7 @@ public class TodoListOptionsDialog {
     private static ActivityResultLauncher<Intent> launcher = null;
     private static void launchEditDefaultContentActivity(Context context, SpannedString initialDefaultContent, Consumer<SpannedString> onResult) {
         ActivityResultRegistry registry = ((ComponentActivity)Utility.getActivity(context)).getActivityResultRegistry();
-        String key = "edit_default_content";
-        launcher = registry.register(key, new ActivityResultContracts.StartActivityForResult(), result -> {
+        launcher = registry.register("edit_default_content", new ActivityResultContracts.StartActivityForResult(), result -> {
             launcher.unregister(); launcher = null;
             if(result.getData() != null)
                 onResult.accept(RichTextSerializer.deserialize(result.getData().getStringExtra("default_content")));
