@@ -12,6 +12,7 @@ import android.widget.TimePicker;
 
 import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.ActivityResultRegistry;
 import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -73,7 +74,10 @@ public class TodoListOptionsDialog {
     }
 
     private static void launchEditDefaultContentActivity(Context context, SpannedString initialDefaultContent, Consumer<SpannedString> onResult) {
-        ActivityResultLauncher<Intent> launcher = ((ComponentActivity)context).registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        ActivityResultRegistry registry = ((ComponentActivity)Utility.getActivity(context)).getActivityResultRegistry();
+        String key = "edit_default_content";
+        ActivityResultLauncher<Intent> launcher = registry.register(key, new ActivityResultContracts.StartActivityForResult(), result -> {
+            registry.unregister(key);
             if(result.getData() != null)
                 onResult.accept(RichTextSerializer.deserialize(result.getData().getStringExtra("default_text")));
         });
