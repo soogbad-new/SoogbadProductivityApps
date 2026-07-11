@@ -73,11 +73,12 @@ public class TodoListOptionsDialog {
                 .setNegativeButton("Cancel", null).show();
     }
 
+    private static ActivityResultLauncher<Intent> launcher = null;
     private static void launchEditDefaultContentActivity(Context context, SpannedString initialDefaultContent, Consumer<SpannedString> onResult) {
         ActivityResultRegistry registry = ((ComponentActivity)Utility.getActivity(context)).getActivityResultRegistry();
         String key = "edit_default_content";
-        ActivityResultLauncher<Intent> launcher = registry.register(key, new ActivityResultContracts.StartActivityForResult(), result -> {
-            registry.unregister(key);
+        launcher = registry.register(key, new ActivityResultContracts.StartActivityForResult(), result -> {
+            launcher.unregister(); launcher = null;
             if(result.getData() != null)
                 onResult.accept(RichTextSerializer.deserialize(result.getData().getStringExtra("default_content")));
         });
