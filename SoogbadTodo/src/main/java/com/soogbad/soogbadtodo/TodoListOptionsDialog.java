@@ -2,7 +2,6 @@ package com.soogbad.soogbadtodo;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.text.SpannedString;
 import android.view.LayoutInflater;
@@ -15,6 +14,7 @@ import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import com.soogbad.sharedmodule.core.Item;
@@ -66,7 +66,7 @@ public class TodoListOptionsDialog {
         timePicker.setHour(initialOptions.Hour); timePicker.setMinute(initialOptions.Minute);
         SwitchMaterial skipNextRunSwitch = view.findViewById(R.id.skipNextRunSwitch);
         skipNextRunSwitch.setChecked(initialOptions.SkipNextRun);
-        new AlertDialog.Builder(context).setTitle("Edit Options").setView(view)
+        new MaterialAlertDialogBuilder(context, com.soogbad.sharedmodule.R.style.OptionsDialogTheme).setTitle("Edit Options").setView(view)
                 .setPositiveButton("OK", (dialog, which) ->
                     callback.onConfirm(TodoList.DayOfWeek.values()[spinner.getSelectedItemPosition()], timePicker.getHour(), timePicker.getMinute(), skipNextRunSwitch.isChecked()))
                 .setNegativeButton("Cancel", null).show();

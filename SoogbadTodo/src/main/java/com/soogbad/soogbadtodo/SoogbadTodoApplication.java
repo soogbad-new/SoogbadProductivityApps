@@ -30,9 +30,9 @@ public class SoogbadTodoApplication extends ItemApplication<TodoList, TodoList.O
         itemScheduler = new ItemScheduler(this, TodoAlarmReceiver.class);
         itemsManager.setItemScheduler(itemScheduler);
         if(!getSystemService(AlarmManager.class).canScheduleExactAlarms())
-            startActivity(new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:" + getPackageName())));
+            startActivity(new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:" + getPackageName())).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         if(!Settings.canDrawOverlays(this))
-            startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())));
+            startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         itemScheduler.scheduleAllItems();
     }
 

@@ -59,7 +59,7 @@ public class TodoList extends Item<TodoList.Options> implements Item.Schedulable
     }
 
     public static Options getDefaultOptions() {
-        return new Options(DayOfWeek.MONDAY, 9, 0, new SpannedString(""), false);
+        return new Options(DayOfWeek.SUNDAY, 11, 0, new SpannedString(""), false);
     }
 
     @Override
