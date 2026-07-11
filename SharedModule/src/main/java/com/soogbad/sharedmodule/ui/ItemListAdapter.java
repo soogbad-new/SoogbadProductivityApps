@@ -55,6 +55,8 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
 
     private void showContextMenu(ContextMenu menu, ViewHolder itemHolder, Item<?> item) {
         new MenuInflater(itemHolder.itemView.getContext()).inflate(R.menu.item_menu, menu);
+        if(!Utility.getAppUtility(itemHolder.itemView.getContext()).hasConfigurableOptions())
+            menu.findItem(R.id.action_edit_options).setVisible(false);
         for(int i = 0; i < menu.size(); i++)
             menu.getItem(i).setOnMenuItemClickListener((menuItem) -> handleMenuItem(menuItem, itemHolder, item));
     }

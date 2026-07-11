@@ -55,9 +55,9 @@ public abstract class ItemActivity extends AppCompatActivity {
         if(previewMode)
             getMenuInflater().inflate(R.menu.recycle_bin_item_menu, menu);
         else {
+            getMenuInflater().inflate(R.menu.item_menu, menu);
             if(!Utility.getAppUtility(this).hasConfigurableOptions())
                 menu.findItem(R.id.action_edit_options).setVisible(false);
-            getMenuInflater().inflate(R.menu.item_menu, menu);
         }
         return true;
     }
