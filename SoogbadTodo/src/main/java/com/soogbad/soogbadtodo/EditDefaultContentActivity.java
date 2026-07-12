@@ -29,11 +29,11 @@ public class EditDefaultContentActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    public void finish() {
         Intent result = new Intent();
         result.putExtra("default_content", RichTextSerializer.serialize(itemLayout.getContentEditText().getTextIncludingHiddenContent()));
         setResult(RESULT_OK, result);
+        super.finish();
     }
 
     private WindowInsetsCompat onApplyWindowInsetsListener(View view, WindowInsetsCompat insets) {
