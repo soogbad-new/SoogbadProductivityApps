@@ -21,7 +21,7 @@ public class NoteActivity extends ItemActivity {
     @Override
     protected void onItemLoaded(Item<?> item) {
         ((Note)item).Options.LastViewed = System.currentTimeMillis();
-        Utility.getItemsManager(this).saveItemMetadata(item.UUID, item.Title, item.Options);
+        Utility.getItemsManager(this).saveItemOptions(item.UUID, item.Options, null);
     }
 
     @Override protected View getToolbar() { return findViewById(R.id.toolbar); }

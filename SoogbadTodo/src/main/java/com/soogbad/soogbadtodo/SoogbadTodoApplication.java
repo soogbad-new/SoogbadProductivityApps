@@ -15,7 +15,6 @@ import com.soogbad.sharedmodule.ui.ItemActivity;
 
 import java.util.Comparator;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class SoogbadTodoApplication extends ItemApplication<TodoList, TodoList.Options> {
 
@@ -43,8 +42,12 @@ public class SoogbadTodoApplication extends ItemApplication<TodoList, TodoList.O
             @Override public String getItemName() { return "TodoList"; }
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return TodoListActivity.class; }
             @Override public boolean hasConfigurableOptions() { return true; }
-            @Override public void launchEditItemOptionsDialog(Context context, Item<?> item, Consumer<Item.Options> callback) { TodoListOptionsDialog.launchEditItemOptionsDialog(context, item, callback); }
-            @Override public void launchCreateItemOptionsDialog(Context context, Function<Item.Options, String> callback) { TodoListOptionsDialog.launchCreateItemOptionsDialog(context, callback); }
+            @Override public void createItemOptionsDialog(Context context, Item.Options initialOptions, Consumer<Item.Options> callback) {
+                new TodoListOptionsDialog(context, (TodoList.Options)initialOptions, callback::accept).show();
+            }
+            @Override public void onItemOptionsChanged(Item<?> item) {
+                getItemScheduler().scheduleItem((TodoList)item);
+            }
             @Override public ItemScheduler getItemScheduler() { return itemScheduler; }
         };
     }

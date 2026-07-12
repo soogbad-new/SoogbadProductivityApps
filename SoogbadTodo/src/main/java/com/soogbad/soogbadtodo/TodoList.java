@@ -20,17 +20,18 @@ public class TodoList extends Item<TodoList.Options> implements Item.Schedulable
         return new TodoList(uuid, title, options);
     }
 
+    @SuppressWarnings("CanBeFinal")
     public static class Options extends Item.Options {
 
-        public Options(DayOfWeek day, int hour, int minute, SpannedString defaultContent, boolean skipNextRun) {
-            Day = day; Hour = hour; Minute = minute; DefaultContent = defaultContent; SkipNextRun = skipNextRun;
+        public Options(DayOfWeek day, int hour, int minute, boolean skipNextRun, SpannedString defaultContent) {
+            Day = day; Hour = hour; Minute = minute; SkipNextRun = skipNextRun; DefaultContent = defaultContent;
         }
 
         public DayOfWeek Day;
         public int Hour;
         public int Minute;
-        public SpannedString DefaultContent;
         public boolean SkipNextRun;
+        public SpannedString DefaultContent;
 
         @Override
         public JSONObject toJson() {
@@ -54,12 +55,12 @@ public class TodoList extends Item<TodoList.Options> implements Item.Schedulable
             int minute = json.getInt("minute");
             boolean skipNextRun = json.getBoolean("skipNextRun");
             SpannedString defaultContent = RichTextSerializer.deserialize(json.getJSONObject("defaultContent").toString());
-            return new Options(day, hour, minute, defaultContent, skipNextRun);
+            return new Options(day, hour, minute, skipNextRun, defaultContent);
         } catch(JSONException e) { throw new RuntimeException(e); }
     }
 
     public static Options getDefaultOptions() {
-        return new Options(DayOfWeek.SUNDAY, 11, 0, new SpannedString(""), false);
+        return new Options(DayOfWeek.SUNDAY, 11, 0, false, new SpannedString(""));
     }
 
     @Override

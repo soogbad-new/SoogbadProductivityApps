@@ -56,7 +56,7 @@ public class ItemLayout extends ConstraintLayout {
         item.Title = itemActionBar.getTitleEditText().getText().toString();
         if(item.Title.isEmpty()) item.Title = "Untitled";
         if(!item.Title.equals(oldTitle))
-            itemsManager.saveItemMetadata(item.UUID, item.Title, item.Options);
+            itemsManager.saveItemTitle(item.UUID, item.Title);
         if(contentTouched)
             itemsManager.saveItemContent(item.UUID, contentEditText.getTextIncludingHiddenContent());
         contentTouched = contentEditText.hasFocus();

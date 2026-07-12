@@ -18,6 +18,7 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
         return new Event(uuid, title, options);
     }
 
+    @SuppressWarnings("CanBeFinal")
     public static class Options extends Item.Options {
 
         public Options(Date time, Schedule repeatSchedule) { Time = time; RepeatSchedule = repeatSchedule; }

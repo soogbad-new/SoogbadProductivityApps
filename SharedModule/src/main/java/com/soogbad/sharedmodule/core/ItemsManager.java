@@ -5,6 +5,7 @@ import android.text.SpannedString;
 import com.soogbad.sharedmodule.scheduling.ItemScheduler;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,14 +55,23 @@ public class ItemsManager<T extends Item<O>, O extends Item.Options> {
     public SpannedString getItemContent(Item<?> item) { return storageManager.loadContent(item.UUID, item.DeletedAt > 0); }
 
     public void saveItemContent(String uuid, SpannedString content) { storageManager.saveContent(uuid, content); }
-    public void saveItemMetadata(String uuid, String title, Item.Options options) { storageManager.saveMetadata(uuid, title, options); }
+    public void saveItemTitle(String uuid, String title) { storageManager.saveMetadata(uuid, title, getItem(uuid).Options); }
+    public void saveItemOptions(String uuid, Item.Options options, Consumer<Item<?>> onItemOptionsChanged) {
+        Item<?> item = getItem(uuid);
+        if(onItemOptionsChanged != null)
+            onItemOptionsChanged.accept(item);
+        storageManager.saveMetadata(uuid, item.Title, options);
+    }
 
-    public String createItem(O defaultOptions) {
+    public T createItem(O defaultOptions, Consumer<T> onItemOptionsChanged) {
         String uuid = Utility.generateUniqueUUID(items);
-        items.add(itemCreator.create(uuid, "", defaultOptions));
         storageManager.saveContent(uuid, new SpannedString(""));
         storageManager.saveMetadata(uuid, "", defaultOptions);
-        return uuid;
+        T item = itemCreator.create(uuid, "", defaultOptions);
+        items.add(item);
+        if(onItemOptionsChanged != null)
+            onItemOptionsChanged.accept(item);
+        return item;
     }
 
     public void moveItemToRecycleBin(String uuid) {

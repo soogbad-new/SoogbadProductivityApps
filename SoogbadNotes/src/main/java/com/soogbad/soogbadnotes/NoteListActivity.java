@@ -32,8 +32,10 @@ public class NoteListActivity extends ItemListActivity {
     }
 
     public void onAddButtonClick(View view) {
-        String uuid = itemsManager.createItem(Note.getDefaultOptions());
-        createItem(uuid);
+        Note note = itemsManager.createItem(Note.getDefaultOptions(), Utility.getAppUtility(this)::onItemOptionsChanged);
+        if(itemList.getAdapter() != null)
+            itemList.getAdapter().notifyItemInserted(0);
+        launchItem(note.UUID);
     }
 
     @Override protected View getToolbar() { return findViewById(R.id.toolbar); }

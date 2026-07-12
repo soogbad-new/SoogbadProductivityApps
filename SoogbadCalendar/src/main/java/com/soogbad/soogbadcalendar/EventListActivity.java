@@ -22,11 +22,10 @@ public class EventListActivity extends ItemListActivity {
     }
 
     public void onAddButtonClick(View view) {
-        Utility.getAppUtility(this).launchCreateItemOptionsDialog(this, options -> {
-            String uuid = itemsManager.createItem((Event.Options)options);
-            createItem(uuid);
-            return uuid;
-        });
+        Event event = itemsManager.createItem(Event.getDefaultOptions(), Utility.getAppUtility(this)::onItemOptionsChanged);
+        if(itemList.getAdapter() != null)
+            itemList.getAdapter().notifyItemInserted(0);
+        launchItem(event.UUID);
     }
 
     @Override protected View getToolbar() { return findViewById(R.id.toolbar); }

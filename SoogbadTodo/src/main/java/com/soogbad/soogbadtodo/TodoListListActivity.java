@@ -34,11 +34,12 @@ public class TodoListListActivity extends ItemListActivity {
     }
 
     public void onAddButtonClick(View view) {
-        Utility.getAppUtility(this).launchCreateItemOptionsDialog(this, options -> {
-            String uuid = itemsManager.createItem((TodoList.Options)options);
-            itemsManager.saveItemContent(uuid, ((TodoList.Options)options).DefaultContent);
-            createItem(uuid);
-            return uuid;
+        Utility.getAppUtility(this).createItemOptionsDialog(this, TodoList.getDefaultOptions(), options -> {
+            TodoList todoList = itemsManager.createItem((TodoList.Options)options, Utility.getAppUtility(this)::onItemOptionsChanged);
+            itemsManager.saveItemContent(todoList.UUID, ((TodoList.Options)options).DefaultContent);
+            if(itemList.getAdapter() != null)
+                itemList.getAdapter().notifyItemInserted(0);
+            launchItem(todoList.UUID);
         });
     }
 

@@ -13,7 +13,7 @@ public class TodoAlarmReceiver extends ItemAlarmReceiver<TodoList> {
         ItemsManager<TodoList, TodoList.Options> itemsManager = ((SoogbadTodoApplication)context.getApplicationContext()).getItemsManager();
         if(todoList.Options.SkipNextRun) {
             todoList.Options.SkipNextRun = false;
-            itemsManager.saveItemMetadata(todoList.UUID, todoList.Title, todoList.Options);
+            itemsManager.saveItemOptions(todoList.UUID, todoList.Options, null);
         }
         else {
             itemsManager.saveItemContent(todoList.UUID, todoList.Options.DefaultContent);

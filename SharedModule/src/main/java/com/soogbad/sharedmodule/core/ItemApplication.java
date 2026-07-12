@@ -7,7 +7,6 @@ import com.soogbad.sharedmodule.ui.ItemActivity;
 import com.soogbad.sharedmodule.scheduling.ItemScheduler;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public abstract class ItemApplication<T extends Item<O>, O extends Item.Options> extends Application {
 
@@ -21,8 +20,8 @@ public abstract class ItemApplication<T extends Item<O>, O extends Item.Options>
         String getItemName();
         Class<? extends ItemActivity> getItemActivityClass();
         @SuppressWarnings("BooleanMethodIsAlwaysInverted") boolean hasConfigurableOptions();
-        void launchEditItemOptionsDialog(Context context, Item<?> item, Consumer<Item.Options> callback);
-        void launchCreateItemOptionsDialog(Context context, Function<Item.Options, String> callback);
+        void createItemOptionsDialog(Context context, Item.Options initialOptions, Consumer<Item.Options> callback);
+        void onItemOptionsChanged(Item<?> item);
         ItemScheduler getItemScheduler();
     }
 

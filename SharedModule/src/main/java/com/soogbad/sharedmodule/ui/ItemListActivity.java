@@ -34,11 +34,6 @@ public abstract class ItemListActivity extends AppCompatActivity {
     public void onItemListItemClick(View view) {
         launchItem(view.getTag().toString());
     }
-    protected void createItem(String uuid) {
-        if(itemList.getAdapter() != null)
-            itemList.getAdapter().notifyItemInserted(0);
-        launchItem(uuid);
-    }
     protected void launchItem(String uuid) {
         startActivity(new Intent(this, Utility.getAppUtility(this).getItemActivityClass()).putExtra("item_uuid", uuid));
     }
