@@ -26,6 +26,11 @@ public abstract class Item<O extends Item.Options> {
         public JSONObject toJson() { return new JSONObject(); }
     }
 
+    @SuppressWarnings("unchecked")
+    public void setOptions(Item.Options options) {
+        this.Options = (O)options;
+    }
+
     public interface SchedulableItem {
         Calendar getNextOccurrence();
     }

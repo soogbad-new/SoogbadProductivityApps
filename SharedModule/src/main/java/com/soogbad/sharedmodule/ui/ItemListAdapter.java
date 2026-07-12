@@ -65,7 +65,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
         ItemsManager<?, ?> itemsManager = Utility.getItemsManager(context);
         if(menuItem.getItemId() == R.id.action_edit_options) {
             Utility.getAppUtility(context).createItemOptionsDialog(context, item.Options, (options) -> {
-                item.Options = options;
+                item.setOptions(options);
                 itemsManager.saveItemOptions(item.UUID, item.Options, Utility.getAppUtility(context)::onItemOptionsChanged);
             });
             return true;
