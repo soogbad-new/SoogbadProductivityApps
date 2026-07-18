@@ -39,7 +39,7 @@ public class SoogbadTodoApplication extends ItemApplication<TodoList, TodoList.O
     public AppUtility getAppUtility() {
         return new AppUtility() {
             @Override public String getAppName() { return "SoogbadTodo"; }
-            @Override public String getItemName() { return "TodoList"; }
+            @Override public String getItemName() { return "Todo"; }
             @Override public Class<? extends ItemActivity> getItemActivityClass() { return TodoListActivity.class; }
             @Override public boolean hasConfigurableOptions() { return true; }
             @Override public void createItemOptionsDialog(Context context, Item.Options initialOptions, Consumer<Item.Options> callback) {
