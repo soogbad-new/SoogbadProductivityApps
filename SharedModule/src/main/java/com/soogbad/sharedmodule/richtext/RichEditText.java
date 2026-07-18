@@ -451,9 +451,11 @@ public class RichEditText extends AppCompatEditText {
 
     private boolean handleHyperlinkClick(MotionEvent event) {
         Editable editable = getText();
-        if(editable == null) return false;
+        if(editable == null || getLayout() == null) return false;
         int x = (int)event.getX() - getTotalPaddingLeft() + getScrollX(); int y = (int)event.getY() - getTotalPaddingTop() + getScrollY();
-        int line = getLayout().getLineForVertical(y); int offset = getLayout().getOffsetForHorizontal(line, x);
+        int line = getLayout().getLineForVertical(y);
+        if(y < getLayout().getLineTop(line) || y >= getLayout().getLineBottom(line) || x < getLayout().getLineLeft(line) || x > getLayout().getLineRight(line)) return false;
+        int offset = getLayout().getOffsetForHorizontal(line, x);
         URLSpan[] spans = editable.getSpans(offset, offset, URLSpan.class);
         if(spans.length > 0) {
             String url = spans[0].getURL();
@@ -515,6 +517,7 @@ public class RichEditText extends AppCompatEditText {
         if(editable == null || getLayout() == null) return false;
         float touchY = event.getY() - getTotalPaddingTop() + getScrollY();
         int touchLine = getLayout().getLineForVertical((int)touchY);
+        if(touchY < getLayout().getLineTop(touchLine) || touchY >= getLayout().getLineBottom(touchLine)) return false;
         CollapsibleRegionSpan[] spans = editable.getSpans(0, editable.length(), CollapsibleRegionSpan.class);
         for(CollapsibleRegionSpan span : spans) {
             int firstParagraphStart = editable.getSpanStart(span); int firstParagraphEnd = getParagraphEnd(editable.toString(), firstParagraphStart);
