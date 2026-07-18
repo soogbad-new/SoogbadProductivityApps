@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:name=".SoogbadNotesApplication"
@@ -7,11 +8,13 @@
         android:icon="@mipmap/ic_launcher"
         android:theme="@style/AppTheme"
         android:supportsRtl="true"
-        android:hasFragileUserData="true">
+        android:hasFragileUserData="true"
+        tools:ignore="LockedOrientationActivity,DiscouragedApi">
 
         <activity
             android:name=".NoteListActivity"
             android:label="SoogbadNotes"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,8 +22,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".NoteActivity" android:exported="true" />
-        <activity android:name="com.soogbad.sharedmodule.ui.RecycleBinActivity" android:exported="false" />
+        <activity
+            android:name=".NoteActivity"
+            android:screenOrientation="portrait"
+            android:exported="true" />
+
+        <activity
+            android:name="com.soogbad.sharedmodule.ui.RecycleBinActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
 
     </application>
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
@@ -11,11 +12,13 @@
         android:icon="@mipmap/ic_launcher"
         android:theme="@style/AppTheme"
         android:supportsRtl="true"
-        android:hasFragileUserData="true">
+        android:hasFragileUserData="true"
+        tools:ignore="LockedOrientationActivity,DiscouragedApi" >
 
         <activity
             android:name=".TodoListListActivity"
             android:label="SoogbadTodo"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,9 +26,20 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".TodoListActivity" android:exported="true" />
-        <activity android:name=".EditDefaultContentActivity" android:exported="false" />
-        <activity android:name="com.soogbad.sharedmodule.ui.RecycleBinActivity" android:exported="false" />
+        <activity
+            android:name=".TodoListActivity"
+            android:screenOrientation="portrait"
+            android:exported="true" />
+
+        <activity
+            android:name=".EditDefaultContentActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+
+        <activity
+            android:name="com.soogbad.sharedmodule.ui.RecycleBinActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
 
         <receiver android:name=".TodoAlarmReceiver" android:exported="false" />
 
