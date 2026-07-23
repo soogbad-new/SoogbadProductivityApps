@@ -156,7 +156,7 @@ public class FormattingToolbar extends ConstraintLayout implements RichEditText.
 
     private void toggleButton(MaterialButton button, boolean state) {
         if(state)
-            button.setIconTint(ContextCompat.getColorStateList(getContext(), R.color.lightGreen));
+            button.setIconTint(ContextCompat.getColorStateList(getContext(), R.color.selectedGreen));
         else
             button.setIconTint(ContextCompat.getColorStateList(getContext(), R.color.white));
     }

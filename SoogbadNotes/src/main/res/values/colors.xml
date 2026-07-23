@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="appBarColor">@color/darkGreen</color>
+    <color name="appColor">@color/darkGreen</color>
 </resources>
