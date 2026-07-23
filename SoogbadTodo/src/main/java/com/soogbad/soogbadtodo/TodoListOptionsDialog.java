@@ -28,11 +28,11 @@ import java.util.function.Consumer;
 
 public class TodoListOptionsDialog extends ItemOptionsDialog<TodoList.Options> {
 
+    @SuppressWarnings("FieldCanBeLocal")
+    private MaterialButton editDefaultContentButton;
     private Spinner dayOfWeekSpinner;
     private TimePicker timePicker;
     private SwitchMaterial skipNextRunSwitch;
-    @SuppressWarnings("FieldCanBeLocal")
-    private MaterialButton editDefaultContentButton;
 
     private SpannedString currentDefaultContent = null;
 
@@ -41,13 +41,13 @@ public class TodoListOptionsDialog extends ItemOptionsDialog<TodoList.Options> {
     @Override
     public void show() {
         View view = LayoutInflater.from(context).inflate(R.layout.todo_list_options_dialog, null);
-        dayOfWeekSpinner = view.findViewById(R.id.dayOfWeekSpinner); timePicker = view.findViewById(R.id.timePicker); skipNextRunSwitch = view.findViewById(R.id.skipNextRunSwitch); editDefaultContentButton = view.findViewById(R.id.editDefaultContentButton);
+        editDefaultContentButton = view.findViewById(R.id.editDefaultContentButton); dayOfWeekSpinner = view.findViewById(R.id.dayOfWeekSpinner); timePicker = view.findViewById(R.id.timePicker); skipNextRunSwitch = view.findViewById(R.id.skipNextRunSwitch);
+        editDefaultContentButton.setOnClickListener((v) -> launchEditDefaultContentActivity());
         ArrayList<String> dayNames = new ArrayList<>();
         for(TodoList.DayOfWeek day : TodoList.DayOfWeek.values()) dayNames.add(day.displayName());
         dayOfWeekSpinner.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, dayNames.toArray())); dayOfWeekSpinner.setSelection(initialOptions.Day.ordinal());
         timePicker.setIs24HourView(true); timePicker.setHour(initialOptions.Hour); timePicker.setMinute(initialOptions.Minute);
         skipNextRunSwitch.setChecked(initialOptions.SkipNextRun);
-        editDefaultContentButton.setOnClickListener((v) -> launchEditDefaultContentActivity());
         new MaterialAlertDialogBuilder(context, com.soogbad.sharedmodule.R.style.OptionsDialogTheme).setTitle("Edit Options").setView(view)
                 .setPositiveButton("OK", (dialog, which) -> onConfirm()).setNegativeButton("Cancel", null).show();
     }
