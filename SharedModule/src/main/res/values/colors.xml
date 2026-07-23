@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="appColor">#FFFFFF</color>
     <color name="colorAccent">#00B4AA</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
@@ -8,6 +9,7 @@
     <color name="darkBlue">#004050</color>
     <color name="veryDarkBlue">#003040</color>
     <color name="lightGreen">#66CC77</color>
+    <color name="mediumGreen">#3A9855</color>
     <color name="darkGreen">#0F6432</color>
     <color name="yellow">#D7AA28</color>
     <color name="almostBlack">#05050F</color>

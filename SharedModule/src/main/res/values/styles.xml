@@ -14,7 +14,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.Material3.Dark" />
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.Material3.Dark">
-        <item name="colorSurfaceContainer">@color/darkGreen</item>
+        <item name="colorSurfaceContainer">@color/appColor</item>
     </style>
 
     <style name="ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
