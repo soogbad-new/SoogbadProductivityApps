@@ -26,6 +26,12 @@ public class RichCharacterStyle<T extends CharacterStyle> {
         return spanClass == StyleSpan.class || spanClass == UnderlineSpan.class;
     }
 
+    public boolean isDefaultValue() {
+        if(spanClass == AbsoluteSizeSpan.class) return value == DEFAULT_TEXT_SIZE.size;
+        if(spanClass == ForegroundColorSpan.class) return value == DEFAULT_TEXT_COLOR.color;
+        return false;
+    }
+
     public CharacterStyle createSpan() {
         if(spanClass == StyleSpan.class) return new StyleSpan(value);
         else if(spanClass == UnderlineSpan.class) return new UnderlineSpan();

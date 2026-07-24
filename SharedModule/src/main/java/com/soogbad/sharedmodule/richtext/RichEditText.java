@@ -128,7 +128,9 @@ public class RichEditText extends AppCompatEditText {
 
     private static void applyActiveCharacterStyle(Editable editable, int changeStart, int changeCount, RichCharacterStyle<?> style, boolean isActive) {
         if(isActive) {
-            if(!isEntireRangeCovered(editable, changeStart, changeStart + changeCount, style)) {
+            if(style.isDefaultValue())
+                removeSpansInRange(editable, changeStart, changeStart + changeCount, style);
+            else if(!isEntireRangeCovered(editable, changeStart, changeStart + changeCount, style)) {
                 removeSpansInRange(editable, changeStart, changeStart + changeCount, style);
                 editable.setSpan(style.createSpan(), changeStart, changeStart + changeCount, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             }
