@@ -2,8 +2,8 @@
 <resources>
 
     <color name="appColor">#FFFFFF</color>
-    <color name="lightGreen">#49AA61</color>
-    <color name="mediumGreen">#2C874A</color>
+    <color name="lightGreen">#0FA032</color>
+    <color name="mediumGreen">#0F8232</color>
     <color name="darkGreen">#0F6432</color>
 
     <color name="colorAccent">#00B4AA</color>
