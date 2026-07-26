@@ -66,8 +66,12 @@ public class RichTextSerializer {
         spanJson.put("start", start); spanJson.put("end", end); spanJson.put("flags", flags);
         if(span instanceof StyleSpan) spanJson.put("type", ((StyleSpan)span).getStyle() == Typeface.BOLD ? "bold" : "italic");
         else if(span instanceof UnderlineSpan) spanJson.put("type", "underline");
-        else if(span instanceof AbsoluteSizeSpan) { spanJson.put("type", "size"); spanJson.put("size", ((AbsoluteSizeSpan)span).getSize()); }
-        else if(span instanceof ForegroundColorSpan) { spanJson.put("type", "color"); spanJson.put("color", ((ForegroundColorSpan)span).getForegroundColor()); }
+        else if(span instanceof AbsoluteSizeSpan) { int size = ((AbsoluteSizeSpan)span).getSize();
+            if(size == RichCharacterStyle.DEFAULT_TEXT_SIZE.size) return null;
+            else spanJson.put("type", "size"); spanJson.put("size", size); }
+        else if(span instanceof ForegroundColorSpan) { int color = ((ForegroundColorSpan)span).getForegroundColor();
+            if(color == RichCharacterStyle.DEFAULT_TEXT_COLOR.color) return null;
+            else spanJson.put("type", "color"); spanJson.put("color", color); }
         else if(span instanceof BulletSpan) spanJson.put("type", "bullet");
         else if(span instanceof AlignmentSpan.Standard) { spanJson.put("type", "align"); spanJson.put("align", ((AlignmentSpan.Standard)span).getAlignment().ordinal()); }
         else if(span instanceof URLSpan) { spanJson.put("type", "url"); spanJson.put("url", ((URLSpan)span).getURL()); }
