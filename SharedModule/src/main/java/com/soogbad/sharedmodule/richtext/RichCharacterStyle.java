@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+@SuppressWarnings("IfCanBeSwitch")
 public class RichCharacterStyle<T extends CharacterStyle> {
 
     private RichCharacterStyle(Class<T> spanClass, int value) {
