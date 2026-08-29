@@ -89,7 +89,7 @@ public class RichCharacterStyle<T extends CharacterStyle> {
         public final int size;
     }
     public enum TextColor {
-        WHITE(0xFFFFFFFF), RED(0xFFFF0000), GREEN(0xFF00FF00), BLUE(0xFF1F1FFF), CYAN(0xFF00FFFF), YELLOW(0xFFFFFF00), ORANGE(0xFFFFA500), MAGENTA(0xFFFF00FF);
+        WHITE(0xFFFFFFFF), CYAN(0xFF00FFFF), BLUE(0xFF1F1FFF), GREEN(0xFF00C300), YELLOW(0xFFFFFF00), ORANGE(0xFFFFA500), RED(0xFFFF0000);
         TextColor(int color) { this.color = color; }
         public final int color;
     }

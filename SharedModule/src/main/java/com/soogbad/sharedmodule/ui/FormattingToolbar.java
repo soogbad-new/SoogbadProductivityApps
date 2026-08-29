@@ -205,7 +205,7 @@ public class FormattingToolbar extends ConstraintLayout implements RichEditText.
             if(selected) {
                 Drawable colorDrawable = new ColorDrawable(value);
                 Drawable borderDrawable = ContextCompat.getDrawable(getContext(), R.drawable.selected_popup_option_border);
-                textView.setBackground(new LayerDrawable(new Drawable[]{colorDrawable, borderDrawable}));
+                textView.setBackground(new LayerDrawable(new Drawable[] { colorDrawable, borderDrawable }));
             }
         }
         else if(styleType == AlignmentSpan.Standard.class) {
