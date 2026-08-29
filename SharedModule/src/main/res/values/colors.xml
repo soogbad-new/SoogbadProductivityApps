@@ -2,9 +2,9 @@
 <resources>
 
     <color name="appColor">#FFFFFF</color>
-    <color name="calendarGreen">#0FA032</color>
-    <color name="todoGreen">#0F8232</color>
-    <color name="notesGreen">#0F6432</color>
+    <color name="calendarGreen">#228c33</color>
+    <color name="todoGreen">#157530</color>
+    <color name="notesGreen">#0e622d</color>
     <color name="colorAccent">#00B4AA</color>
 
     <color name="black">#000000</color>
