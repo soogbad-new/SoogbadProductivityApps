@@ -39,7 +39,7 @@ public abstract class ItemActivity extends AppCompatActivity {
             return;
         }
         itemLayout.init(itemActionBar, itemsManager, item, previewMode);
-        onItemLoaded(item);
+        if(!previewMode) onItemLoaded(item);
     }
     protected void onItemLoaded(Item<?> item) {}
 
