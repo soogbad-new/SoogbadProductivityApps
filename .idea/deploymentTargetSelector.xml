@@ -4,6 +4,13 @@
     <selectionStates>
       <SelectionState runConfigName="SoogbadCalendar">
         <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2026-09-05T08:32:42.688712900Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="Wireless" identifier="serviceName=adb-R5CY81QMX3Z-HaEJ2W" />
+            </handle>
+          </Target>
+        </DropdownSelection>
         <DialogSelection />
       </SelectionState>
       <SelectionState runConfigName="SoogbadNotes">

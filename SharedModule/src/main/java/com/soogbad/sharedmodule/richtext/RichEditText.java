@@ -120,6 +120,7 @@ public class RichEditText extends AppCompatEditText {
                 handleParagraphStyleNewLine(editable, changeStart, changeCount);
                 autoDetectLinks(editable, changeStart, changeCount);
             }
+            updateCurrentActiveParagraphStyles();
             textChanging = true;
         }
     };
