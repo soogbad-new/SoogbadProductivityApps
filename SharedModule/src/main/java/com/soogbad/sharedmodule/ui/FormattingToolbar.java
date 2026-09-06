@@ -1,7 +1,6 @@
 package com.soogbad.sharedmodule.ui;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
@@ -24,11 +23,13 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.soogbad.sharedmodule.R;
 import com.soogbad.sharedmodule.core.Utility;
 import com.soogbad.sharedmodule.richtext.RichCharacterStyle;
@@ -230,13 +231,13 @@ public class FormattingToolbar extends ConstraintLayout implements RichEditText.
                 if(existingUrl != null) urlEditText.setText(existingUrl);
             }
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext()).setTitle("Hyperlink").setView(dialogView).setNeutralButton("Cancel", null);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext(), R.style.AlertDialogTheme)
+                .setTitle("Hyperlink").setView(dialogView).setNeutralButton("Cancel", null);
         if(!selection)
             builder.setPositiveButton("Insert", null);
         else
             builder.setPositiveButton("Apply", null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        AlertDialog dialog = builder.show();
         if(!selection) {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
                 String url = urlEditText.getText().toString().trim();

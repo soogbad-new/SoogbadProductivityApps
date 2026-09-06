@@ -21,7 +21,7 @@
         <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="OptionsDialogTheme" parent="ThemeOverlay.Material3.MaterialAlertDialog" tools:keep="@style/OptionsDialogTheme">
+    <style name="AlertDialogTheme" parent="ThemeOverlay.Material3.MaterialAlertDialog" tools:keep="@style/AlertDialogTheme">
         <item name="colorPrimary">@color/colorAccent</item>
     </style>
 

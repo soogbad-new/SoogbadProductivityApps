@@ -1,7 +1,6 @@
 package com.soogbad.sharedmodule.ui;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.soogbad.sharedmodule.core.ItemsManager;
 import com.soogbad.sharedmodule.R;
 import com.soogbad.sharedmodule.core.Utility;
@@ -46,7 +46,7 @@ public class RecycleBinActivity extends AppCompatActivity {
     @SuppressLint("NotifyDataSetChanged")
     public void onEmptyBinButtonClick(View view) {
         if(itemsManager.getRecycleBinItems().isEmpty()) return;
-        new AlertDialog.Builder(this).setTitle("Empty Recycle Bin").setMessage("Are you sure you want to empty the recycle bin?")
+        new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme).setTitle("Empty Recycle Bin").setMessage("Are you sure you want to empty the recycle bin?")
                 .setPositiveButton("Empty", (dialog, which) -> {
                     itemsManager.emptyRecycleBin();
                     if(recycleBinList.getAdapter() != null) recycleBinList.getAdapter().notifyDataSetChanged();

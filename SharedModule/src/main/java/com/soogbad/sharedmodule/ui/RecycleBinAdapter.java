@@ -2,7 +2,6 @@ package com.soogbad.sharedmodule.ui;
 
 import android.content.Context;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -15,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.soogbad.sharedmodule.core.Item;
 import com.soogbad.sharedmodule.core.ItemsManager;
 import com.soogbad.sharedmodule.R;
@@ -69,7 +69,7 @@ public class RecycleBinAdapter extends RecyclerView.Adapter<RecycleBinAdapter.Vi
             return true;
         }
         else if(menuItem.getItemId() == R.id.action_delete_permanently) {
-            new AlertDialog.Builder(context).setTitle("Delete Permanently").setMessage("Are you sure you want to permanently delete this item?")
+            new MaterialAlertDialogBuilder(context, R.style.AlertDialogTheme).setTitle("Delete Permanently").setMessage("Are you sure you want to permanently delete this item?")
                     .setPositiveButton("Delete", (dialog, which) -> {
                         itemsManager.permanentlyDeleteRecycleBinItem(item.UUID);
                         notifyItemRemoved(itemHolder);
