@@ -299,7 +299,7 @@ public class RichEditText extends AppCompatEditText {
         int paragraphEndExclusive = paragraphEnd < editable.length() ? paragraphEnd + 1 : paragraphEnd;
         ParagraphStyle[] spans = editable.getSpans(paragraphStart, paragraphEndExclusive, style.spanClass);
         for(ParagraphStyle span : spans)
-            if(style.matchesSpanValue(span))
+            if(style.matchesSpanValue(span) && editable.getSpanStart(span) == paragraphStart)
                 return true;
         return false;
     }
@@ -377,7 +377,7 @@ public class RichEditText extends AppCompatEditText {
         ParagraphStyle[] spans = editable.getSpans(paragraphStart, paragraphEnd, style.spanClass);
         ArrayList<ParagraphStyle> result = new ArrayList<>();
         for(ParagraphStyle span : spans)
-            if(style.matchesSpanValue(span))
+            if(style.matchesSpanValue(span) && editable.getSpanStart(span) == paragraphStart)
                 result.add(span);
         return result.toArray(new ParagraphStyle[0]);
     }
