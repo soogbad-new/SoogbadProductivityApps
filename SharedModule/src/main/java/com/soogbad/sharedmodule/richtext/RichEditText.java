@@ -336,12 +336,20 @@ public class RichEditText extends AppCompatEditText {
         if(changeCount != 1 || editable.charAt(changeStart) != '\n' || changeStart >= editable.length())
             return;
         int previousLineStart = getParagraphStart(editable.toString(), changeStart);
+        boolean insertedTrailingNewLine = false;
         for(RichParagraphStyle<?> style : RichParagraphStyle.values()) {
             ParagraphStyle[] spans = getParagraphSpans(editable, previousLineStart, changeStart, style);
             if(spans.length == 0) continue;
+            // a paragraph span needs a real character to cover, so insert a newline if the trailing paragraph is at the end of the editable
+            if(!insertedTrailingNewLine && changeStart + 1 == editable.length()) {
+                ignoreTextChanges = true; editable.append("\n"); ignoreTextChanges = false;
+                insertedTrailingNewLine = true;
+            }
             endParagraphSpanBeforeNewLine(editable, spans, changeStart);
             addParagraphSpanAfterNewLine(editable, spans, changeStart);
         }
+        if(insertedTrailingNewLine)
+            setSelection(changeStart + 1);
     }
     private static void endParagraphSpanBeforeNewLine(Editable editable, ParagraphStyle[] spans, int newLinePosition) {
         for(ParagraphStyle span : spans) {
