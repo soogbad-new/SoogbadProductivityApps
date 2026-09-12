@@ -28,6 +28,8 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.soogbad.sharedmodule.core.Utility;
 
@@ -545,10 +547,15 @@ public class RichEditText extends AppCompatEditText {
                     expandRegion(span);
                 else
                     collapseRegion(span);
+                if(!isKeyboardVisible()) clearFocus();
                 return true;
             }
         }
         return false;
+    }
+    private boolean isKeyboardVisible() {
+        WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(this);
+        return insets != null && insets.isVisible(WindowInsetsCompat.Type.ime());
     }
 
     public void collapseRegion(CollapsibleRegionSpan span) {
