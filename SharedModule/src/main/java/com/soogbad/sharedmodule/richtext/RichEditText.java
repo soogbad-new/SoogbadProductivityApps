@@ -547,7 +547,9 @@ public class RichEditText extends AppCompatEditText {
                     expandRegion(span);
                 else
                     collapseRegion(span);
-                if(!isKeyboardVisible()) clearFocus();
+                if(!isKeyboardVisible()) {
+                    setFocusableInTouchMode(false); clearFocus(); setFocusableInTouchMode(true);
+                }
                 return true;
             }
         }
