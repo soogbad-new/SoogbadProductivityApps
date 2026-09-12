@@ -67,6 +67,13 @@ public class RichEditText extends AppCompatEditText {
         bringPointIntoView(getSelectionStart());
     }
 
+    @Override
+    protected void onDraw(Canvas canvas) {
+        drawTightSelectionHighlight(canvas);
+        super.onDraw(canvas);
+        drawCollapsibleRegions(canvas);
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -599,23 +606,20 @@ public class RichEditText extends AppCompatEditText {
     private final Paint regionBorderPaint;
     private final Paint arrowPaint;
     private final float arrowSize;
-    @SuppressLint("DrawAllocation")
-    @Override
-    protected void onDraw(Canvas canvas) {
-        drawTightSelectionHighlight(canvas);
-        super.onDraw(canvas);
-        Editable editable = getText();
-        if(editable == null || getLayout() == null) return;
+    private final Path arrowPath = new Path();
+    private void drawCollapsibleRegions(Canvas canvas) {
+        Editable editable = getText(); Layout layout = getLayout();
+        if(editable == null || layout == null) return;
         CollapsibleRegionSpan[] spans = editable.getSpans(0, editable.length(), CollapsibleRegionSpan.class);
         for(CollapsibleRegionSpan span : spans) {
             int spanStart = editable.getSpanStart(span);
             if(spanStart < 0) continue;
             int firstParagraphEnd = getParagraphEnd(editable.toString(), spanStart);
-            int firstLine = getLayout().getLineForOffset(spanStart); int lastLine = getLayout().getLineForOffset(firstParagraphEnd);
-            int lineTop = getLayout().getLineTop(firstLine) + getTotalPaddingTop(); int lineBottom = getLayout().getLineBottom(lastLine) + getTotalPaddingTop();
+            int firstLine = layout.getLineForOffset(spanStart); int lastLine = layout.getLineForOffset(firstParagraphEnd);
+            int lineTop = layout.getLineTop(firstLine) + getTotalPaddingTop(); int lineBottom = layout.getLineBottom(lastLine) + getTotalPaddingTop();
             canvas.drawRect(getPaddingLeft(), lineTop, getWidth() - getPaddingRight(), lineBottom, regionBorderPaint);
             float centerY = (lineTop + lineBottom) / 2f; float centerX = getPaddingLeft() / 2f;
-            Path arrowPath = new Path();
+            arrowPath.reset();
             if(span.isCollapsed()) {
                 arrowPath.moveTo(centerX - arrowSize / 3, centerY - arrowSize / 2); arrowPath.lineTo(centerX + arrowSize * 2 / 3, centerY); arrowPath.lineTo(centerX - arrowSize / 3, centerY + arrowSize / 2);
             } 
