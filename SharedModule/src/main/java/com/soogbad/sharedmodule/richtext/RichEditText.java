@@ -617,7 +617,7 @@ public class RichEditText extends AppCompatEditText {
             int firstParagraphEnd = getParagraphEnd(editable.toString(), spanStart);
             int firstLine = layout.getLineForOffset(spanStart); int lastLine = layout.getLineForOffset(firstParagraphEnd);
             int lineTop = layout.getLineTop(firstLine) + getTotalPaddingTop(); int lineBottom = layout.getLineBottom(lastLine) + getTotalPaddingTop();
-            canvas.drawRect(getPaddingLeft(), lineTop, getWidth() - getPaddingRight(), lineBottom, regionBorderPaint);
+            canvas.drawRect(getPaddingLeft() - 2, lineTop, getWidth() - getPaddingRight() + 2, lineBottom, regionBorderPaint);
             float centerY = (lineTop + lineBottom) / 2f; float centerX = getPaddingLeft() / 2f;
             arrowPath.reset();
             if(span.isCollapsed()) {
