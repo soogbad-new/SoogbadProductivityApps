@@ -624,14 +624,14 @@ public class RichEditText extends AppCompatEditText {
             int firstParagraphEnd = getParagraphEnd(editable.toString(), spanStart);
             int firstLine = layout.getLineForOffset(spanStart); int lastLine = layout.getLineForOffset(firstParagraphEnd);
             int lineTop = layout.getLineTop(firstLine) + getTotalPaddingTop(); int lineBottom = layout.getLineBottom(lastLine) + getTotalPaddingTop();
-            canvas.drawRect(getPaddingLeft() - 2, lineTop, getWidth() - getPaddingRight() + 2, lineBottom, regionBorderPaint);
-            float centerY = (lineTop + lineBottom) / 2f; float centerX = getPaddingLeft() / 2f;
+            canvas.drawRect(getPaddingLeft() - 8, lineTop, getWidth() - getPaddingRight() + 12, lineBottom, regionBorderPaint);
             arrowPath.reset();
+            float y = (lineTop + lineBottom) / 2f; float x = getPaddingLeft() / 2f - 6;
             if(span.isCollapsed()) {
-                arrowPath.moveTo(centerX - arrowSize / 3, centerY - arrowSize / 2); arrowPath.lineTo(centerX + arrowSize * 2 / 3, centerY); arrowPath.lineTo(centerX - arrowSize / 3, centerY + arrowSize / 2);
+                arrowPath.moveTo(x - arrowSize / 3, y - arrowSize / 2); arrowPath.lineTo(x + arrowSize * 2 / 3, y); arrowPath.lineTo(x - arrowSize / 3, y + arrowSize / 2);
             } 
             else {
-                arrowPath.moveTo(centerX - arrowSize / 2, centerY - arrowSize / 3); arrowPath.lineTo(centerX, centerY + arrowSize * 2 / 3); arrowPath.lineTo(centerX + arrowSize / 2, centerY - arrowSize / 3);
+                arrowPath.moveTo(x - arrowSize / 2, y - arrowSize / 3); arrowPath.lineTo(x, y + arrowSize * 2 / 3); arrowPath.lineTo(x + arrowSize / 2, y - arrowSize / 3);
             }
             arrowPath.close();
             canvas.drawPath(arrowPath, arrowPaint);
