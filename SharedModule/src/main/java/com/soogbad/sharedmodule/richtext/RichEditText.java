@@ -355,22 +355,25 @@ public class RichEditText extends AppCompatEditText {
                 insertedTrailingNewLine = true;
             }
             endParagraphSpanBeforeNewLine(editable, spans, changeStart);
-            addParagraphSpanAfterNewLine(editable, spans, changeStart);
+            addParagraphSpanAfterNewLine(editable, spans, changeStart, style);
         }
         if(insertedTrailingNewLine)
             setSelection(changeStart + 1);
     }
     private static void endParagraphSpanBeforeNewLine(Editable editable, ParagraphStyle[] spans, int newLinePosition) {
-        for(ParagraphStyle span : spans) {
-            int spanStart = editable.getSpanStart(span);
+        int spanStart = editable.getSpanStart(spans[0]);
+        for(ParagraphStyle span : spans)
             editable.removeSpan(span);
-            editable.setSpan(RichParagraphStyle.cloneSpan(span), spanStart, newLinePosition + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        }
+        editable.setSpan(RichParagraphStyle.cloneSpan(spans[0]), spanStart, newLinePosition + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
     }
-    private static void addParagraphSpanAfterNewLine(Editable editable, ParagraphStyle[] spans, int newLinePosition) {
+    private static void addParagraphSpanAfterNewLine(Editable editable, ParagraphStyle[] spans, int newLinePosition, RichParagraphStyle<?> style) {
         int newLineEnd = getParagraphEnd(editable.toString(), newLinePosition + 1);
         int spanStart = newLinePosition + 1;
         int spanEnd = newLineEnd < editable.length() ? newLineEnd + 1 : newLineEnd;
+        // remove duplicate spans on this position
+        for(ParagraphStyle existingSpan : editable.getSpans(spanStart, spanEnd, style.spanClass))
+            if(editable.getSpanStart(existingSpan) == spanStart)
+                editable.removeSpan(existingSpan);
         editable.setSpan(RichParagraphStyle.cloneSpan(spans[0]), spanStart, spanEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
     }
 
