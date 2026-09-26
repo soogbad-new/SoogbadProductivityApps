@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <color name="appColor">#FFFFFF</color>
-    <color name="calendarGreen">#228C33</color>
-    <color name="todoGreen">#157530</color>
-    <color name="notesGreen">#0E622D</color>
+    <color name="calendarGreen" tools:ignore="UnusedResources">#228C33</color>
+    <color name="todoGreen" tools:ignore="UnusedResources">#157530</color>
+    <color name="notesGreen" tools:ignore="UnusedResources">#0E622D</color>
     <color name="colorAccent">#00B4AA</color>
 
     <color name="black">#000000</color>
