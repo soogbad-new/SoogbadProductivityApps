@@ -21,6 +21,7 @@ import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ParagraphStyle;
 import android.text.style.AlignmentSpan;
+import android.text.style.BulletSpan;
 import android.text.style.URLSpan;
 import android.util.AttributeSet;
 import android.util.Patterns;
@@ -113,8 +114,14 @@ public class RichEditText extends AppCompatEditText {
     }
     @SuppressWarnings("FieldCanBeLocal")
     private final TextWatcher textChangedListener = new TextWatcher() {
+        private boolean deletedAParagraph = false;
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            if(ignoreTextChanges) return;
+            deletedAParagraph = false;
+            for(int i = start; i < start + count; i++)
+                if(s.charAt(i) == '\n') { deletedAParagraph = true; break; }
+        }
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if(ignoreTextChanges) return;
@@ -129,6 +136,8 @@ public class RichEditText extends AppCompatEditText {
                 handleParagraphStyleNewLine(editable, changeStart, changeCount);
                 autoDetectLinks(editable, changeStart, changeCount);
             }
+            if(deletedAParagraph)
+                handleParagraphStyleMerge(editable, changeStart);
             updateCurrentActiveParagraphStyles();
             textChanging = true;
         }
@@ -375,6 +384,25 @@ public class RichEditText extends AppCompatEditText {
             if(editable.getSpanStart(existingSpan) == spanStart)
                 editable.removeSpan(existingSpan);
         editable.setSpan(RichParagraphStyle.cloneSpan(spans[0]), spanStart, spanEnd, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+    }
+
+    private static void handleParagraphStyleMerge(Editable editable, int mergePosition) {
+        int paragraphStart = getParagraphStart(editable.toString(), mergePosition); int paragraphEnd = getParagraphEnd(editable.toString(), mergePosition);
+        int endExclusive = paragraphEnd < editable.length() ? paragraphEnd + 1 : paragraphEnd;
+        boolean hadBullet = hasStyleAtParagraph(editable, paragraphStart, paragraphEnd, RichParagraphStyle.BULLET);
+        RichParagraphStyle<?> explicitAlignment = null;
+        // the merged paragraph adopts whichever style the first (surviving) paragraph had, discarding the second paragraph's leftover spans
+        for(RichParagraphStyle<?> alignment : new RichParagraphStyle<?>[] { RichParagraphStyle.ALIGN_LEFT, RichParagraphStyle.ALIGN_CENTER, RichParagraphStyle.ALIGN_RIGHT })
+            if(hasStyleAtParagraph(editable, paragraphStart, paragraphEnd, alignment))
+                explicitAlignment = alignment;
+        for(ParagraphStyle span : editable.getSpans(paragraphStart, endExclusive, BulletSpan.class))
+            editable.removeSpan(span);
+        for(ParagraphStyle span : editable.getSpans(paragraphStart, endExclusive, AlignmentSpan.Standard.class))
+            editable.removeSpan(span);
+        if(hadBullet)
+            editable.setSpan(RichParagraphStyle.BULLET.createSpan(), paragraphStart, endExclusive, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        if(explicitAlignment != null)
+            editable.setSpan(explicitAlignment.createSpan(), paragraphStart, endExclusive, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
     }
 
     private static RichParagraphStyle<?> reverseAlignmentAccordingToDirection(RichParagraphStyle<?> style, boolean isDirectionRtl) {
