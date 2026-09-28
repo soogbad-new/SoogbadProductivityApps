@@ -28,6 +28,7 @@
 
         <activity
             android:name=".TodoListActivity"
+            android:parentActivityName=".TodoListListActivity"
             android:screenOrientation="portrait"
             android:exported="true" />
 

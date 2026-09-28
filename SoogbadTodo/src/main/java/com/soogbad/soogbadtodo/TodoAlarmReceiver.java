@@ -3,6 +3,8 @@ package com.soogbad.soogbadtodo;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.core.app.TaskStackBuilder;
+
 import com.soogbad.sharedmodule.scheduling.ItemAlarmReceiver;
 import com.soogbad.sharedmodule.core.ItemsManager;
 
@@ -17,8 +19,8 @@ public class TodoAlarmReceiver extends ItemAlarmReceiver<TodoList> {
         }
         else {
             itemsManager.saveItemContent(todoList.UUID, todoList.Options.DefaultContent);
-            context.startActivity(new Intent(context, TodoListActivity.class).putExtra("item_uuid", todoList.UUID).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-        }        
+            TaskStackBuilder.create(context).addNextIntentWithParentStack(new Intent(context, TodoListActivity.class).putExtra("item_uuid", todoList.UUID)).startActivities();
+        }
     }
 
     @Override protected TodoList getItem(Context context, String uuid) { return ((SoogbadTodoApplication)context.getApplicationContext()).getItemsManager().getItem(uuid); }
