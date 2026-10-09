@@ -1,5 +1,6 @@
 package com.soogbad.soogbadcalendar;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
 
     public EventOptionsDialog(Context context, Event.Options initialOptions, Consumer<Event.Options> callback) { super(context, initialOptions, callback); }
 
+    @SuppressLint("InflateParams")
     @Override
     public void show() {
         View view = LayoutInflater.from(context).inflate(R.layout.event_options_dialog, null);
@@ -32,7 +34,8 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
         timePicker.setIs24HourView(true); timePicker.setHour(calendar.get(Calendar.HOUR_OF_DAY)); timePicker.setMinute(calendar.get(Calendar.MINUTE));
         ArrayList<String> scheduleNames = new ArrayList<>();
         for(Event.Schedule schedule : Event.Schedule.values()) scheduleNames.add(schedule.displayName());
-        repeatScheduleSpinner.setAdapter(new ArrayAdapter<>(context, R.layout.simple_spinner_dropdown_item, scheduleNames.toArray())); repeatScheduleSpinner.setSelection(initialOptions.RepeatSchedule.ordinal());
+        System.out.println(scheduleNames.size());
+        repeatScheduleSpinner.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, scheduleNames.toArray())); repeatScheduleSpinner.setSelection(initialOptions.RepeatSchedule.ordinal());
         showDialog(view);
     }
 

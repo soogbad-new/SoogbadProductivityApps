@@ -1,5 +1,6 @@
 package com.soogbad.soogbadtodo;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.Context;
 import android.text.SpannedString;
@@ -37,6 +38,7 @@ public class TodoListOptionsDialog extends ItemOptionsDialog<TodoList.Options> {
 
     public TodoListOptionsDialog(Context context, TodoList.Options initialOptions, Consumer<TodoList.Options> callback) { super(context, initialOptions, callback); }
 
+    @SuppressLint("InflateParams")
     @Override
     public void show() {
         View view = LayoutInflater.from(context).inflate(R.layout.todo_list_options_dialog, null);
