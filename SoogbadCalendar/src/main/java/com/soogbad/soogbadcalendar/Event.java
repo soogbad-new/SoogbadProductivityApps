@@ -59,7 +59,12 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
         NONE,
         DAILY,
         WEEKLY,
-        MONTHLY
+        MONTHLY;
+
+        public String displayName() {
+            String name = name();
+            return name.charAt(0) + name.substring(1).toLowerCase();
+        }
     }
 
 }
