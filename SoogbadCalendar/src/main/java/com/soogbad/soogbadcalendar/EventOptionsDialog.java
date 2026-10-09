@@ -34,7 +34,6 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
         timePicker.setIs24HourView(true); timePicker.setHour(calendar.get(Calendar.HOUR_OF_DAY)); timePicker.setMinute(calendar.get(Calendar.MINUTE));
         ArrayList<String> scheduleNames = new ArrayList<>();
         for(Event.Schedule schedule : Event.Schedule.values()) scheduleNames.add(schedule.displayName());
-        System.out.println(scheduleNames.size());
         repeatScheduleSpinner.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, scheduleNames.toArray())); repeatScheduleSpinner.setSelection(initialOptions.RepeatSchedule.ordinal());
         showDialog(view);
     }
