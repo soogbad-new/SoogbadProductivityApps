@@ -16,7 +16,6 @@ import androidx.activity.result.ActivityResultRegistry;
 import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import com.soogbad.sharedmodule.core.Utility;
@@ -48,8 +47,7 @@ public class TodoListOptionsDialog extends ItemOptionsDialog<TodoList.Options> {
         dayOfWeekSpinner.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, dayNames.toArray())); dayOfWeekSpinner.setSelection(initialOptions.Day.ordinal());
         timePicker.setIs24HourView(true); timePicker.setHour(initialOptions.Hour); timePicker.setMinute(initialOptions.Minute);
         skipNextRunSwitch.setChecked(initialOptions.SkipNextRun);
-        new MaterialAlertDialogBuilder(context, com.soogbad.sharedmodule.R.style.AlertDialogTheme).setTitle("Edit Options").setView(view)
-                .setPositiveButton("OK", (dialog, which) -> onConfirm()).setNegativeButton("Cancel", null).show();
+        showDialog(view);
     }
     @Override
     protected void onConfirm() {
