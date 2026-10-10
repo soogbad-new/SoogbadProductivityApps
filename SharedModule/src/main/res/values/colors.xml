@@ -2,9 +2,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <color name="appColor">#FFFFFF</color>
-    <color name="calendarGreen" tools:ignore="UnusedResources">#228C33</color>
-    <color name="todoGreen" tools:ignore="UnusedResources">#157530</color>
-    <color name="notesGreen" tools:ignore="UnusedResources">#0E622D</color>
+    <color name="calendarPurple" tools:ignore="UnusedResources">#3E2973</color>
+    <color name="todoYellow" tools:ignore="UnusedResources">#B5A228</color>
+    <color name="notesGreen" tools:ignore="UnusedResources">#0D5728</color>
     <color name="colorAccent">#00B4AA</color>
 
     <color name="black">#000000</color>
