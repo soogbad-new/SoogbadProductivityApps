@@ -1,8 +1,12 @@
 package com.soogbad.soogbadcalendar;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import com.soogbad.sharedmodule.ui.ItemListActivity;
@@ -19,6 +23,8 @@ public class EventListActivity extends ItemListActivity {
         Utility.setWindowProperties(this, R.layout.event_list_activity, R.id.toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), this::onApplyWindowInsetsListener);
         itemsManager = ((SoogbadCalendarApplication)getApplication()).getItemsManager();
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 0);
     }
 
     public void onAddButtonClick(View view) {

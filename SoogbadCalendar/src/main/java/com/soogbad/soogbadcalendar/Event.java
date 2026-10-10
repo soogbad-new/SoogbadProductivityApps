@@ -52,7 +52,9 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
 
     @Override
     public Calendar getNextOccurrence() {
-        return null;
+        Calendar occurrence = Calendar.getInstance();
+        occurrence.setTime(Options.Time);
+        return occurrence;
     }
 
     public enum Schedule {
