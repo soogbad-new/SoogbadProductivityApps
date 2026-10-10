@@ -12,6 +12,8 @@ import android.content.Intent;
 
 import androidx.annotation.RequiresPermission;
 
+import java.util.Calendar;
+
 public class ItemScheduler {
 
     private final Context context;
@@ -31,7 +33,11 @@ public class ItemScheduler {
 
     @RequiresPermission(Manifest.permission.SCHEDULE_EXACT_ALARM)
     public <T extends Item<?> & Item.SchedulableItem> void scheduleItem(T item) {
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, item.getNextOccurrence().getTimeInMillis(), buildPendingIntent(item.UUID));
+        Calendar nextOccurrence = item.getNextOccurrence();
+        if(nextOccurrence == null)
+            cancelItem(item.UUID);
+        else
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextOccurrence.getTimeInMillis(), buildPendingIntent(item.UUID));
     }
     
     public void cancelItem(String itemUuid) {
