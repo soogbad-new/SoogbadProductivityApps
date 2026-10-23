@@ -1,5 +1,6 @@
 package com.soogbad.soogbadcalendar;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -16,6 +17,7 @@ public class EventAlarmReceiver extends ItemAlarmReceiver<Event> {
     @Override
     protected Event getItem(Context context, String uuid) { return ((SoogbadCalendarApplication)context.getApplicationContext()).getItemsManager().getItem(uuid); }
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onAlarm(Context context, Event event) {
         PendingIntent contentIntent = TaskStackBuilder.create(context).addNextIntentWithParentStack(new Intent(context, EventActivity.class).putExtra("item_uuid", event.UUID))
