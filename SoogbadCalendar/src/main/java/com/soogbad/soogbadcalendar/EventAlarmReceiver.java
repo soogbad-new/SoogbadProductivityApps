@@ -12,6 +12,8 @@ import androidx.core.app.TaskStackBuilder;
 
 import com.soogbad.sharedmodule.scheduling.ItemAlarmReceiver;
 
+import java.time.LocalDate;
+
 public class EventAlarmReceiver extends ItemAlarmReceiver<Event> {
 
     @Override
@@ -20,7 +22,8 @@ public class EventAlarmReceiver extends ItemAlarmReceiver<Event> {
     @SuppressLint("MissingPermission")
     @Override
     protected void onAlarm(Context context, Event event) {
-        PendingIntent contentIntent = TaskStackBuilder.create(context).addNextIntentWithParentStack(new Intent(context, EventActivity.class).putExtra("item_uuid", event.UUID))
+        Intent dayIntent = new Intent(context, DayListActivity.class).putExtra("date", LocalDate.now().toString());
+        PendingIntent contentIntent = TaskStackBuilder.create(context).addNextIntentWithParentStack(dayIntent).addNextIntent(new Intent(context, EventActivity.class).putExtra("item_uuid", event.UUID))
                 .getPendingIntent(Math.abs(event.UUID.hashCode()), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         Notification notification = new NotificationCompat.Builder(context, SoogbadCalendarApplication.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher).setContentTitle(event.Title).setContentText("Event reminder")

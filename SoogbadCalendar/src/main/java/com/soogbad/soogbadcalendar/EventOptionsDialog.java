@@ -11,8 +11,8 @@ import android.widget.TimePicker;
 
 import com.soogbad.sharedmodule.ui.ItemOptionsDialog;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.function.Consumer;
 
 public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
@@ -28,10 +28,9 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
     public void show() {
         View view = LayoutInflater.from(context).inflate(R.layout.event_options_dialog, null);
         datePicker = view.findViewById(R.id.datePicker); timePicker = view.findViewById(R.id.timePicker); repeatScheduleSpinner = view.findViewById(R.id.repeatScheduleSpinner);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(initialOptions.Time);
-        datePicker.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        timePicker.setIs24HourView(true); timePicker.setHour(calendar.get(Calendar.HOUR_OF_DAY)); timePicker.setMinute(calendar.get(Calendar.MINUTE));
+        LocalDateTime time = initialOptions.Time;
+        datePicker.updateDate(time.getYear(), time.getMonthValue() - 1, time.getDayOfMonth());
+        timePicker.setIs24HourView(true); timePicker.setHour(time.getHour()); timePicker.setMinute(time.getMinute());
         ArrayList<String> scheduleNames = new ArrayList<>();
         for(Event.Schedule schedule : Event.Schedule.values()) scheduleNames.add(schedule.displayName());
         repeatScheduleSpinner.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, scheduleNames.toArray())); repeatScheduleSpinner.setSelection(initialOptions.RepeatSchedule.ordinal());
@@ -40,10 +39,9 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
 
     @Override
     protected void onConfirm() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getHour(), timePicker.getMinute(), 0);
+        LocalDateTime time = LocalDateTime.of(datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth(), timePicker.getHour(), timePicker.getMinute());
         Event.Schedule repeatSchedule = Event.Schedule.values()[repeatScheduleSpinner.getSelectedItemPosition()];
-        callback.accept(new Event.Options(calendar.getTime(), repeatSchedule));
+        callback.accept(new Event.Options(time, repeatSchedule));
     }
 
 }

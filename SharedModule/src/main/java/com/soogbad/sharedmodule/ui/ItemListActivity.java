@@ -26,9 +26,12 @@ public abstract class ItemListActivity extends AppCompatActivity {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         itemList = findViewById(R.id.itemList);
-        ItemsManager<?, ?> itemsManager = Utility.getItemsManager(this);
         itemList.setLayoutManager(new LinearLayoutManager(this));
-        itemList.setAdapter(new ItemListAdapter(itemsManager.getItems(), R.layout.item_list_item, R.id.itemListItemTitleTextView));
+        itemList.setAdapter(createItemListAdapter());
+    }
+    protected RecyclerView.Adapter<?> createItemListAdapter() {
+        ItemsManager<?, ?> itemsManager = Utility.getItemsManager(this);
+        return new ItemListAdapter(itemsManager.getItems(), R.layout.item_list_item, R.id.itemListItemTitleTextView);
     }
 
     public void onItemListItemClick(View view) {

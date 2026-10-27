@@ -16,7 +16,7 @@
         tools:ignore="LockedOrientationActivity,DiscouragedApi">
 
         <activity
-            android:name=".EventListActivity"
+            android:name=".MonthGridActivity"
             android:label="SoogbadCalendar"
             android:screenOrientation="portrait"
             android:exported="true">
@@ -27,8 +27,14 @@
         </activity>
 
         <activity
+            android:name=".DayListActivity"
+            android:parentActivityName=".MonthGridActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+
+        <activity
             android:name=".EventActivity"
-            android:parentActivityName=".EventListActivity"
+            android:parentActivityName=".DayListActivity"
             android:screenOrientation="portrait"
             android:exported="true" />
 
