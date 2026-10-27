@@ -74,8 +74,7 @@ public class MonthGrid extends LinearLayout {
         dayNumber.setText(String.valueOf(day.getDayOfMonth()));
         cell.setAlpha(inMonth ? 1f : 0.4f);
         cell.setTag(day);
-        if(isToday)
-            dayNumber.setBackgroundResource(R.drawable.month_today_circle);
+        dayNumber.setBackgroundResource(isToday ? R.drawable.month_today_circle : 0);
         LinearLayout eventsContainer = cell.findViewById(R.id.dayEventsContainer);
         eventsContainer.removeAllViews();
         for(int i = 0; i < Math.min(dayEvents.size(), MAX_VISIBLE_EVENTS); i++) {
