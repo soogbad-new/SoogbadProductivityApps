@@ -37,11 +37,14 @@
             android:paddingHorizontal="8dp"
             android:paddingVertical="4dp">
 
-            <ImageButton
+            <com.google.android.material.button.MaterialButton
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/chevron_left"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                style="?attr/materialIconButtonStyle"
+                app:icon="@drawable/chevron_left"
+                app:iconTint="@color/white"
+                app:iconSize="24dp"
+                android:padding="8dp"
                 android:contentDescription="Previous month"
                 android:onClick="onPreviousMonthButtonClick" />
 
@@ -56,11 +59,14 @@
                 android:textStyle="bold"
                 android:background="?attr/selectableItemBackground" />
 
-            <ImageButton
+            <com.google.android.material.button.MaterialButton
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/chevron_right"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                style="?attr/materialIconButtonStyle"
+                app:icon="@drawable/chevron_right"
+                app:iconTint="@color/white"
+                app:iconSize="24dp"
+                android:padding="8dp"
                 android:contentDescription="Next month"
                 android:onClick="onNextMonthButtonClick" />
 
@@ -70,7 +76,8 @@
             android:id="@+id/monthGrid"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@color/lightBlue" />
 
     </LinearLayout>
 
