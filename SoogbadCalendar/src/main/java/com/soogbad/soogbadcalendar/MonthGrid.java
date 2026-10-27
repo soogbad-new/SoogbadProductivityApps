@@ -53,7 +53,8 @@ public class MonthGrid extends LinearLayout {
             label.setGravity(Gravity.CENTER);
             label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
             label.setTextColor(ContextCompat.getColor(context, com.soogbad.sharedmodule.R.color.lightGray));
-            label.setPadding(0, dpToPx(6), 0, dpToPx(6));
+            int paddingPx = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics());
+            label.setPadding(0, paddingPx, 0, paddingPx);
             header.addView(label, new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
         }
         return header;
@@ -91,7 +92,5 @@ public class MonthGrid extends LinearLayout {
             eventsContainer.addView(more);
         }
     }
-
-    private int dpToPx(float dp) { return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics()); }
 
 }

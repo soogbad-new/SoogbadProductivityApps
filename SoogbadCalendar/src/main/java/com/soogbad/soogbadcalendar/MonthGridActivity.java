@@ -20,7 +20,6 @@ import com.soogbad.sharedmodule.core.ItemsManager;
 import com.soogbad.sharedmodule.core.Utility;
 import com.soogbad.sharedmodule.ui.RecycleBinActivity;
 
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
