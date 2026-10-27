@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHolder> {
 
-    private final ArrayList<? extends Item<?>> items;
+    protected final ArrayList<? extends Item<?>> items;
     private final int item_resource, item_title_id;
 
     public ItemListAdapter(ArrayList<? extends Item<?>> items, @LayoutRes int item_resource, @IdRes int item_title_id) {
@@ -67,6 +67,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
             Utility.getAppUtility(context).createItemOptionsDialog(context, item.Options, (options) -> {
                 item.setOptions(options);
                 itemsManager.saveItemOptions(item.UUID, item.Options, Utility.getAppUtility(context)::onItemOptionsChanged);
+                onItemOptionsSaved();
             });
             return true;
         }
@@ -76,19 +77,21 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
         }
         else if(menuItem.getItemId() == R.id.action_delete) {
             itemsManager.moveItemToRecycleBin(item.UUID);
-            notifyItemRemoved(itemHolder);
+            onItemDeleted(itemHolder, item);
             return true;
         }
         return false;
     }
+
     @SuppressLint("NotifyDataSetChanged")
-    private void notifyItemRemoved(ViewHolder itemHolder) {
+    protected void onItemDeleted(ViewHolder itemHolder, Item<?> ignoredItem) {
         int position = itemHolder.getBindingAdapterPosition();
         if(position != RecyclerView.NO_POSITION)
             notifyItemRemoved(position);
         else
             notifyDataSetChanged();
     }
+    protected void onItemOptionsSaved() { }
 
     @Override
     public int getItemCount() { return items.size(); }
