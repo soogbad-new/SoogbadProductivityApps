@@ -14,7 +14,16 @@ public class ItemsManager<T extends Item<O>, O extends Item.Options> {
 
     private final ArrayList<T> items = new ArrayList<>();
     public ArrayList<T> getItems() { return items; }
-    public T getItem(String uuid) { return items.stream().filter(i -> i.UUID.equals(uuid)).findFirst().orElse(null); }
+
+    private boolean isListLoaded = false;
+    public boolean isListLoaded() { return isListLoaded; }
+
+    public T getItem(String uuid) {
+        if(isListLoaded)
+            return items.stream().filter(i -> i.UUID.equals(uuid)).findFirst().orElse(null);
+        else
+            return storageManager.itemExists(uuid) ? loadItem(uuid, false) : null;
+    }
 
     private final ArrayList<T> recycleBinItems = new ArrayList<>();
     public ArrayList<T> getRecycleBinItems() { return recycleBinItems; }
@@ -34,6 +43,7 @@ public class ItemsManager<T extends Item<O>, O extends Item.Options> {
         items.clear();
         for(String uuid : storageManager.loadItemUUIDs(false))
             items.add(loadItem(uuid, false));
+        isListLoaded = true;
     }
     public void loadRecycleBinItems() {
         recycleBinItems.clear();

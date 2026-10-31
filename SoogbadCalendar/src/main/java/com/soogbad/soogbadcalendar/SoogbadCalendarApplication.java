@@ -26,12 +26,15 @@ public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Opt
     public void onCreate() {
         super.onCreate();
         itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Event::create, Event::parseOptionsFromJson);
-        itemsManager.loadItems();
         itemScheduler = new ItemScheduler(this, EventAlarmReceiver.class);
         itemsManager.setItemScheduler(itemScheduler);
+        getSystemService(NotificationManager.class).createNotificationChannel(new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Events", NotificationManager.IMPORTANCE_HIGH));
+    }
+
+    @Override
+    protected void onFirstActivityOpened() {
         if(!getSystemService(AlarmManager.class).canScheduleExactAlarms())
             startActivity(new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:" + getPackageName())).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-        getSystemService(NotificationManager.class).createNotificationChannel(new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Events", NotificationManager.IMPORTANCE_HIGH));
         itemScheduler.scheduleAllItems();
     }
 

@@ -42,6 +42,10 @@ public class StorageManager {
         return uuids;
     }
 
+    public boolean itemExists(String uuid) {
+        return Files.exists(directory.resolve(uuid + ".metadata.json"));
+    }
+
     public void saveContent(String uuid, SpannedString spannedText) {
         String json = RichTextSerializer.serialize(spannedText);
         try { Files.write(directory.resolve(uuid + ".content.json"), json.getBytes(StandardCharsets.UTF_16)); }

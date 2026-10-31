@@ -13,7 +13,6 @@ import com.soogbad.sharedmodule.core.ItemsManager;
 import com.soogbad.sharedmodule.core.StorageManager;
 import com.soogbad.sharedmodule.ui.ItemActivity;
 
-import java.util.Comparator;
 import java.util.function.Consumer;
 
 public class SoogbadTodoApplication extends ItemApplication<TodoList, TodoList.Options> {
@@ -24,10 +23,12 @@ public class SoogbadTodoApplication extends ItemApplication<TodoList, TodoList.O
     public void onCreate() {
         super.onCreate();
         itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), TodoList::create, TodoList::parseOptionsFromJson);
-        itemsManager.loadItems();
-        itemsManager.getItems().sort(Comparator.comparing((TodoList item) -> item.Options.Day).thenComparingInt(item -> item.Options.Hour).thenComparingInt(item -> item.Options.Minute));
         itemScheduler = new ItemScheduler(this, TodoAlarmReceiver.class);
         itemsManager.setItemScheduler(itemScheduler);
+    }
+
+    @Override
+    protected void onFirstActivityOpened() {
         if(!getSystemService(AlarmManager.class).canScheduleExactAlarms())
             startActivity(new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:" + getPackageName())).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         if(!Settings.canDrawOverlays(this))
