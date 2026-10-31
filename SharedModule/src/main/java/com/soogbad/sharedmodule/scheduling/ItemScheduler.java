@@ -29,7 +29,7 @@ public class ItemScheduler {
     public void scheduleAllItems() {
         for(Item<?> item : Utility.getItemsManager(context).getItems()) {
             Calendar nextOccurrence = ((Item.SchedulableItem)item).getNextOccurrence();
-            if(nextOccurrence != null) // Don't set an alarm whose time is in the past. No need to cancel here because any outdated alarm would have already been cancelled in scheduleItem
+            if(nextOccurrence != null) // Don't set an alarm whose time is in the past. No need to cancel here because any outdated alarm would have already been canceled in scheduleItem
                 setAlarm(item.UUID, nextOccurrence);
         }
     }

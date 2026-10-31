@@ -1,5 +1,6 @@
 package com.soogbad.soogbadcalendar;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import android.content.Context;
@@ -71,7 +72,7 @@ public class MonthGrid extends LinearLayout {
             day = day.plusDays(1);
         }
     }
-    private void bindCell(View cell, LocalDate day, boolean inMonth, boolean isToday, ArrayList<Event> dayEvents) {
+    private void bindCell(View cell, LocalDate day, boolean inMonth, boolean isToday, @Nullable ArrayList<Event> dayEvents) {
         Context context = getContext();
         TextView dayNumber = cell.findViewById(R.id.dayNumberTextView);
         dayNumber.setText(String.valueOf(day.getDayOfMonth()));
@@ -80,6 +81,7 @@ public class MonthGrid extends LinearLayout {
         dayNumber.setBackgroundResource(isToday ? R.drawable.month_today_circle : 0);
         LinearLayout eventsContainer = cell.findViewById(R.id.dayEventsContainer);
         eventsContainer.removeAllViews();
+        if(dayEvents == null) return;
         for(int i = 0; i < Math.min(dayEvents.size(), MAX_VISIBLE_EVENTS); i++) {
             TextView eventTitlePreview = (TextView)LayoutInflater.from(context).inflate(R.layout.event_title_preview, eventsContainer, false);
             eventTitlePreview.setText(dayEvents.get(i).Title);
