@@ -29,9 +29,10 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
     @SuppressWarnings("CanBeFinal")
     public static class Options extends Item.Options {
 
-        public Options(LocalDateTime time, Schedule repeatSchedule) { Time = time; RepeatSchedule = repeatSchedule; }
+        public Options(LocalDateTime time, EventColor eventColor, Schedule repeatSchedule) { Time = time; EventColor = eventColor; RepeatSchedule = repeatSchedule; }
 
         public LocalDateTime Time;
+        public EventColor EventColor;
         public Schedule RepeatSchedule;
 
         @Override
@@ -39,6 +40,7 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
             try {
                 JSONObject json = new JSONObject();
                 json.put("time", Time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+                json.put("eventColor", EventColor.name());
                 json.put("repeatSchedule", RepeatSchedule.name());
                 return json;
             } catch(JSONException e) { throw new RuntimeException(e); }
@@ -49,13 +51,14 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
     public static Options parseOptionsFromJson(JSONObject json) {
         try {
             LocalDateTime time = LocalDateTime.ofInstant(Instant.ofEpochMilli(json.getLong("time")), ZoneId.systemDefault());
+            EventColor eventColor = EventColor.valueOf(json.optString("eventColor", EventColor.PURPLE.name()));
             Schedule repeatSchedule = Schedule.valueOf(json.getString("repeatSchedule"));
-            return new Options(time, repeatSchedule);
+            return new Options(time, eventColor, repeatSchedule);
         } catch(JSONException e) { throw new RuntimeException(e); }
     }
 
     public static Options getDefaultOptions(LocalDate day) {
-        return new Options(day.atTime(8, 0), Schedule.NONE);
+        return new Options(day.atTime(8, 0), EventColor.PURPLE, Schedule.NONE);
     }
 
     public static ArrayList<Event> getEventsOn(List<Event> events, LocalDate day) {
@@ -83,6 +86,13 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
             }
         }
         return GregorianCalendar.from(next.atZone(ZoneId.systemDefault()));
+    }
+
+    public enum EventColor {
+        PURPLE(0xFF3E2973);
+
+        public final int color;
+        EventColor(int color) { this.color = color; }
     }
 
     public enum Schedule {

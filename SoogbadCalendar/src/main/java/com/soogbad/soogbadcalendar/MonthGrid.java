@@ -3,6 +3,7 @@ package com.soogbad.soogbadcalendar;
 import androidx.core.content.ContextCompat;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -80,6 +81,7 @@ public class MonthGrid extends LinearLayout {
         for(int i = 0; i < Math.min(dayEvents.size(), MAX_VISIBLE_EVENTS); i++) {
             TextView eventTitlePreview = (TextView)LayoutInflater.from(context).inflate(R.layout.event_title_preview, eventsContainer, false);
             eventTitlePreview.setText(dayEvents.get(i).Title);
+            eventTitlePreview.setBackgroundTintList(ColorStateList.valueOf(dayEvents.get(i).Options.EventColor.color));
             eventsContainer.addView(eventTitlePreview);
         }
         if(dayEvents.size() > MAX_VISIBLE_EVENTS) {
