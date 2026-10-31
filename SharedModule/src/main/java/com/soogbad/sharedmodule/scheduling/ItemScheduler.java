@@ -27,20 +27,28 @@ public class ItemScheduler {
 
     @RequiresPermission(Manifest.permission.SCHEDULE_EXACT_ALARM)
     public void scheduleAllItems() {
-        for(Item<?> item : Utility.getItemsManager(context).getItems())
-            scheduleItem((Item<?> & Item.SchedulableItem)item);
+        for(Item<?> item : Utility.getItemsManager(context).getItems()) {
+            Calendar nextOccurrence = ((Item.SchedulableItem)item).getNextOccurrence();
+            if(nextOccurrence != null) // Don't set an alarm whose time is in the past. No need to cancel here because any outdated alarm would have already been cancelled in scheduleItem
+                setAlarm(item.UUID, nextOccurrence);
+        }
     }
 
     @RequiresPermission(Manifest.permission.SCHEDULE_EXACT_ALARM)
     public <T extends Item<?> & Item.SchedulableItem> void scheduleItem(T item) {
         Calendar nextOccurrence = item.getNextOccurrence();
-        if(nextOccurrence == null)
-            cancelItem(item.UUID);
+        if(nextOccurrence == null) // Don't set an alarm whose time is in the past
+            cancelAlarm(item.UUID); // Clear any alarm still pending from before
         else
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextOccurrence.getTimeInMillis(), buildPendingIntent(item.UUID));
+            setAlarm(item.UUID, nextOccurrence);
+    }
+
+    @RequiresPermission(Manifest.permission.SCHEDULE_EXACT_ALARM)
+    private void setAlarm(String itemUuid, Calendar time) {
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(), buildPendingIntent(itemUuid));
     }
     
-    public void cancelItem(String itemUuid) {
+    public void cancelAlarm(String itemUuid) {
         alarmManager.cancel(buildPendingIntent(itemUuid));
     }
 

@@ -75,7 +75,7 @@ public class ItemsManager<T extends Item<O>, O extends Item.Options> {
     }
 
     public void moveItemToRecycleBin(String uuid) {
-        if(itemScheduler != null) itemScheduler.cancelItem(uuid);
+        if(itemScheduler != null) itemScheduler.cancelAlarm(uuid);
         T item = getItem(uuid);
         items.removeIf(i -> i.UUID.equals(uuid));
         storageManager.moveToRecycleBin(uuid);
