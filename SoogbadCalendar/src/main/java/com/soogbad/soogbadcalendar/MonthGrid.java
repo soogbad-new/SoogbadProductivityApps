@@ -19,6 +19,7 @@ import java.time.format.TextStyle;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -64,8 +65,9 @@ public class MonthGrid extends LinearLayout {
     public void setMonth(YearMonth month, List<Event> events) {
         LocalDate today = LocalDate.now();
         LocalDate day = month.atDay(1).with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
+        HashMap<LocalDate, ArrayList<Event>> eventsByDay = Event.groupEventsByDay(events, day, day.plusDays(cells.length - 1));
         for(View cell : cells) {
-            bindCell(cell, day, YearMonth.from(day).equals(month), day.equals(today), Event.getEventsOn(events, day));
+            bindCell(cell, day, YearMonth.from(day).equals(month), day.equals(today), eventsByDay.get(day));
             day = day.plusDays(1);
         }
     }

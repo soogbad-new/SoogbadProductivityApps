@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class Event extends Item<Event.Options> implements Item.SchedulableItem {
@@ -67,6 +68,19 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
             if(event.Options.Time.toLocalDate().equals(day)) dayEvents.add(event);
         dayEvents.sort(Comparator.comparing((Event event) -> event.Options.Time));
         return dayEvents;
+    }
+
+    public static HashMap<LocalDate, ArrayList<Event>> groupEventsByDay(List<Event> events, LocalDate from, LocalDate to) {
+        HashMap<LocalDate, ArrayList<Event>> eventsByDay = new HashMap<>();
+        for(LocalDate day = from; !day.isAfter(to); day = day.plusDays(1))
+            eventsByDay.put(day, new ArrayList<>());
+        for(Event event : events) {
+            ArrayList<Event> dayEvents = eventsByDay.get(event.Options.Time.toLocalDate());
+            if(dayEvents != null) dayEvents.add(event);
+        }
+        for(ArrayList<Event> dayEvents : eventsByDay.values())
+            dayEvents.sort(Comparator.comparing((Event event) -> event.Options.Time));
+        return eventsByDay;
     }
 
     @Override
