@@ -46,10 +46,11 @@ public class DayListActivity extends ItemListActivity {
         dayEvents.addAll(Event.getEventsOn(itemsManager.getItems(), day));
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     public void onAddButtonClick(View view) {
-        Event event = itemsManager.createItem(Event.getDefaultOptions(day), Utility.getAppUtility(this)::onItemOptionsChanged);
-        launchItem(event.UUID);
+        Utility.getAppUtility(this).createItemOptionsDialog(this, Event.getDefaultOptions(day), options -> {
+            Event event = itemsManager.createItem((Event.Options)options, Utility.getAppUtility(this)::onItemOptionsChanged);
+            launchItem(event.UUID);
+        });
     }
 
     @Override protected View getToolbar() { return findViewById(R.id.toolbar); }
