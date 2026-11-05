@@ -55,6 +55,7 @@ public class RichParagraphStyle<T extends ParagraphStyle> {
     public static final RichParagraphStyle<AlignmentSpan.Standard> ALIGN_LEFT = TEXT_ALIGNMENT(Layout.Alignment.ALIGN_NORMAL);
     public static final RichParagraphStyle<AlignmentSpan.Standard> ALIGN_CENTER = TEXT_ALIGNMENT(Layout.Alignment.ALIGN_CENTER);
     public static final RichParagraphStyle<AlignmentSpan.Standard> ALIGN_RIGHT = TEXT_ALIGNMENT(Layout.Alignment.ALIGN_OPPOSITE);
+    public static final int[] ALIGNMENT_VALUES = { RichParagraphStyle.ALIGN_LEFT.value, RichParagraphStyle.ALIGN_CENTER.value, RichParagraphStyle.ALIGN_RIGHT.value };
 
     public static RichParagraphStyle<AlignmentSpan.Standard> TEXT_ALIGNMENT(Layout.Alignment alignment) { return new RichParagraphStyle<>(AlignmentSpan.Standard.class, alignment.ordinal()); }
 

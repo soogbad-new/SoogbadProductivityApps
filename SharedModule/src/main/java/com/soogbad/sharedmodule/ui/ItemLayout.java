@@ -49,6 +49,11 @@ public class ItemLayout extends ConstraintLayout {
         itemDeletedGuard = false;
     }
 
+    public void reloadContent() {
+        contentEditText.setTextSafely(itemsManager.getItemContent(item));
+        contentTouched = false;
+    }
+
     public void save() {
         if(itemDeletedGuard)
             return;

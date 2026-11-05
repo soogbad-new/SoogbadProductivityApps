@@ -1,13 +1,25 @@
 package com.soogbad.sharedmodule.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.LayoutRes;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.soogbad.sharedmodule.R;
 import com.soogbad.sharedmodule.core.Item;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 @SuppressWarnings("unused")
 public abstract class ItemOptionsDialog<O extends Item.Options> {
@@ -16,6 +28,9 @@ public abstract class ItemOptionsDialog<O extends Item.Options> {
     protected final O initialOptions;
     protected final Consumer<O> callback;
 
+    private View dialogView;
+    private LinearLayout toolbar;
+
     protected ItemOptionsDialog(Context context, O initialOptions, Consumer<O> callback) {
         this.context = context; this.initialOptions = initialOptions; this.callback = callback;
     }
@@ -23,9 +38,52 @@ public abstract class ItemOptionsDialog<O extends Item.Options> {
     public abstract void show();
     protected abstract void onConfirm();
 
-    protected void showDialog(View view) {
-        new MaterialAlertDialogBuilder(context, R.style.AlertDialogTheme).setTitle("Edit Options").setView(view)
+    @SuppressLint("InflateParams")
+    protected View inflateDialogView(@LayoutRes int contentLayout) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        dialogView = inflater.inflate(R.layout.item_options_dialog, null);
+        toolbar = dialogView.findViewById(R.id.optionsDialogToolbar);
+        inflater.inflate(contentLayout, (ViewGroup)dialogView, true);
+        return dialogView;
+    }
+
+    protected void showDialog() {
+        new MaterialAlertDialogBuilder(context, R.style.AlertDialogTheme).setTitle("Edit Options").setView(dialogView)
                 .setPositiveButton("OK", (dialog, which) -> onConfirm()).setNegativeButton("Cancel", null).show();
+    }
+
+    protected MaterialButton addActionButton(@DrawableRes int icon, String tooltip, Runnable onClick) {
+        MaterialButton button = addToolbarButton(icon, tooltip);
+        button.setOnClickListener(v -> onClick.run());
+        return button;
+    }
+    protected MaterialButton addToggleButton(@DrawableRes int icon, String tooltip, boolean initialState) {
+        MaterialButton button = addToolbarButton(icon, tooltip);
+        button.setCheckable(true); button.setChecked(initialState);
+        button.setIconTint(ContextCompat.getColorStateList(context, initialState ? R.color.selectedGreen : R.color.white));
+        button.addOnCheckedChangeListener((b, isChecked) -> button.setIconTint(ContextCompat.getColorStateList(context, isChecked ? R.color.selectedGreen : R.color.white)));
+        return button;
+    }
+    protected MaterialButton addTextSelectionButton(@DrawableRes int icon, String tooltip, String[] labels, int initialIndex, IntConsumer onSelect) {
+        MaterialButton button = addToolbarButton(icon, tooltip);
+        AtomicInteger selectedIndex = new AtomicInteger(initialIndex);
+        SelectionPopup popup = SelectionPopup.withTextOptions(button, false, labels, i -> { selectedIndex.set(i); onSelect.accept(i); });
+        button.setOnClickListener(v -> popup.show(selectedIndex.get()));
+        return button;
+    }
+    protected MaterialButton addColorSelectionButton(@DrawableRes int icon, String tooltip, int[] colors, int initialIndex, IntConsumer onSelect) {
+        MaterialButton button = addToolbarButton(icon, tooltip);
+        AtomicInteger selectedIndex = new AtomicInteger(initialIndex);
+        button.setIconTint(ColorStateList.valueOf(colors[initialIndex]));
+        SelectionPopup popup = SelectionPopup.withColorOptions(button, false, colors, i -> { selectedIndex.set(i); button.setIconTint(ColorStateList.valueOf(colors[i])); onSelect.accept(i); });
+        button.setOnClickListener(v -> popup.show(selectedIndex.get()));
+        return button;
+    }
+    private MaterialButton addToolbarButton(@DrawableRes int icon, String tooltip) {
+        MaterialButton button = (MaterialButton)LayoutInflater.from(context).inflate(R.layout.options_dialog_toolbar_button, toolbar, false);
+        button.setIconResource(icon); button.setTooltipText(tooltip); button.setContentDescription(tooltip);
+        toolbar.addView(button);
+        return button;
     }
 
 }

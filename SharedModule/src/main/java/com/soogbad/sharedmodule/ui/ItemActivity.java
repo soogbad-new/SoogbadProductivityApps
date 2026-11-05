@@ -43,6 +43,8 @@ public abstract class ItemActivity extends AppCompatActivity {
     }
     protected void onItemLoaded(Item<?> item) {}
 
+    public void reloadContent() { itemLayout.reloadContent(); }
+
     @Override
     protected void onPause() {
         super.onPause();

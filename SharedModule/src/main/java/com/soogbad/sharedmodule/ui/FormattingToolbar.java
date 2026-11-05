@@ -3,9 +3,6 @@ package com.soogbad.sharedmodule.ui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.text.Layout;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.AlignmentSpan;
@@ -16,15 +13,9 @@ import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
@@ -37,7 +28,6 @@ import com.soogbad.sharedmodule.richtext.RichEditText;
 import com.soogbad.sharedmodule.richtext.RichParagraphStyle;
 
 import java.util.HashSet;
-import java.util.function.IntConsumer;
 
 @SuppressLint("SetTextI18n")
 @SuppressWarnings("FieldCanBeLocal")
@@ -49,13 +39,28 @@ public class FormattingToolbar extends ConstraintLayout implements RichEditText.
     private HashSet<RichCharacterStyle<?>> activeCharacterStyles = new HashSet<>();
     private HashSet<RichParagraphStyle<?>> activeParagraphStyles = new HashSet<>();
     private ActionMode currentSelectionActionMode = null;
-    private boolean suppressNextPopup = false;
+    private SelectionPopup textSizePopup, textColorPopup, textAlignmentPopup;
 
     public FormattingToolbar(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.formatting_toolbar_content, this, true);
         boldButton = findViewById(R.id.boldButton); italicButton = findViewById(R.id.italicButton); underlineButton = findViewById(R.id.underlineButton); textSizeButton = findViewById(R.id.textSizeButton); textColorButton = findViewById(R.id.textColorButton); bulletListButton = findViewById(R.id.bulletListButton); textAlignmentButton = findViewById(R.id.textAlignmentButton); hyperlinkButton = findViewById(R.id.hyperlinkButton); regionButton = findViewById(R.id.regionButton); undoButton = findViewById(R.id.undoButton); redoButton = findViewById(R.id.redoButton);
         boldButton.setOnClickListener(v -> onBoldButtonClick()); italicButton.setOnClickListener(v -> onItalicButtonClick()); underlineButton.setOnClickListener(v -> onUnderlineButtonClick()); textSizeButton.setOnClickListener(v -> onTextSizeButtonClick()); textColorButton.setOnClickListener(v -> onTextColorButtonClick()); bulletListButton.setOnClickListener(v -> onBulletListButtonClick()); textAlignmentButton.setOnClickListener(v -> onTextAlignmentButtonClick()); hyperlinkButton.setOnClickListener(v -> onHyperlinkButtonClick()); regionButton.setOnClickListener(v -> onRegionButtonClick()); undoButton.setOnClickListener(v -> onUndoButtonClick()); redoButton.setOnClickListener(v -> onRedoButtonClick());
+        initSelectionPopups();
+    }
+
+    private void initSelectionPopups() {
+        RichCharacterStyle.TextSize[] sizes = RichCharacterStyle.TextSize.values();
+        String[] sizeLabels = new String[sizes.length];
+        for(int i = 0; i < sizes.length; i++) sizeLabels[i] = String.valueOf(sizes[i].size);
+        textSizePopup = SelectionPopup.withTextOptions(textSizeButton, true, sizeLabels, i -> onTextSizeSelected(sizes[i]));
+        RichCharacterStyle.TextColor[] colors = RichCharacterStyle.TextColor.values();
+        int[] colorValues = new int[colors.length];
+        for(int i = 0; i < colors.length; i++) colorValues[i] = colors[i].color;
+        textColorPopup = SelectionPopup.withColorOptions(textColorButton, true, colorValues, i -> onTextColorSelected(colors[i]));
+        textAlignmentPopup = SelectionPopup.withTextOptions(textAlignmentButton, true, new String[]{ "Left", "Center", "Right" }, i -> onTextAlignmentSelected(Layout.Alignment.values()[RichParagraphStyle.ALIGNMENT_VALUES[i]]));
+        for(SelectionPopup popup : new SelectionPopup[]{ textSizePopup, textColorPopup, textAlignmentPopup })
+            popup.setOnShowListener(() -> { if(currentSelectionActionMode != null) currentSelectionActionMode.hide(Long.MAX_VALUE); });
     }
 
     public void init(RichEditText contentEditText) {
@@ -83,34 +88,38 @@ public class FormattingToolbar extends ConstraintLayout implements RichEditText.
     private void onUnderlineButtonClick() { contentEditText.toggleCharacterStyle(RichCharacterStyle.UNDERLINE); }
     private void onTextSizeButtonClick() {
         RichCharacterStyle.TextSize[] sizes = RichCharacterStyle.TextSize.values();
-        int[] sizeValues = new int[sizes.length];
-        for(int i = 0; i < sizes.length; i++) sizeValues[i] = sizes[i].size;
         int selectedSize = RichCharacterStyle.DEFAULT_TEXT_SIZE.size;
         for(RichCharacterStyle<?> style : activeCharacterStyles)
             if(style.spanClass == AbsoluteSizeSpan.class)
                 selectedSize = style.value;
-        showSelectionPopup(textSizeButton, sizeValues, selectedSize, AbsoluteSizeSpan.class, i -> onTextSizeSelected(sizes[i]));
+        int selectedIndex = -1;
+        for(int i = 0; i < sizes.length; i++)
+            if(sizes[i].size == selectedSize) selectedIndex = i;
+        textSizePopup.show(selectedIndex);
     }
     private void onTextSizeSelected(RichCharacterStyle.TextSize size) { contentEditText.toggleCharacterStyle(RichCharacterStyle.TEXT_SIZE(size)); }
     private void onTextColorButtonClick() {
         RichCharacterStyle.TextColor[] colors = RichCharacterStyle.TextColor.values();
-        int[] colorValues = new int[colors.length];
-        for(int i = 0; i < colors.length; i++) colorValues[i] = colors[i].color;
         int selectedColor = RichCharacterStyle.DEFAULT_TEXT_COLOR.color;
         for(RichCharacterStyle<?> style : activeCharacterStyles)
             if(style.spanClass == ForegroundColorSpan.class)
                 selectedColor = style.value;
-        showSelectionPopup(textColorButton, colorValues, selectedColor, ForegroundColorSpan.class, i -> onTextColorSelected(colors[i]));
+        int selectedIndex = -1;
+        for(int i = 0; i < colors.length; i++)
+            if(colors[i].color == selectedColor) selectedIndex = i;
+        textColorPopup.show(selectedIndex);
     }
     private void onTextColorSelected(RichCharacterStyle.TextColor color) { contentEditText.toggleCharacterStyle(RichCharacterStyle.TEXT_COLOR(color)); }
     private void onBulletListButtonClick() { contentEditText.toggleParagraphStyle(RichParagraphStyle.BULLET); }
     private void onTextAlignmentButtonClick() {
-        int[] alignmentValues = new int[]{ RichParagraphStyle.ALIGN_LEFT.value, RichParagraphStyle.ALIGN_CENTER.value, RichParagraphStyle.ALIGN_RIGHT.value };
         int selectedAlignment = RichParagraphStyle.DEFAULT_TEXT_ALIGNMENT.value;
         for(RichParagraphStyle<?> style : activeParagraphStyles)
             if(style.spanClass == AlignmentSpan.Standard.class)
                 selectedAlignment = style.value;
-        showSelectionPopup(textAlignmentButton, alignmentValues, selectedAlignment, AlignmentSpan.Standard.class, i -> onTextAlignmentSelected(Layout.Alignment.values()[alignmentValues[i]]));
+        int selectedIndex = -1;
+        for(int i = 0; i < RichParagraphStyle.ALIGNMENT_VALUES.length; i++)
+            if(RichParagraphStyle.ALIGNMENT_VALUES[i] == selectedAlignment) selectedIndex = i;
+        textAlignmentPopup.show(selectedIndex);
     }
     private void onTextAlignmentSelected(Layout.Alignment alignment) { contentEditText.toggleParagraphStyle(RichParagraphStyle.TEXT_ALIGNMENT(alignment)); }
     private void onHyperlinkButtonClick() {
@@ -160,62 +169,6 @@ public class FormattingToolbar extends ConstraintLayout implements RichEditText.
             button.setIconTint(ContextCompat.getColorStateList(getContext(), R.color.selectedGreen));
         else
             button.setIconTint(ContextCompat.getColorStateList(getContext(), R.color.white));
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private void showSelectionPopup(MaterialButton popupAnchor, int[] options, int selectedOption, Class<?> styleType, IntConsumer onSelect) {
-        if(suppressNextPopup) {
-            suppressNextPopup = false;
-            return;
-        }
-        if(currentSelectionActionMode != null)
-            currentSelectionActionMode.hide(Long.MAX_VALUE);
-        Context themedContext = new ContextThemeWrapper(getContext(), R.style.AppTheme_PopupOverlay);
-        LayoutInflater inflater = LayoutInflater.from(themedContext);
-        LinearLayout popupLayout = (LinearLayout)inflater.inflate(R.layout.formatting_toolbar_popup, this, false);
-        PopupWindow popup = new PopupWindow(popupLayout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, false);
-        popup.setWindowLayoutType(WindowManager.LayoutParams.TYPE_APPLICATION_SUB_PANEL);
-        popup.setElevation(8);
-        popup.setOutsideTouchable(true);
-        TypedValue typedValue = new TypedValue();
-        themedContext.getTheme().resolveAttribute(android.R.attr.colorBackground, typedValue, true);
-        popup.setBackgroundDrawable(new ColorDrawable(typedValue.data));
-        popup.setTouchInterceptor((view, motionEvent) -> {
-            if(motionEvent.getAction() == MotionEvent.ACTION_OUTSIDE && Utility.isMotionEventInsideView(motionEvent, popupAnchor))
-                suppressNextPopup = true;
-            return false;
-        });
-        for(int i = 0; i < options.length; i++) {
-            TextView textView = (TextView)inflater.inflate(styleType == ForegroundColorSpan.class ? R.layout.formatting_toolbar_popup_option_color : R.layout.formatting_toolbar_popup_option, popupLayout, false);
-            adjustOptionTextView(textView, options[i], options[i] == selectedOption, styleType);
-            final int index = i;
-            textView.setOnClickListener(view -> { popup.dismiss(); onSelect.accept(index); });
-            popupLayout.addView(textView);
-        }
-        popupLayout.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-        popup.showAsDropDown(popupAnchor, 0, -(popupAnchor.getHeight() + popupLayout.getMeasuredHeight()));
-    }
-    private void adjustOptionTextView(TextView textView, int value, boolean selected, Class<?> styleType) {
-        if(styleType == AbsoluteSizeSpan.class) {
-            textView.setText(String.valueOf(value));
-            if(selected)
-                textView.setBackgroundResource(R.drawable.selected_popup_option_border);
-        }
-        else if(styleType == ForegroundColorSpan.class) {
-            textView.setBackgroundColor(value);
-            if(selected) {
-                Drawable colorDrawable = new ColorDrawable(value);
-                Drawable borderDrawable = ContextCompat.getDrawable(getContext(), R.drawable.selected_popup_option_border);
-                textView.setBackground(new LayerDrawable(new Drawable[] { colorDrawable, borderDrawable }));
-            }
-        }
-        else if(styleType == AlignmentSpan.Standard.class) {
-            if(value == RichParagraphStyle.ALIGN_LEFT.value) textView.setText("Left");
-            else if(value == RichParagraphStyle.ALIGN_CENTER.value) textView.setText("Center");
-            else if(value == RichParagraphStyle.ALIGN_RIGHT.value) textView.setText("Right");
-            if(selected)
-                textView.setBackgroundResource(R.drawable.selected_popup_option_border);
-        }
     }
 
     private void showHyperlinkDialog(boolean selection, boolean selectionIsUrl) {

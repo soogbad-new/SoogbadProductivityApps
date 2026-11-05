@@ -32,6 +32,7 @@ public class TodoList extends Item<TodoList.Options> implements Item.Schedulable
         public int Minute;
         public boolean SkipNextRun;
         public SpannedString DefaultContent;
+        public boolean ResetRequested = false;
 
         @Override
         public JSONObject toJson() {

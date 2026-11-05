@@ -1,8 +1,6 @@
 package com.soogbad.soogbadcalendar;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
@@ -17,23 +15,34 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
     private DatePicker datePicker;
     private TimePicker timePicker;
 
+    private Event.EventColor eventColor;
+    private Event.Schedule repeatSchedule;
+
     public EventOptionsDialog(Context context, Event.Options initialOptions, Consumer<Event.Options> callback) { super(context, initialOptions, callback); }
 
-    @SuppressLint("InflateParams")
     @Override
     public void show() {
-        View view = LayoutInflater.from(context).inflate(R.layout.event_options_dialog, null);
+        View view = inflateDialogView(R.layout.event_options_dialog_content);
         datePicker = view.findViewById(R.id.datePicker); timePicker = view.findViewById(R.id.timePicker);
+        eventColor = initialOptions.EventColor; repeatSchedule = initialOptions.RepeatSchedule;
+        Event.EventColor[] colors = Event.EventColor.values();
+        int[] colorValues = new int[colors.length];
+        for(int i = 0; i < colors.length; i++) colorValues[i] = colors[i].color;
+        addColorSelectionButton(R.drawable.palette, "Event Color", colorValues, eventColor.ordinal(), i -> eventColor = colors[i]);
+        Event.Schedule[] schedules = Event.Schedule.values();
+        String[] scheduleNames = new String[schedules.length];
+        for(int i = 0; i < schedules.length; i++) scheduleNames[i] = schedules[i].displayName();
+        addTextSelectionButton(R.drawable.event_repeat, "Repeat Schedule", scheduleNames, repeatSchedule.ordinal(), i -> repeatSchedule = schedules[i]);
         LocalDateTime time = initialOptions.Time;
         datePicker.updateDate(time.getYear(), time.getMonthValue() - 1, time.getDayOfMonth());
         timePicker.setIs24HourView(true); timePicker.setHour(time.getHour()); timePicker.setMinute(time.getMinute());
-        showDialog(view);
+        showDialog();
     }
 
     @Override
     protected void onConfirm() {
         LocalDateTime time = LocalDateTime.of(datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth(), timePicker.getHour(), timePicker.getMinute());
-        callback.accept(new Event.Options(time, initialOptions.EventColor, initialOptions.RepeatSchedule));
+        callback.accept(new Event.Options(time, eventColor, repeatSchedule));
     }
 
 }

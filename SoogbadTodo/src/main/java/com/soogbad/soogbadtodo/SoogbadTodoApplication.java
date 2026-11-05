@@ -47,7 +47,12 @@ public class SoogbadTodoApplication extends ItemApplication<TodoList, TodoList.O
                 new TodoListOptionsDialog(context, (TodoList.Options)initialOptions, callback::accept).show();
             }
             @Override public void onItemOptionsChanged(Item<?> item) {
-                getItemScheduler().scheduleItem((TodoList)item);
+                TodoList todoList = (TodoList)item;
+                if(todoList.Options.ResetRequested) {
+                    todoList.Options.ResetRequested = false;
+                    itemsManager.saveItemContent(todoList.UUID, todoList.Options.DefaultContent);
+                }
+                getItemScheduler().scheduleItem(todoList);
             }
             @Override public ItemScheduler getItemScheduler() { return itemScheduler; }
         };

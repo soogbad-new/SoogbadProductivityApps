@@ -29,8 +29,9 @@ public class Utility {
     }
 
     public static boolean isMotionEventInsideView(MotionEvent motionEvent, View view) {
-        Rect rect = new Rect();
-        view.getGlobalVisibleRect(rect);
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+        Rect rect = new Rect(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight());
         return rect.contains((int)motionEvent.getRawX(), (int)motionEvent.getRawY());
     }
 
