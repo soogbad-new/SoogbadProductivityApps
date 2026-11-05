@@ -1,11 +1,9 @@
 package com.soogbad.sharedmodule.ui;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
@@ -38,12 +36,14 @@ public abstract class ItemOptionsDialog<O extends Item.Options> {
     public abstract void show();
     protected abstract void onConfirm();
 
-    @SuppressLint("InflateParams")
     protected View inflateDialogView(@LayoutRes int contentLayout) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        dialogView = inflater.inflate(R.layout.item_options_dialog, null);
-        toolbar = dialogView.findViewById(R.id.optionsDialogToolbar);
-        inflater.inflate(contentLayout, (ViewGroup)dialogView, true);
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        inflater.inflate(R.layout.options_dialog_toolbar, layout, true);
+        toolbar = layout.findViewById(R.id.optionsDialogToolbar);
+        inflater.inflate(contentLayout, layout, true);
+        dialogView = layout;
         return dialogView;
     }
 
