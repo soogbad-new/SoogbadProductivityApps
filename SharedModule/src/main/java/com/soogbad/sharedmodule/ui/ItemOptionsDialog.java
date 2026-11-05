@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SameParameterValue"})
 public abstract class ItemOptionsDialog<O extends Item.Options> {
 
     protected final Context context;
@@ -52,32 +52,28 @@ public abstract class ItemOptionsDialog<O extends Item.Options> {
                 .setPositiveButton("OK", (dialog, which) -> onConfirm()).setNegativeButton("Cancel", null).show();
     }
 
-    protected MaterialButton addActionButton(@DrawableRes int icon, String tooltip, Runnable onClick) {
+    protected void addActionButton(@DrawableRes int icon, String tooltip, Runnable onClick) {
         MaterialButton button = addToolbarButton(icon, tooltip);
-        button.setOnClickListener(v -> onClick.run());
-        return button;
+        button.setOnClickListener(view -> onClick.run());
     }
-    protected MaterialButton addToggleButton(@DrawableRes int icon, String tooltip, boolean initialState) {
+    protected void addToggleButton(@DrawableRes int icon, String tooltip, boolean initialState, Consumer<Boolean> onCheckedChange) {
         MaterialButton button = addToolbarButton(icon, tooltip);
         button.setCheckable(true); button.setChecked(initialState);
         button.setIconTint(ContextCompat.getColorStateList(context, initialState ? R.color.selectedGreen : R.color.white));
-        button.addOnCheckedChangeListener((b, isChecked) -> button.setIconTint(ContextCompat.getColorStateList(context, isChecked ? R.color.selectedGreen : R.color.white)));
-        return button;
+        button.addOnCheckedChangeListener((view, isChecked) -> { button.setIconTint(ContextCompat.getColorStateList(context, isChecked ? R.color.selectedGreen : R.color.white)); onCheckedChange.accept(isChecked); });
     }
-    protected MaterialButton addTextSelectionButton(@DrawableRes int icon, String tooltip, String[] labels, int initialIndex, IntConsumer onSelect) {
+    protected void addTextSelectionButton(@DrawableRes int icon, String tooltip, String[] labels, int initialIndex, IntConsumer onSelect) {
         MaterialButton button = addToolbarButton(icon, tooltip);
         AtomicInteger selectedIndex = new AtomicInteger(initialIndex);
         SelectionPopup popup = SelectionPopup.withTextOptions(button, false, labels, i -> { selectedIndex.set(i); onSelect.accept(i); });
-        button.setOnClickListener(v -> popup.show(selectedIndex.get()));
-        return button;
+        button.setOnClickListener(view -> popup.show(selectedIndex.get()));
     }
-    protected MaterialButton addColorSelectionButton(@DrawableRes int icon, String tooltip, int[] colors, int initialIndex, IntConsumer onSelect) {
+    protected void addColorSelectionButton(@DrawableRes int icon, String tooltip, int[] colors, int initialIndex, IntConsumer onSelect) {
         MaterialButton button = addToolbarButton(icon, tooltip);
         AtomicInteger selectedIndex = new AtomicInteger(initialIndex);
         button.setIconTint(ColorStateList.valueOf(colors[initialIndex]));
         SelectionPopup popup = SelectionPopup.withColorOptions(button, false, colors, i -> { selectedIndex.set(i); button.setIconTint(ColorStateList.valueOf(colors[i])); onSelect.accept(i); });
-        button.setOnClickListener(v -> popup.show(selectedIndex.get()));
-        return button;
+        button.setOnClickListener(view -> popup.show(selectedIndex.get()));
     }
     private MaterialButton addToolbarButton(@DrawableRes int icon, String tooltip) {
         MaterialButton button = (MaterialButton)LayoutInflater.from(context).inflate(R.layout.options_dialog_toolbar_button, toolbar, false);

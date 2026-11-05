@@ -1,6 +1,5 @@
 package com.soogbad.soogbadcalendar;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 
