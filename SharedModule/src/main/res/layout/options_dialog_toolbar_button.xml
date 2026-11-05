@@ -4,4 +4,4 @@
     android:layout_height="48dp"
     style="?attr/materialIconButtonStyle"
     app:iconTint="@color/white"
-    android:backgroundTint="@color/black" />
+    android:backgroundTint="@android:color/transparent" />
