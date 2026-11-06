@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:maxHeight="500dp">
-
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:paddingTop="24dp"
+    android:paddingHorizontal="24dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -43,5 +39,3 @@
         android:timePickerMode="spinner" />
 
 </LinearLayout>
-
-</ScrollView>
