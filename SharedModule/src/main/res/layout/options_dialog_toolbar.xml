@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="?attr/colorSurfaceContainerHigh"
-        android:paddingTop="20dp"
-        android:paddingHorizontal="20dp" />
+        android:paddingTop="16dp"
+        android:paddingHorizontal="16dp" />
 
 </HorizontalScrollView>
