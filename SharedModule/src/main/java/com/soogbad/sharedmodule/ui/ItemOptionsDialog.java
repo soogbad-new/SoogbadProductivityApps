@@ -1,5 +1,6 @@
 package com.soogbad.sharedmodule.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
@@ -26,7 +27,7 @@ public abstract class ItemOptionsDialog<O extends Item.Options> {
     protected final O initialOptions;
     protected final Consumer<O> callback;
 
-    private View dialogView;
+    private View toolbarView, dialogView;
     private LinearLayout toolbar;
 
     protected ItemOptionsDialog(Context context, O initialOptions, Consumer<O> callback) {
@@ -36,19 +37,17 @@ public abstract class ItemOptionsDialog<O extends Item.Options> {
     public abstract void show();
     protected abstract void onConfirm();
 
+    @SuppressLint("InflateParams")
     protected View inflateDialogView(@LayoutRes int contentLayout) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        LinearLayout layout = new LinearLayout(context);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        inflater.inflate(R.layout.options_dialog_toolbar, layout, true);
-        toolbar = layout.findViewById(R.id.optionsDialogToolbar);
-        inflater.inflate(contentLayout, layout, true);
-        dialogView = layout;
+        toolbarView = inflater.inflate(R.layout.options_dialog_toolbar, null);
+        toolbar = toolbarView.findViewById(R.id.optionsDialogToolbar);
+        dialogView = inflater.inflate(contentLayout, null);
         return dialogView;
     }
 
     protected void showDialog() {
-        new MaterialAlertDialogBuilder(context, R.style.AlertDialogTheme).setTitle("Edit Options").setView(dialogView)
+        new MaterialAlertDialogBuilder(context, R.style.AlertDialogTheme).setCustomTitle(toolbarView).setView(dialogView)
                 .setPositiveButton("OK", (dialog, which) -> onConfirm()).setNegativeButton("Cancel", null).show();
     }
 
