@@ -46,7 +46,7 @@
         android:layout_margin="20dp"
         android:elevation="4dp"
         app:srcCompat="@drawable/add"
-        android:backgroundTint="@color/yellow"
+        android:backgroundTint="@color/appColor"
         android:onClick="onAddButtonClick"
         android:contentDescription="Add" />
 

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="appColor">@color/calendarPurple</color>
+    <color name="appColor">@color/calendarRed</color>
 </resources>

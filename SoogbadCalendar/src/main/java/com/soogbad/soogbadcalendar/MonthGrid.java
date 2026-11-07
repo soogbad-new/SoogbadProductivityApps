@@ -50,6 +50,7 @@ public class MonthGrid extends LinearLayout {
     private LinearLayout createWeekdayHeader(Context context) {
         LinearLayout header = new LinearLayout(context);
         header.setOrientation(HORIZONTAL);
+        header.setBackgroundColor(ContextCompat.getColor(context, com.soogbad.sharedmodule.R.color.darkBlue));
         for(int i = 0; i < DAYS_IN_WEEK; i++) {
             TextView label = new TextView(context);
             label.setText(firstDayOfWeek.plus(i).getDisplayName(TextStyle.SHORT, Locale.getDefault()));
