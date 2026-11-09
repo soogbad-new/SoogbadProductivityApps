@@ -20,6 +20,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class Event extends Item<Event.Options> implements Item.SchedulableItem {
@@ -113,7 +114,7 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
                 long count = Math.max(scheduleUnit.between(start, from), 0);
                 for(LocalDate day = start.plus(count, scheduleUnit); !day.isAfter(to); day = start.plus(++count, scheduleUnit))
                     if(!day.isBefore(from) && !event.Options.DeletedOccurrences.contains(day))
-                        eventsByDay.get(day).add(event);
+                        Objects.requireNonNull(eventsByDay.get(day)).add(event);
             }
         }
         for(ArrayList<Event> dayEvents : eventsByDay.values())

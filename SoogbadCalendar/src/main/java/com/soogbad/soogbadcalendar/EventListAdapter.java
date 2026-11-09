@@ -41,10 +41,8 @@ public class EventListAdapter extends ItemListAdapter {
     @Override
     protected void deleteItem(ViewHolder itemHolder, Item<?> item) {
         Event event = (Event)item;
-        if(event.Options.RepeatSchedule == Event.Schedule.NONE) {
+        if(event.Options.RepeatSchedule == Event.Schedule.NONE)
             super.deleteItem(itemHolder, item);
-            return;
-        }
         else {
             Context context = itemHolder.itemView.getContext();
             new MaterialAlertDialogBuilder(context, com.soogbad.sharedmodule.R.style.AlertDialogTheme).setTitle("Delete Repeating Event").setItems(new CharSequence[] { "This event", "All events" }, (dialog, which) -> {
