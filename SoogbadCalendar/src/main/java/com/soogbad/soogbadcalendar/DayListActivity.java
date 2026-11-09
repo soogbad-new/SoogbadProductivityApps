@@ -32,7 +32,7 @@ public class DayListActivity extends ItemListActivity {
     }
     @Override
     protected RecyclerView.Adapter<?> createItemListAdapter() {
-        return new EventListAdapter(dayEvents, this::reloadDayEvents);
+        return new EventListAdapter(dayEvents, day, this::reloadDayEvents);
     }
 
     @Override

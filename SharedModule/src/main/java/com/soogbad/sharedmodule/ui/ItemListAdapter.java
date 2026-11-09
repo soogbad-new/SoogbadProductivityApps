@@ -76,13 +76,16 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
             return true;
         }
         else if(menuItem.getItemId() == R.id.action_delete) {
-            itemsManager.moveItemToRecycleBin(item.UUID);
-            onItemDeleted(itemHolder, item);
+            deleteItem(itemHolder, item);
             return true;
         }
         return false;
     }
 
+    protected void deleteItem(ViewHolder itemHolder, Item<?> item) {
+        Utility.getItemsManager(itemHolder.itemView.getContext()).moveItemToRecycleBin(item.UUID);
+        onItemDeleted(itemHolder, item);
+    }
     @SuppressLint("NotifyDataSetChanged")
     protected void onItemDeleted(ViewHolder itemHolder, Item<?> ignoredItem) {
         int position = itemHolder.getBindingAdapterPosition();

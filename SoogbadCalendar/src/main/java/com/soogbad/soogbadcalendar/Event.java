@@ -2,6 +2,7 @@ package com.soogbad.soogbadcalendar;
 
 import com.soogbad.sharedmodule.core.Item;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,7 +16,9 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Event extends Item<Event.Options> implements Item.SchedulableItem {
 
@@ -30,11 +33,14 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
     @SuppressWarnings("CanBeFinal")
     public static class Options extends Item.Options {
 
-        public Options(LocalDateTime time, EventColor eventColor, Schedule repeatSchedule) { Time = time; EventColor = eventColor; RepeatSchedule = repeatSchedule; }
+        public Options(LocalDateTime time, EventColor eventColor, Schedule repeatSchedule, Set<LocalDate> deletedOccurrences) {
+            Time = time; EventColor = eventColor; RepeatSchedule = repeatSchedule; DeletedOccurrences = deletedOccurrences;
+        }
 
         public LocalDateTime Time;
         public EventColor EventColor;
         public Schedule RepeatSchedule;
+        public Set<LocalDate> DeletedOccurrences;
 
         @Override
         public JSONObject toJson() {
@@ -43,6 +49,9 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
                 json.put("time", Time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
                 json.put("eventColor", EventColor.name());
                 json.put("repeatSchedule", RepeatSchedule.name());
+                JSONArray deletedOccurrences = new JSONArray();
+                for(LocalDate date : DeletedOccurrences) deletedOccurrences.put(date.toString());
+                json.put("deletedOccurrences", deletedOccurrences);
                 return json;
             } catch(JSONException e) { throw new RuntimeException(e); }
         }
@@ -54,19 +63,32 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
             LocalDateTime time = LocalDateTime.ofInstant(Instant.ofEpochMilli(json.getLong("time")), ZoneId.systemDefault());
             EventColor eventColor = EventColor.valueOf(json.getString("eventColor"));
             Schedule repeatSchedule = Schedule.valueOf(json.getString("repeatSchedule"));
-            return new Options(time, eventColor, repeatSchedule);
+            Set<LocalDate> deletedOccurrences = new HashSet<>();
+            JSONArray deletedOccurrencesJson = json.optJSONArray("deletedOccurrences");
+            if(deletedOccurrencesJson != null)
+                for(int i = 0; i < deletedOccurrencesJson.length(); i++) deletedOccurrences.add(LocalDate.parse(deletedOccurrencesJson.getString(i)));
+            return new Options(time, eventColor, repeatSchedule, deletedOccurrences);
         } catch(JSONException e) { throw new RuntimeException(e); }
     }
 
     public static Options getDefaultOptions(LocalDate day) {
-        return new Options(day.atTime(8, 0), EventColor.GREEN, Schedule.NONE);
+        return new Options(day.atTime(8, 0), EventColor.GREEN, Schedule.NONE, new HashSet<>());
+    }
+
+    public boolean occursOn(LocalDate day) {
+        LocalDate start = Options.Time.toLocalDate();
+        ChronoUnit scheduleUnit = Options.RepeatSchedule.unit;
+        if(scheduleUnit == null) return day.equals(start); // if repeat schedule is none, just compare between the dates
+        if(day.isBefore(start) || Options.DeletedOccurrences.contains(day)) return false;
+        long count = scheduleUnit.between(start, day);
+        return start.plus(count, scheduleUnit).equals(day) || start.plus(count + 1, scheduleUnit).equals(day); // plus() clamps to month end (Jan 31 -> Feb 28), in which case between() comes out one short
     }
 
     public static ArrayList<Event> getEventsOn(List<Event> events, LocalDate day) {
         ArrayList<Event> dayEvents = new ArrayList<>();
         for(Event event : events)
-            if(event.Options.Time.toLocalDate().equals(day)) dayEvents.add(event);
-        dayEvents.sort(Comparator.comparing((Event event) -> event.Options.Time));
+            if(event.occursOn(day)) dayEvents.add(event);
+        dayEvents.sort(Comparator.comparing((Event event) -> event.Options.Time.toLocalTime()));
         return dayEvents;
     }
 
@@ -75,11 +97,22 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
         for(LocalDate day = from; !day.isAfter(to); day = day.plusDays(1))
             eventsByDay.put(day, new ArrayList<>());
         for(Event event : events) {
-            ArrayList<Event> dayEvents = eventsByDay.get(event.Options.Time.toLocalDate());
-            if(dayEvents != null) dayEvents.add(event);
+            LocalDate start = event.Options.Time.toLocalDate();
+            ChronoUnit scheduleUnit = event.Options.RepeatSchedule.unit;
+            if(scheduleUnit == null) {
+                ArrayList<Event> dayEvents = eventsByDay.get(start);
+                if(dayEvents != null)
+                    dayEvents.add(event);
+            }
+            else {
+                long count = Math.max(scheduleUnit.between(start, from), 0);
+                for(LocalDate day = start.plus(count, scheduleUnit); !day.isAfter(to); day = start.plus(++count, scheduleUnit))
+                    if(!day.isBefore(from) && !event.Options.DeletedOccurrences.contains(day))
+                        eventsByDay.get(day).add(event);
+            }
         }
         for(ArrayList<Event> dayEvents : eventsByDay.values())
-            dayEvents.sort(Comparator.comparing((Event event) -> event.Options.Time));
+            dayEvents.sort(Comparator.comparing((Event event) -> event.Options.Time.toLocalTime()));
         return eventsByDay;
     }
 
@@ -88,18 +121,19 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime next = Options.Time;
         ChronoUnit scheduleUnit = Options.RepeatSchedule.unit;
-        if(!next.isAfter(now)) {
-            if(scheduleUnit == null) return null;
-            else {
-                long count = Math.max(scheduleUnit.between(Options.Time, now), 0);
-                next = Options.Time.plus(count, scheduleUnit);
-                while(!next.isAfter(now)) {
-                    count++;
-                    next = Options.Time.plus(count, scheduleUnit);
-                }
-            }
+        if(scheduleUnit == null) {
+            if(!next.isAfter(now)) return null;
+            else return GregorianCalendar.from(next.atZone(ZoneId.systemDefault()));
         }
-        return GregorianCalendar.from(next.atZone(ZoneId.systemDefault()));
+        else {
+            long count = Math.max(scheduleUnit.between(Options.Time, now), 0);
+            next = Options.Time.plus(count, scheduleUnit);
+            while(!next.isAfter(now) || Options.DeletedOccurrences.contains(next.toLocalDate())) {
+                count++;
+                next = Options.Time.plus(count, scheduleUnit);
+            }
+            return GregorianCalendar.from(next.atZone(ZoneId.systemDefault()));
+        }
     }
 
     public enum EventColor {

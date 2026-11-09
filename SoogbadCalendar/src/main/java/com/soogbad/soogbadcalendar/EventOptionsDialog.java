@@ -42,7 +42,7 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
     @Override
     protected void onConfirm() {
         LocalDateTime time = LocalDateTime.of(datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth(), timePicker.getHour(), timePicker.getMinute());
-        callback.accept(new Event.Options(time, eventColor, repeatSchedule));
+        callback.accept(new Event.Options(time, eventColor, repeatSchedule, initialOptions.DeletedOccurrences));
     }
 
 }
