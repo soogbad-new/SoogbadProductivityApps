@@ -5,6 +5,9 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.button.MaterialButton;
 import com.soogbad.sharedmodule.ui.ItemOptionsDialog;
 
 import java.time.LocalDateTime;
@@ -14,6 +17,7 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
 
     private DatePicker datePicker;
     private TimePicker timePicker;
+    private MaterialButton importanceButton, repeatButton;
 
     private Event.EventColor eventColor;
     private Event.Importance importance;
@@ -33,15 +37,25 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
         Event.Importance[] importances = Event.Importance.values();
         String[] importanceNames = new String[importances.length];
         for(int i = 0; i < importances.length; i++) importanceNames[i] = importances[i].displayName();
-        addTextSelectionButton(R.drawable.event_importance, "Importance", importanceNames, importance.ordinal(), i -> importance = importances[i]);
+        importanceButton = addTextSelectionButton(importance == Event.Importance.SILENT ? R.drawable.event_importance_silent : R.drawable.event_importance, "Importance", importanceNames, importance.ordinal(), i -> {
+            importance = importances[i];
+            importanceButton.setIconResource(importance == Event.Importance.SILENT ? R.drawable.event_importance_silent : R.drawable.event_importance);
+        });
         Event.Schedule[] schedules = Event.Schedule.values();
         String[] scheduleNames = new String[schedules.length];
         for(int i = 0; i < schedules.length; i++) scheduleNames[i] = schedules[i].displayName();
-        addTextSelectionButton(R.drawable.event_repeat, "Repeat Schedule", scheduleNames, repeatSchedule.ordinal(), i -> repeatSchedule = schedules[i]);
+        repeatButton = addTextSelectionButton(R.drawable.event_repeat, "Repeat Schedule", scheduleNames, repeatSchedule.ordinal(), i -> {
+            repeatSchedule = schedules[i];
+            toggleButton(repeatButton, repeatSchedule != Event.Schedule.NONE);
+        });
+        toggleButton(repeatButton, repeatSchedule != Event.Schedule.NONE);
         LocalDateTime time = initialOptions.Time;
         datePicker.updateDate(time.getYear(), time.getMonthValue() - 1, time.getDayOfMonth());
         timePicker.setIs24HourView(true); timePicker.setHour(time.getHour()); timePicker.setMinute(time.getMinute());
         showDialog();
+    }
+    private void toggleButton(MaterialButton button, boolean enabled) {
+        button.setIconTint(ContextCompat.getColorStateList(context, enabled ? com.soogbad.sharedmodule.R.color.selectedGreen : com.soogbad.sharedmodule.R.color.white));
     }
 
     @Override

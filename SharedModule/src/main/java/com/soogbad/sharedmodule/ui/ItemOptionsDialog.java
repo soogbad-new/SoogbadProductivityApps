@@ -61,11 +61,12 @@ public abstract class ItemOptionsDialog<O extends Item.Options> {
         button.setIconTint(ContextCompat.getColorStateList(context, initialState ? R.color.selectedGreen : R.color.white));
         button.addOnCheckedChangeListener((view, isChecked) -> { button.setIconTint(ContextCompat.getColorStateList(context, isChecked ? R.color.selectedGreen : R.color.white)); onCheckedChange.accept(isChecked); });
     }
-    protected void addTextSelectionButton(@DrawableRes int icon, String tooltip, String[] labels, int initialIndex, IntConsumer onSelect) {
+    protected MaterialButton addTextSelectionButton(@DrawableRes int icon, String tooltip, String[] labels, int initialIndex, IntConsumer onSelect) {
         MaterialButton button = addToolbarButton(icon, tooltip);
         AtomicInteger selectedIndex = new AtomicInteger(initialIndex);
         SelectionPopup popup = SelectionPopup.withTextOptions(button, false, labels, i -> { selectedIndex.set(i); onSelect.accept(i); });
         button.setOnClickListener(view -> popup.show(selectedIndex.get()));
+        return button;
     }
     protected void addColorSelectionButton(@DrawableRes int icon, String tooltip, int[] colors, int initialIndex, IntConsumer onSelect) {
         MaterialButton button = addToolbarButton(icon, tooltip);
