@@ -137,7 +137,7 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
     }
 
     public enum EventColor {
-        GREEN(0xFF4CBB17);
+        GREEN(0xFF4FA626);
 
         public final int color;
         EventColor(int color) { this.color = color; }
