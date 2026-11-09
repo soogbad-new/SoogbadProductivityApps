@@ -18,9 +18,6 @@ import java.util.function.Consumer;
 
 public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Options> {
 
-    // Sound channel was created without vibration and channels are immutable, so it was replaced; deleted on startup so it doesn't linger in settings
-    private static final String LEGACY_SOUND_CHANNEL_ID = "soogbad_calendar_events_sound";
-
     private ItemScheduler itemScheduler;
 
     @Override
@@ -30,7 +27,6 @@ public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Opt
         itemScheduler = new ItemScheduler(this, EventAlarmReceiver.class);
         itemsManager.setItemScheduler(itemScheduler);
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        notificationManager.deleteNotificationChannel(LEGACY_SOUND_CHANNEL_ID);
         for(Event.Importance importance : Event.Importance.values()) {
             NotificationChannel channel = new NotificationChannel(importance.channelId, "Events (" + importance.displayName() + ")", importance.channelImportance);
             channel.enableVibration(importance == Event.Importance.SOUND);
