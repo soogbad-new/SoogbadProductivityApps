@@ -1,5 +1,7 @@
 package com.soogbad.soogbadcalendar;
 
+import android.app.NotificationManager;
+
 import com.soogbad.sharedmodule.core.Item;
 
 import org.json.JSONArray;
@@ -33,12 +35,13 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
     @SuppressWarnings("CanBeFinal")
     public static class Options extends Item.Options {
 
-        public Options(LocalDateTime time, EventColor eventColor, Schedule repeatSchedule, Set<LocalDate> deletedOccurrences) {
-            Time = time; EventColor = eventColor; RepeatSchedule = repeatSchedule; DeletedOccurrences = deletedOccurrences;
+        public Options(LocalDateTime time, EventColor eventColor, Importance importance, Schedule repeatSchedule, Set<LocalDate> deletedOccurrences) {
+            Time = time; EventColor = eventColor; Importance = importance; RepeatSchedule = repeatSchedule; DeletedOccurrences = deletedOccurrences;
         }
 
         public LocalDateTime Time;
         public EventColor EventColor;
+        public Importance Importance;
         public Schedule RepeatSchedule;
         public Set<LocalDate> DeletedOccurrences;
 
@@ -48,6 +51,7 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
                 JSONObject json = new JSONObject();
                 json.put("time", Time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
                 json.put("eventColor", EventColor.name());
+                json.put("importance", Importance.name());
                 json.put("repeatSchedule", RepeatSchedule.name());
                 JSONArray deletedOccurrences = new JSONArray();
                 for(LocalDate date : DeletedOccurrences) deletedOccurrences.put(date.toString());
@@ -62,17 +66,18 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
         try {
             LocalDateTime time = LocalDateTime.ofInstant(Instant.ofEpochMilli(json.getLong("time")), ZoneId.systemDefault());
             EventColor eventColor = EventColor.valueOf(json.getString("eventColor"));
+            Importance importance = Importance.valueOf(json.optString("importance", Importance.SOUND.name()));
             Schedule repeatSchedule = Schedule.valueOf(json.getString("repeatSchedule"));
             Set<LocalDate> deletedOccurrences = new HashSet<>();
             JSONArray deletedOccurrencesJson = json.optJSONArray("deletedOccurrences");
             if(deletedOccurrencesJson != null)
                 for(int i = 0; i < deletedOccurrencesJson.length(); i++) deletedOccurrences.add(LocalDate.parse(deletedOccurrencesJson.getString(i)));
-            return new Options(time, eventColor, repeatSchedule, deletedOccurrences);
+            return new Options(time, eventColor, importance, repeatSchedule, deletedOccurrences);
         } catch(JSONException e) { throw new RuntimeException(e); }
     }
 
     public static Options getDefaultOptions(LocalDate day) {
-        return new Options(day.atTime(8, 0), EventColor.GREEN, Schedule.NONE, new HashSet<>());
+        return new Options(day.atTime(8, 0), EventColor.GREEN, Importance.SOUND, Schedule.NONE, new HashSet<>());
     }
 
     public boolean occursOn(LocalDate day) {
@@ -141,6 +146,20 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
 
         public final int color;
         EventColor(int color) { this.color = color; }
+    }
+
+    public enum Importance {
+        SILENT("soogbad_calendar_events_silent", NotificationManager.IMPORTANCE_LOW),
+        SOUND("soogbad_calendar_events_sound", NotificationManager.IMPORTANCE_HIGH);
+
+        public final String channelId;
+        public final int channelImportance;
+        Importance(String channelId, int channelImportance) { this.channelId = channelId; this.channelImportance = channelImportance; }
+
+        public String displayName() {
+            String name = name();
+            return name.charAt(0) + name.substring(1).toLowerCase();
+        }
     }
 
     public enum Schedule {

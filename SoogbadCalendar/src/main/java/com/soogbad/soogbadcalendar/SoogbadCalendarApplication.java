@@ -18,7 +18,8 @@ import java.util.function.Consumer;
 
 public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Options> {
 
-    public static final String NOTIFICATION_CHANNEL_ID = "soogbad_calendar_events";
+    // Replaced by the per-importance channels; deleted on startup so it doesn't linger in the app's notification settings
+    private static final String LEGACY_NOTIFICATION_CHANNEL_ID = "soogbad_calendar_events";
 
     private ItemScheduler itemScheduler;
 
@@ -28,7 +29,10 @@ public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Opt
         itemsManager = new ItemsManager<>(new StorageManager(getFilesDir().toPath()), Event::create, Event::parseOptionsFromJson);
         itemScheduler = new ItemScheduler(this, EventAlarmReceiver.class);
         itemsManager.setItemScheduler(itemScheduler);
-        getSystemService(NotificationManager.class).createNotificationChannel(new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Events", NotificationManager.IMPORTANCE_HIGH));
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.deleteNotificationChannel(LEGACY_NOTIFICATION_CHANNEL_ID);
+        for(Event.Importance importance : Event.Importance.values())
+            notificationManager.createNotificationChannel(new NotificationChannel(importance.channelId, "Events (" + importance.displayName() + ")", importance.channelImportance));
     }
 
     @Override
