@@ -37,9 +37,9 @@ public class TodoListOptionsDialog extends ItemOptionsDialog<TodoList.Options> {
         View view = inflateDialogView(R.layout.todo_list_options_dialog_content);
         dayOfWeekSpinner = view.findViewById(R.id.dayOfWeekSpinner); timePicker = view.findViewById(R.id.timePicker);
         skipNextRun = initialOptions.SkipNextRun; resetRequested = false;
-        addActionButton(R.drawable.edit_note, "Edit Default Content", this::launchEditDefaultContentActivity);
-        addToggleButton(R.drawable.skip_next, "Skip Next Run", skipNextRun, isChecked -> skipNextRun = isChecked);
-        addToggleButton(R.drawable.restore_page, "Reset", resetRequested, isChecked -> resetRequested = isChecked);
+        addActionButton(R.drawable.edit_default_content, "Edit Default Content", this::launchEditDefaultContentActivity);
+        addToggleButton(R.drawable.skip_next_run, "Skip Next Run", skipNextRun, isChecked -> skipNextRun = isChecked);
+        addToggleButton(R.drawable.reset_todo_list, "Reset", resetRequested, isChecked -> resetRequested = isChecked);
         ArrayList<String> dayNames = new ArrayList<>();
         for(TodoList.DayOfWeek day : TodoList.DayOfWeek.values()) dayNames.add(day.displayName());
         dayOfWeekSpinner.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, dayNames.toArray())); dayOfWeekSpinner.setSelection(initialOptions.Day.ordinal());

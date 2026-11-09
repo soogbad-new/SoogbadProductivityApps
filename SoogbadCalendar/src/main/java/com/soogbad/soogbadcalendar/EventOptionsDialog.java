@@ -33,18 +33,18 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
         Event.EventColor[] colors = Event.EventColor.values();
         int[] colorValues = new int[colors.length];
         for(int i = 0; i < colors.length; i++) colorValues[i] = colors[i].color;
-        addColorSelectionButton(R.drawable.palette, "Event Color", colorValues, eventColor.ordinal(), i -> eventColor = colors[i]);
+        addColorSelectionButton(R.drawable.event_color, "Event Color", colorValues, eventColor.ordinal(), i -> eventColor = colors[i]);
         Event.Importance[] importances = Event.Importance.values();
         String[] importanceNames = new String[importances.length];
         for(int i = 0; i < importances.length; i++) importanceNames[i] = importances[i].displayName();
-        importanceButton = addTextSelectionButton(importance == Event.Importance.SILENT ? R.drawable.event_importance_silent : R.drawable.event_importance, "Importance", importanceNames, importance.ordinal(), i -> {
+        importanceButton = addTextSelectionButton(importance == Event.Importance.SILENT ? R.drawable.event_importance_silent : R.drawable.event_importance_sound, "Importance", importanceNames, importance.ordinal(), i -> {
             importance = importances[i];
-            importanceButton.setIconResource(importance == Event.Importance.SILENT ? R.drawable.event_importance_silent : R.drawable.event_importance);
+            importanceButton.setIconResource(importance == Event.Importance.SILENT ? R.drawable.event_importance_silent : R.drawable.event_importance_sound);
         });
         Event.Schedule[] schedules = Event.Schedule.values();
         String[] scheduleNames = new String[schedules.length];
         for(int i = 0; i < schedules.length; i++) scheduleNames[i] = schedules[i].displayName();
-        repeatButton = addTextSelectionButton(R.drawable.event_repeat, "Repeat Schedule", scheduleNames, repeatSchedule.ordinal(), i -> {
+        repeatButton = addTextSelectionButton(R.drawable.event_repeat_schedule, "Repeat Schedule", scheduleNames, repeatSchedule.ordinal(), i -> {
             repeatSchedule = schedules[i];
             toggleButton(repeatButton, repeatSchedule != Event.Schedule.NONE);
         });
