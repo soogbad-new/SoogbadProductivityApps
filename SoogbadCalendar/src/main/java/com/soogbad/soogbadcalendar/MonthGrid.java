@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
 import java.time.temporal.TemporalAdjusters;
-import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +26,8 @@ import java.util.Locale;
 public class MonthGrid extends LinearLayout {
 
     private static final int WEEKS = 6, DAYS_IN_WEEK = 7, MAX_VISIBLE_EVENTS = 3;
+    private final DayOfWeek firstDayOfWeek = DayOfWeek.SUNDAY;
 
-    private final DayOfWeek firstDayOfWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
     private final View[] cells = new View[WEEKS * DAYS_IN_WEEK];
 
     public MonthGrid(Context context, AttributeSet attrs) {
