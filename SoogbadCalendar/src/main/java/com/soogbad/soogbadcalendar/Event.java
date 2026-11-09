@@ -66,7 +66,7 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
         try {
             LocalDateTime time = LocalDateTime.ofInstant(Instant.ofEpochMilli(json.getLong("time")), ZoneId.systemDefault());
             EventColor eventColor = EventColor.valueOf(json.getString("eventColor"));
-            Importance importance = Importance.valueOf(json.optString("importance", Importance.SOUND.name()));
+            Importance importance = Importance.valueOf(json.getString("importance"));
             Schedule repeatSchedule = Schedule.valueOf(json.getString("repeatSchedule"));
             Set<LocalDate> deletedOccurrences = new HashSet<>();
             JSONArray deletedOccurrencesJson = json.optJSONArray("deletedOccurrences");
