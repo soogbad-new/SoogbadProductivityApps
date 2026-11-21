@@ -47,7 +47,6 @@
         android:layout_height="64dp"
         android:text="Open Event"
         android:textSize="20sp"
-        style="?attr/materialButtonOutlinedStyle"
         android:textColor="@color/colorAccent"
         android:onClick="onOpenButtonClick" />
 
