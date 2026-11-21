@@ -30,9 +30,10 @@ public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Opt
         itemScheduler = new ItemScheduler(this, EventAlarmReceiver.class);
         itemsManager.setItemScheduler(itemScheduler);
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.deleteNotificationChannel("soogbad_calendar_events_alarm"); // TEMPORARY: old alarm channel that vibrated; channels are immutable so it was replaced
         for(Event.Importance importance : Event.Importance.values()) {
             NotificationChannel channel = new NotificationChannel(importance.channelId, "Events (" + importance.displayName() + ")", importance.channelImportance);
-            channel.enableVibration(importance != Event.Importance.SILENT);
+            channel.enableVibration(importance == Event.Importance.SOUND);
             if(importance == Event.Importance.ALARM)
                 channel.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM), new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build());
             notificationManager.createNotificationChannel(channel);
