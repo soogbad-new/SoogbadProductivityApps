@@ -18,7 +18,7 @@ public class EventAlarmReceiver extends ItemAlarmReceiver<Event> {
     @Override
     protected Event getItem(Context context, String uuid) { return ((SoogbadCalendarApplication)context.getApplicationContext()).getItemsManager().getItem(uuid); }
 
-    @SuppressLint("MissingPermission")
+    @SuppressLint({"MissingPermission", "FullScreenIntentPolicy"})
     @Override
     protected void onAlarm(Context context, Event event) {
         Intent dayIntent = new Intent(context, DayListActivity.class).putExtra("date", LocalDate.now().toString());
