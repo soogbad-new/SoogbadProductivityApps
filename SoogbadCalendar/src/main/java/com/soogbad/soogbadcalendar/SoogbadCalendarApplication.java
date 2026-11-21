@@ -5,7 +5,10 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 
 import com.soogbad.sharedmodule.core.Item;
@@ -29,7 +32,9 @@ public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Opt
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         for(Event.Importance importance : Event.Importance.values()) {
             NotificationChannel channel = new NotificationChannel(importance.channelId, "Events (" + importance.displayName() + ")", importance.channelImportance);
-            channel.enableVibration(importance == Event.Importance.SOUND);
+            channel.enableVibration(importance != Event.Importance.SILENT);
+            if(importance == Event.Importance.ALARM)
+                channel.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM), new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build());
             notificationManager.createNotificationChannel(channel);
         }
     }
@@ -38,6 +43,8 @@ public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Opt
     protected void onFirstActivityOpened() {
         if(!getSystemService(AlarmManager.class).canScheduleExactAlarms())
             startActivity(new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:" + getPackageName())).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE && !getSystemService(NotificationManager.class).canUseFullScreenIntent())
+            startActivity(new Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT, Uri.parse("package:" + getPackageName())).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         itemScheduler.scheduleAllItems();
     }
 

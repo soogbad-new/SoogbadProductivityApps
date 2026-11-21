@@ -151,7 +151,8 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
 
     public enum Importance {
         SILENT("soogbad_calendar_events_silent", NotificationManager.IMPORTANCE_LOW),
-        SOUND("soogbad_calendar_events_alert", NotificationManager.IMPORTANCE_HIGH);
+        SOUND("soogbad_calendar_events_alert", NotificationManager.IMPORTANCE_HIGH),
+        ALARM("soogbad_calendar_events_alarm", NotificationManager.IMPORTANCE_HIGH);
 
         public final String channelId;
         public final int channelImportance;

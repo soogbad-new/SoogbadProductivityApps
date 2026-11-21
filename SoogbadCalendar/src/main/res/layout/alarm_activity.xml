@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp"
+    tools:context=".AlarmActivity">
+
+    <ImageView
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@drawable/event_importance_alarm"
+        android:layout_marginBottom="32dp"
+        android:importantForAccessibility="no" />
+
+    <TextView
+        android:id="@+id/alarmTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAppearance="?attr/textAppearanceHeadlineLarge"
+        android:textColor="@color/white"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/alarmTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceDisplayMedium"
+        android:textColor="@color/white"
+        android:layout_marginBottom="64dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/dismissButton"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="Dismiss"
+        android:textSize="20sp"
+        android:backgroundTint="@color/colorAccent"
+        android:onClick="onDismissButtonClick"
+        android:layout_marginBottom="16dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/openButton"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="Open Event"
+        android:textSize="20sp"
+        style="?attr/materialButtonOutlinedStyle"
+        android:textColor="@color/white"
+        android:onClick="onOpenButtonClick" />
+
+</LinearLayout>

@@ -37,9 +37,10 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
         Event.Importance[] importances = Event.Importance.values();
         String[] importanceNames = new String[importances.length];
         for(int i = 0; i < importances.length; i++) importanceNames[i] = importances[i].displayName();
-        importanceButton = addTextSelectionButton(importance == Event.Importance.SILENT ? R.drawable.event_importance_silent : R.drawable.event_importance_sound, "Importance", importanceNames, importance.ordinal(), i -> {
+        int[] importanceIcons = { R.drawable.event_importance_silent, R.drawable.event_importance_sound, R.drawable.event_importance_alarm };
+        importanceButton = addTextSelectionButton(importanceIcons[importance.ordinal()], "Importance", importanceNames, importance.ordinal(), i -> {
             importance = importances[i];
-            importanceButton.setIconResource(importance == Event.Importance.SILENT ? R.drawable.event_importance_silent : R.drawable.event_importance_sound);
+            importanceButton.setIconResource(importanceIcons[i]);
         });
         Event.Schedule[] schedules = Event.Schedule.values();
         String[] scheduleNames = new String[schedules.length];
