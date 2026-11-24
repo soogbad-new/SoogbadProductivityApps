@@ -28,7 +28,8 @@ public class AlarmActivity extends AppCompatActivity {
     }
 
     public void onDismissButtonClick(View view) {
-        EventAlarmReceiver.showNotification(this, event, Event.Importance.SILENT); // create new silent notification instead of the ringing alarm notification
+        if(((SoogbadCalendarApplication)getApplication()).getItemsManager().getItem(event.UUID) != null)
+            EventAlarmReceiver.showNotification(this, event, Event.Importance.SILENT); // create new silent notification instead of the ringing alarm notification
         finish();
     }
 

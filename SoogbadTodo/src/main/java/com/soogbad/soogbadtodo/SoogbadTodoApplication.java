@@ -54,6 +54,7 @@ public class SoogbadTodoApplication extends ItemApplication<TodoList, TodoList.O
                 }
                 getItemScheduler().scheduleItem(todoList);
             }
+            @Override public void onItemDeleted(Item<?> item) { }
             @Override public ItemScheduler getItemScheduler() { return itemScheduler; }
         };
     }

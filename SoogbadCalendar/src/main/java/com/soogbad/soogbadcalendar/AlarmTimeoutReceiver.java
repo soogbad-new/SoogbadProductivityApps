@@ -15,8 +15,7 @@ public class AlarmTimeoutReceiver extends BroadcastReceiver {
         for(StatusBarNotification notification : notificationManager.getActiveNotifications()) {
             if(notification.getId() != uuid.hashCode() || !Event.Importance.ALARM.channelId.equals(notification.getNotification().getChannelId())) continue; // already dismissed or opened
             Event event = ((SoogbadCalendarApplication)context.getApplicationContext()).getItemsManager().getItem(uuid);
-            if(event == null) notificationManager.cancel(uuid.hashCode()); // event was deleted while ringing
-            else EventAlarmReceiver.showNotification(context, event, Event.Importance.SILENT); // create new silent notification instead of the ringing alarm notification
+            EventAlarmReceiver.showNotification(context, event, Event.Importance.SILENT); // create new silent notification instead of the ringing alarm notification
         }
     }
 

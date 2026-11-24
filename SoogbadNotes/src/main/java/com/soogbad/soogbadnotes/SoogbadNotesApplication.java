@@ -33,6 +33,7 @@ public class SoogbadNotesApplication extends ItemApplication<Note, Note.Options>
             @Override public boolean hasConfigurableOptions() { return false; }
             @Override public void createItemOptionsDialog(Context context, Item.Options initialOptions, Consumer<Item.Options> callback) { }
             @Override public void onItemOptionsChanged(Item<?> item) { }
+            @Override public void onItemDeleted(Item<?> item) { }
             @Override public ItemScheduler getItemScheduler() { return null; }
         };
     }

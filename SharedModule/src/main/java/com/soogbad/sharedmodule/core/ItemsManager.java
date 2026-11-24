@@ -84,9 +84,11 @@ public class ItemsManager<T extends Item<O>, O extends Item.Options> {
         return item;
     }
 
-    public void moveItemToRecycleBin(String uuid) {
+    public void moveItemToRecycleBin(String uuid, Consumer<Item<?>> onItemDeleted) {
         if(itemScheduler != null) itemScheduler.cancelAlarm(uuid);
         T item = getItem(uuid);
+        if(onItemDeleted != null)
+            onItemDeleted.accept(item);
         items.removeIf(i -> i.UUID.equals(uuid));
         storageManager.moveToRecycleBin(uuid);
         item.DeletedAt = System.currentTimeMillis();
