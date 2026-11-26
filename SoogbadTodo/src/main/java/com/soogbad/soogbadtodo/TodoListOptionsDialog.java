@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.Context;
 import android.text.SpannedString;
 import android.view.View;
+import android.view.WindowInsets;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -69,9 +70,11 @@ public class TodoListOptionsDialog extends ItemOptionsDialog<TodoList.Options> {
         MaterialTimePicker timePicker = new MaterialTimePicker.Builder().setTitleText("Select Time")
                 .setTimeFormat(TimeFormat.CLOCK_24H).setHour(selectedTime.getHour()).setMinute(selectedTime.getMinute()).build();
         timePicker.addOnPositiveButtonClickListener(view -> {
+            timePicker.requireDialog().getWindow().getInsetsController().hide(WindowInsets.Type.ime());
             selectedTime = LocalTime.of(timePicker.getHour(), timePicker.getMinute());
             timePickerButton.setText(selectedTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)));
         });
+        timePicker.addOnNegativeButtonClickListener(view -> timePicker.requireDialog().getWindow().getInsetsController().hide(WindowInsets.Type.ime()));
         timePicker.show(((FragmentActivity)Utility.getActivity(context)).getSupportFragmentManager(), "MATERIAL_TIME_PICKER");
     }
 
