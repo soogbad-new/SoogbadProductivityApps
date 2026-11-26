@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat;
 import com.soogbad.sharedmodule.R;
 import com.soogbad.sharedmodule.core.Utility;
 
+import java.util.Objects;
 import java.util.function.IntConsumer;
 
 public class SelectionPopup {
@@ -55,7 +56,7 @@ public class SelectionPopup {
         return new SelectionPopup(anchor, showAboveAnchor, R.layout.selection_popup_option_color, colors.length, (textView, i, selected) -> {
             textView.setBackgroundColor(colors[i]);
             if(selected) {
-                GradientDrawable borderDrawable = (GradientDrawable)ContextCompat.getDrawable(anchor.getContext(), R.drawable.selected_popup_option_border).mutate();
+                GradientDrawable borderDrawable = (GradientDrawable)Objects.requireNonNull(ContextCompat.getDrawable(anchor.getContext(), R.drawable.selected_popup_option_border)).mutate();
                 borderDrawable.setCornerRadius(0);
                 textView.setBackground(new LayerDrawable(new Drawable[] { new ColorDrawable(colors[i]), borderDrawable }));
             }
