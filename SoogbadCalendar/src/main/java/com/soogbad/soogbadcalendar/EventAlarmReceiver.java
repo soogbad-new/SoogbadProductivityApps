@@ -27,7 +27,7 @@ public class EventAlarmReceiver extends ItemAlarmReceiver<Event> {
         PendingIntent contentIntent = TaskStackBuilder.create(context).addNextIntentWithParentStack(dayIntent).addNextIntent(new Intent(context, EventActivity.class).putExtra("item_uuid", event.UUID))
                 .getPendingIntent(Math.abs(event.UUID.hashCode()), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         Notification.Builder builder = new Notification.Builder(context, importance.channelId)
-                .setSmallIcon(R.mipmap.ic_launcher).setContentTitle(event.Title).setContentIntent(contentIntent).setAutoCancel(true);
+                .setSmallIcon(R.mipmap.ic_launcher_foreground).setContentTitle(event.Title).setContentIntent(contentIntent).setAutoCancel(true);
         if(importance == Event.Importance.ALARM) {
             PendingIntent alarmIntent = PendingIntent.getActivity(context, Math.abs(event.UUID.hashCode()), new Intent(context, AlarmActivity.class).putExtra("item_uuid", event.UUID), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             builder.setCategory(Notification.CATEGORY_ALARM).setFullScreenIntent(alarmIntent, true).setFlag(Notification.FLAG_INSISTENT, true);
