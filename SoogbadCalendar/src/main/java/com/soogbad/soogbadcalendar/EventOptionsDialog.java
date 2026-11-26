@@ -3,8 +3,6 @@ package com.soogbad.soogbadcalendar;
 import android.content.Context;
 import android.icu.util.Calendar;
 import android.view.View;
-import android.view.WindowInsets;
-import android.view.WindowInsetsController;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -87,10 +85,6 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
             selectedDate = Instant.ofEpochMilli(selectionMs).atZone(ZoneOffset.UTC).toLocalDate();
             datePickerButton.setText(selectedDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
         });
-        datePicker.addOnDismissListener(dialog -> {
-            WindowInsetsController controller = datePickerButton.getWindowInsetsController();
-            if(controller != null) controller.hide(WindowInsets.Type.ime());
-        });
         datePicker.show(((FragmentActivity)Utility.getActivity(context)).getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
     }
     private void showMaterialTimePicker() {
@@ -99,10 +93,6 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
         timePicker.addOnPositiveButtonClickListener(view -> {
             selectedTime = LocalTime.of(timePicker.getHour(), timePicker.getMinute());
             timePickerButton.setText(selectedTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)));
-        });
-        timePicker.addOnDismissListener(dialog -> {
-            WindowInsetsController controller = timePickerButton.getWindowInsetsController();
-            if(controller != null) controller.hide(WindowInsets.Type.ime());
         });
         timePicker.show(((FragmentActivity)Utility.getActivity(context)).getSupportFragmentManager(), "MATERIAL_TIME_PICKER");
     }
