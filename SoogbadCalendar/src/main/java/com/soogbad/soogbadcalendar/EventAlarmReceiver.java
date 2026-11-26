@@ -1,7 +1,6 @@
 package com.soogbad.soogbadcalendar;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -19,15 +18,8 @@ public class EventAlarmReceiver extends ItemAlarmReceiver<Event> {
     @Override
     protected Event getItem(Context context, String uuid) { return ((SoogbadCalendarApplication)context.getApplicationContext()).getItemsManager().getItem(uuid); }
 
-    @SuppressLint("MissingPermission")
     @Override
-    protected void onAlarm(Context context, Event event) {
-        showNotification(context, event, event.Options.Importance);
-        if(event.Options.Importance == Event.Importance.ALARM) {
-            PendingIntent timeoutIntent = PendingIntent.getBroadcast(context, Math.abs(event.UUID.hashCode()), new Intent(context, AlarmTimeoutReceiver.class).putExtra("uuid", event.UUID), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-            context.getSystemService(AlarmManager.class).setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5 * 60 * 1000, timeoutIntent);
-        }
-    }
+    protected void onAlarm(Context context, Event event) { showNotification(context, event, event.Options.Importance); }
 
     @SuppressLint({"MissingPermission", "FullScreenIntentPolicy"})
     public static void showNotification(Context context, Event event, Event.Importance importance) {
