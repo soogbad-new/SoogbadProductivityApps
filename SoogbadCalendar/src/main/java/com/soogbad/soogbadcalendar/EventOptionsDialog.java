@@ -1,12 +1,14 @@
 package com.soogbad.soogbadcalendar;
 
 import android.content.Context;
+import android.icu.util.Calendar;
 import android.view.View;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
@@ -77,7 +79,8 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
 
     private void showMaterialDatePicker() {
         long selection = selectedDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
-        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select Date").setSelection(selection).build();
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select Date")
+                .setCalendarConstraints(new CalendarConstraints.Builder().setFirstDayOfWeek(Calendar.SUNDAY).build()).setSelection(selection).build();
         datePicker.addOnPositiveButtonClickListener(selectionMs -> {
             selectedDate = Instant.ofEpochMilli(selectionMs).atZone(ZoneOffset.UTC).toLocalDate();
             datePickerButton.setText(selectedDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
