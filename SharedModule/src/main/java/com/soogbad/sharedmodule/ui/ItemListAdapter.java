@@ -83,7 +83,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
     }
 
     protected void deleteItem(ViewHolder itemHolder, Item<?> item) {
-        Utility.getItemsManager(itemHolder.itemView.getContext()).moveItemToRecycleBin(item.UUID);
+        Utility.getItemsManager(itemHolder.itemView.getContext()).moveItemToRecycleBin(item.UUID, Utility.getAppUtility(itemHolder.itemView.getContext())::onItemDeleted);
         onItemDeleted(itemHolder, item);
     }
     @SuppressLint("NotifyDataSetChanged")

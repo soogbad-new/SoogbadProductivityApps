@@ -49,6 +49,7 @@ public abstract class ItemApplication<T extends Item<O>, O extends Item.Options>
         @SuppressWarnings("BooleanMethodIsAlwaysInverted") boolean hasConfigurableOptions();
         void createItemOptionsDialog(Context context, Item.Options initialOptions, Consumer<Item.Options> callback);
         void onItemOptionsChanged(Item<?> item);
+        void onItemDeleted(Item<?> item);
         ItemScheduler getItemScheduler();
     }
 

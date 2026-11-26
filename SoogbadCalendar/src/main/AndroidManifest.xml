@@ -56,6 +56,8 @@
 
         <receiver android:name=".EventAlarmReceiver" android:exported="false" />
 
+        <receiver android:name=".AlarmTimeoutReceiver" android:exported="false" />
+
         <receiver android:name="com.soogbad.sharedmodule.scheduling.ItemBootReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

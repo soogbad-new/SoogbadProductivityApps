@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.soogbad.sharedmodule.core.Item;
 import com.soogbad.sharedmodule.core.ItemsManager;
+import com.soogbad.sharedmodule.core.Utility;
 import com.soogbad.sharedmodule.R;
 import com.soogbad.sharedmodule.richtext.RichEditText;
 
@@ -72,7 +73,7 @@ public class ItemLayout extends ConstraintLayout {
     public void delete() {
         save();
         itemDeletedGuard = true;
-        itemsManager.moveItemToRecycleBin(item.UUID);
+        itemsManager.moveItemToRecycleBin(item.UUID, Utility.getAppUtility(getContext())::onItemDeleted);
     }
 
 }

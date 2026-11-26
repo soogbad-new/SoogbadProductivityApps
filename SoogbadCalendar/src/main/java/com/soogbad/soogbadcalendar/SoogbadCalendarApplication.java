@@ -61,6 +61,9 @@ public class SoogbadCalendarApplication extends ItemApplication<Event, Event.Opt
             @Override public void onItemOptionsChanged(Item<?> item) {
                 getItemScheduler().scheduleItem((Event)item);
             }
+            @Override public void onItemDeleted(Item<?> item) {
+                getSystemService(NotificationManager.class).cancel(item.UUID.hashCode());
+            }
             @Override public ItemScheduler getItemScheduler() { return itemScheduler; }
         };
     }

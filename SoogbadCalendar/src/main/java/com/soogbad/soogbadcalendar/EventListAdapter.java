@@ -5,6 +5,7 @@ import android.content.Context;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.soogbad.sharedmodule.core.Item;
@@ -49,6 +50,7 @@ public class EventListAdapter extends ItemListAdapter {
                 if(which == 0) {
                     event.Options.DeletedOccurrences.add(day);
                     Utility.getItemsManager(context).saveItemOptions(event.UUID, event.Options, Utility.getAppUtility(context)::onItemOptionsChanged);
+                    if(day.equals(LocalDate.now())) NotificationManagerCompat.from(context).cancel(event.UUID.hashCode());
                     onItemDeleted(itemHolder, item);
                 }
                 else
