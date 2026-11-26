@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -54,7 +55,8 @@ public class SelectionPopup {
         return new SelectionPopup(anchor, showAboveAnchor, R.layout.selection_popup_option_color, colors.length, (textView, i, selected) -> {
             textView.setBackgroundColor(colors[i]);
             if(selected) {
-                Drawable borderDrawable = ContextCompat.getDrawable(anchor.getContext(), R.drawable.selected_popup_option_border);
+                GradientDrawable borderDrawable = (GradientDrawable)ContextCompat.getDrawable(anchor.getContext(), R.drawable.selected_popup_option_border).mutate();
+                borderDrawable.setCornerRadius(0);
                 textView.setBackground(new LayerDrawable(new Drawable[] { new ColorDrawable(colors[i]), borderDrawable }));
             }
         }, onSelect);
