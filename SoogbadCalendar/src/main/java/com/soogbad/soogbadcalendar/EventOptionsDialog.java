@@ -2,23 +2,32 @@ package com.soogbad.soogbadcalendar;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.DatePicker;
-import android.widget.TimePicker;
 
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
+import com.soogbad.sharedmodule.core.Utility;
 import com.soogbad.sharedmodule.ui.ItemOptionsDialog;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.function.Consumer;
 
 public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
 
-    private DatePicker datePicker;
-    private TimePicker timePicker;
-    private MaterialButton importanceButton, repeatButton;
+    private MaterialButton datePickerButton, timePickerButton, importanceButton, repeatButton;
 
+    private LocalDate selectedDate;
+    private LocalTime selectedTime;
     private Event.EventColor eventColor;
     private Event.Importance importance;
     private Event.Schedule repeatSchedule;
@@ -28,7 +37,8 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
     @Override
     public void show() {
         View view = inflateDialogView(R.layout.event_options_dialog_content);
-        datePicker = view.findViewById(R.id.datePicker); timePicker = view.findViewById(R.id.timePicker);
+        datePickerButton = view.findViewById(R.id.datePickerButton); timePickerButton = view.findViewById(R.id.timePickerButton);
+        datePickerButton.setOnClickListener(v -> showMaterialDatePicker()); timePickerButton.setOnClickListener(v -> showMaterialTimePicker());
         eventColor = initialOptions.EventColor; importance = initialOptions.Importance; repeatSchedule = initialOptions.RepeatSchedule;
         Event.EventColor[] colors = Event.EventColor.values();
         int[] colorValues = new int[colors.length];
@@ -50,19 +60,38 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
             toggleButton(repeatButton, repeatSchedule != Event.Schedule.NONE);
         });
         toggleButton(repeatButton, repeatSchedule != Event.Schedule.NONE);
-        LocalDateTime time = initialOptions.Time;
-        datePicker.updateDate(time.getYear(), time.getMonthValue() - 1, time.getDayOfMonth());
-        timePicker.setIs24HourView(true); timePicker.setHour(time.getHour()); timePicker.setMinute(time.getMinute());
+        selectedDate = initialOptions.Time.toLocalDate(); selectedTime = initialOptions.Time.toLocalTime();
+        datePickerButton.setText(selectedDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
+        timePickerButton.setText(selectedTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)));
         showDialog();
     }
+
     private void toggleButton(MaterialButton button, boolean enabled) {
         button.setIconTint(ContextCompat.getColorStateList(context, enabled ? com.soogbad.sharedmodule.R.color.selectedGreen : com.soogbad.sharedmodule.R.color.white));
     }
 
     @Override
     protected void onConfirm() {
-        LocalDateTime time = LocalDateTime.of(datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth(), timePicker.getHour(), timePicker.getMinute());
-        callback.accept(new Event.Options(time, eventColor, importance, repeatSchedule, initialOptions.DeletedOccurrences));
+        callback.accept(new Event.Options(LocalDateTime.of(selectedDate, selectedTime), eventColor, importance, repeatSchedule, initialOptions.DeletedOccurrences));
+    }
+
+    private void showMaterialDatePicker() {
+        long selection = selectedDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select Date").setSelection(selection).build();
+        datePicker.addOnPositiveButtonClickListener(selectionMs -> {
+            selectedDate = Instant.ofEpochMilli(selectionMs).atZone(ZoneOffset.UTC).toLocalDate();
+            datePickerButton.setText(selectedDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
+        });
+        datePicker.show(((FragmentActivity)Utility.getActivity(context)).getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+    }
+    private void showMaterialTimePicker() {
+        MaterialTimePicker timePicker = new MaterialTimePicker.Builder().setTitleText("Select Time")
+                .setTimeFormat(TimeFormat.CLOCK_24H).setHour(selectedTime.getHour()).setMinute(selectedTime.getMinute()).build();
+        timePicker.addOnPositiveButtonClickListener(view -> {
+            selectedTime = LocalTime.of(timePicker.getHour(), timePicker.getMinute());
+            timePickerButton.setText(selectedTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)));
+        });
+        timePicker.show(((FragmentActivity)Utility.getActivity(context)).getSupportFragmentManager(), "MATERIAL_TIME_PICKER");
     }
 
 }

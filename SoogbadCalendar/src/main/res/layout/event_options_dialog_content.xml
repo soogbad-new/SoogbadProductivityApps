@@ -12,15 +12,15 @@
         android:text="Date"
         android:textAppearance="?attr/textAppearanceLabelLarge"
         android:layout_marginBottom="8dp"
-        android:labelFor="@id/datePicker" />
+        android:labelFor="@id/datePickerButton" />
 
-    <DatePicker
-        android:id="@+id/datePicker"
-        android:layout_width="wrap_content"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/datePickerButton"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
         android:layout_gravity="center_horizontal"
-        android:datePickerMode="spinner"
-        android:calendarViewShown="false"
         android:layout_marginBottom="24dp" />
 
     <TextView
@@ -29,13 +29,14 @@
         android:text="Time"
         android:textAppearance="?attr/textAppearanceLabelLarge"
         android:layout_marginBottom="8dp"
-        android:labelFor="@id/timePicker" />
+        android:labelFor="@id/timePickerButton" />
 
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_width="wrap_content"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/timePickerButton"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:timePickerMode="spinner" />
+        android:textColor="@color/colorAccent"
+        android:layout_gravity="center_horizontal" />
 
 </LinearLayout>
