@@ -8,8 +8,8 @@
         android:color="@color/selectedGreen" />
 
     <padding
-        android:left="8dp"
-        android:right="8dp"
+        android:left="16dp"
+        android:right="16dp"
         android:top="8dp"
         android:bottom="8dp" />
 
