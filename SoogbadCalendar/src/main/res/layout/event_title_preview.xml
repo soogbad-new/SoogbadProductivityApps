@@ -8,7 +8,7 @@
     android:paddingHorizontal="3dp"
     android:paddingVertical="1dp"
     android:background="@drawable/event_title_preview_background"
-    android:alpha="0.75"
+    android:alpha="0.85"
     android:textColor="@color/white"
     android:textSize="10sp"
     android:maxLines="1"

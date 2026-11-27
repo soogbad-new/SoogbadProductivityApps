@@ -42,7 +42,7 @@
     </style>
     <style name="DatePickerWeekdayStyle" parent="Widget.Material3.MaterialCalendar.DayOfWeekLabel">
         <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:alpha">0.75</item>
+        <item name="android:alpha">0.85</item>
         <item name="android:textStyle">bold</item>
     </style>
 

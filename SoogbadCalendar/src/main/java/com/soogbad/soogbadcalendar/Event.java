@@ -78,7 +78,7 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
     }
 
     public static Options getDefaultOptions(LocalDate day) {
-        return new Options(day.atTime(8, 0), EventColor.GREEN, Importance.SOUND, Schedule.NONE, new HashSet<>());
+        return new Options(day.atTime(8, 0), EventColor.BLUE, Importance.SOUND, Schedule.NONE, new HashSet<>());
     }
 
     public boolean occursOn(LocalDate day) {
@@ -143,13 +143,11 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
     }
 
     public enum EventColor {
-        GREEN(0xFF4FA626),
         BLUE(0xFF4285F4),
+        GREEN(0xFF50B026),
         RED(0xFFEA4335),
-        ORANGE(0xFFFF9800),
-        PURPLE(0xFF9C27B0),
-        TEAL(0xFF009688),
-        YELLOW(0xFFFFC107);
+        YELLOW(0xFFFFC107),
+        PURPLE(0xFF9C27B0);
 
         public final int color;
         EventColor(int color) { this.color = color; }
