@@ -73,12 +73,12 @@ public class MonthGrid extends LinearLayout {
             getChildAt(week + 1).setVisibility(week < weeks ? VISIBLE : GONE);
             if(week >= weeks) continue;
             for(int dayOfWeek = 0; dayOfWeek < DAYS_IN_WEEK; dayOfWeek++) {
-                bindCell(cells[week * DAYS_IN_WEEK + dayOfWeek], day, YearMonth.from(day).equals(month), day.equals(today), eventsByDay.get(day));
+                bindCell(cells[week * DAYS_IN_WEEK + dayOfWeek], day, YearMonth.from(day).equals(month), day.equals(today), eventsByDay.get(day), weeks);
                 day = day.plusDays(1);
             }
         }
     }
-    private void bindCell(View cell, LocalDate day, boolean inMonth, boolean isToday, @Nullable ArrayList<Event> dayEvents) {
+    private void bindCell(View cell, LocalDate day, boolean inMonth, boolean isToday, @Nullable ArrayList<Event> dayEvents, int weeks) {
         Context context = getContext();
         TextView dayNumber = cell.findViewById(R.id.dayNumberTextView);
         dayNumber.setText(String.valueOf(day.getDayOfMonth()));
@@ -92,6 +92,9 @@ public class MonthGrid extends LinearLayout {
             TextView eventTitlePreview = (TextView)LayoutInflater.from(context).inflate(R.layout.event_title_preview, eventsContainer, false);
             eventTitlePreview.setText(dayEvents.get(i).Title);
             eventTitlePreview.setBackgroundTintList(ColorStateList.valueOf(dayEvents.get(i).Options.EventColor.color));
+            int lineHeight = eventTitlePreview.getLineHeight();
+            int paddingVertical = Math.round(((lineHeight + eventTitlePreview.getPaddingTop() + eventTitlePreview.getPaddingBottom()) * (float)WEEKS / weeks - lineHeight) / 2);
+            eventTitlePreview.setPadding(eventTitlePreview.getPaddingLeft(), paddingVertical, eventTitlePreview.getPaddingRight(), paddingVertical);
             eventsContainer.addView(eventTitlePreview);
         }
         if(dayEvents.size() > MAX_VISIBLE_EVENTS) {
