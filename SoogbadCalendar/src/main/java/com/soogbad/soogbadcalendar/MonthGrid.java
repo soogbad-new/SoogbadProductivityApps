@@ -17,6 +17,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,10 +67,15 @@ public class MonthGrid extends LinearLayout {
     public void setMonth(YearMonth month, List<Event> events) {
         LocalDate today = LocalDate.now();
         LocalDate day = month.atDay(1).with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
-        HashMap<LocalDate, ArrayList<Event>> eventsByDay = Event.groupEventsByDay(events, day, day.plusDays(cells.length - 1));
-        for(View cell : cells) {
-            bindCell(cell, day, YearMonth.from(day).equals(month), day.equals(today), eventsByDay.get(day));
-            day = day.plusDays(1);
+        int weeks = (int)(ChronoUnit.DAYS.between(day, month.atEndOfMonth()) / DAYS_IN_WEEK) + 1;
+        HashMap<LocalDate, ArrayList<Event>> eventsByDay = Event.groupEventsByDay(events, day, day.plusDays(weeks * DAYS_IN_WEEK - 1));
+        for(int week = 0; week < WEEKS; week++) {
+            getChildAt(week + 1).setVisibility(week < weeks ? VISIBLE : GONE);
+            if(week >= weeks) continue;
+            for(int dayOfWeek = 0; dayOfWeek < DAYS_IN_WEEK; dayOfWeek++) {
+                bindCell(cells[week * DAYS_IN_WEEK + dayOfWeek], day, YearMonth.from(day).equals(month), day.equals(today), eventsByDay.get(day));
+                day = day.plusDays(1);
+            }
         }
     }
     private void bindCell(View cell, LocalDate day, boolean inMonth, boolean isToday, @Nullable ArrayList<Event> dayEvents) {
