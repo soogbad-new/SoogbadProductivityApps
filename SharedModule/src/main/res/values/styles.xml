@@ -29,9 +29,15 @@
 
     <style name="TimePickerTheme" parent="ThemeOverlay.Material3.MaterialTimePicker" tools:keep="@style/TimePickerTheme">
         <item name="colorPrimary">@color/colorAccent</item>
+        <item name="chipStyle">@style/TimePickerChipStyle</item>
     </style>
+    <style name="TimePickerChipStyle" parent="Widget.Material3.MaterialTimePicker.Display">
+        <item name="chipBackgroundColor">@color/darkBlue</item>
+    </style>
+
     <style name="DatePickerTheme" parent="ThemeOverlay.Material3.MaterialCalendar" tools:keep="@style/DatePickerTheme">
         <item name="colorPrimary">@color/colorAccent</item>
+        <item name="colorOnPrimary">@color/darkBlue</item>
         <item name="materialCalendarDayOfWeekLabel">@style/DatePickerWeekdayStyle</item>
     </style>
     <style name="DatePickerWeekdayStyle" parent="Widget.Material3.MaterialCalendar.DayOfWeekLabel">
