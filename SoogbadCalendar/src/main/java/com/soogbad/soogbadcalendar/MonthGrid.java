@@ -73,12 +73,12 @@ public class MonthGrid extends LinearLayout {
             getChildAt(week + 1).setVisibility(week < weeks ? VISIBLE : GONE);
             if(week >= weeks) continue;
             for(int dayOfWeek = 0; dayOfWeek < DAYS_IN_WEEK; dayOfWeek++) {
-                bindCell(cells[week * DAYS_IN_WEEK + dayOfWeek], day, YearMonth.from(day).equals(month), day.equals(today), eventsByDay.get(day), weeks);
+                bindCell(cells[week * DAYS_IN_WEEK + dayOfWeek], day, YearMonth.from(day).equals(month), day.equals(today), eventsByDay.get(day), MAX_VISIBLE_EVENTS + WEEKS - weeks);
                 day = day.plusDays(1);
             }
         }
     }
-    private void bindCell(View cell, LocalDate day, boolean inMonth, boolean isToday, @Nullable ArrayList<Event> dayEvents, int weeks) {
+    private void bindCell(View cell, LocalDate day, boolean inMonth, boolean isToday, @Nullable ArrayList<Event> dayEvents, int maxVisibleEvents) {
         Context context = getContext();
         TextView dayNumber = cell.findViewById(R.id.dayNumberTextView);
         dayNumber.setText(String.valueOf(day.getDayOfMonth()));
@@ -87,23 +87,22 @@ public class MonthGrid extends LinearLayout {
         dayNumber.setBackgroundResource(isToday ? R.drawable.month_today_circle : 0);
         LinearLayout eventsContainer = cell.findViewById(R.id.dayEventsContainer);
         eventsContainer.removeAllViews();
+        eventsContainer.setWeightSum(maxVisibleEvents);
         if(dayEvents == null) return;
-        for(int i = 0; i < Math.min(dayEvents.size(), MAX_VISIBLE_EVENTS); i++) {
+        int visibleEvents = dayEvents.size() > maxVisibleEvents ? maxVisibleEvents - 1 : dayEvents.size();
+        for(int i = 0; i < visibleEvents; i++) {
             TextView eventTitlePreview = (TextView)LayoutInflater.from(context).inflate(R.layout.event_title_preview, eventsContainer, false);
             eventTitlePreview.setText(dayEvents.get(i).Title);
             eventTitlePreview.setBackgroundTintList(ColorStateList.valueOf(dayEvents.get(i).Options.EventColor.color));
-            int lineHeight = eventTitlePreview.getLineHeight();
-            int paddingVertical = Math.round(((lineHeight + eventTitlePreview.getPaddingTop() + eventTitlePreview.getPaddingBottom()) * (float)WEEKS / weeks - lineHeight) / 2);
-            eventTitlePreview.setPadding(eventTitlePreview.getPaddingLeft(), paddingVertical, eventTitlePreview.getPaddingRight(), paddingVertical);
             eventsContainer.addView(eventTitlePreview);
         }
-        if(dayEvents.size() > MAX_VISIBLE_EVENTS) {
+        if(dayEvents.size() > visibleEvents) {
             TextView more = new TextView(context);
-            more.setText(String.format(Locale.getDefault(), "+%d", dayEvents.size() - MAX_VISIBLE_EVENTS));
+            more.setText(String.format(Locale.getDefault(), "+%d", dayEvents.size() - visibleEvents));
             more.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
             more.setTextColor(ContextCompat.getColor(context, com.soogbad.sharedmodule.R.color.lightGray));
-            more.setGravity(Gravity.CENTER_HORIZONTAL);
-            eventsContainer.addView(more);
+            more.setGravity(Gravity.CENTER);
+            eventsContainer.addView(more, new LayoutParams(LayoutParams.MATCH_PARENT, 0, 1));
         }
     }
 
