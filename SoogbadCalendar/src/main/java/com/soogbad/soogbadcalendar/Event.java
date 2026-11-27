@@ -144,9 +144,9 @@ public class Event extends Item<Event.Options> implements Item.SchedulableItem {
 
     public enum EventColor {
         BLUE(0xFF4285F4),
-        GREEN(0xFF50B026),
+        GREEN(0xFF479425),
         RED(0xFFEA4335),
-        YELLOW(0xFFFFC107),
+        YELLOW(0xFFE3AF14),
         PURPLE(0xFF9C27B0);
 
         public final int color;

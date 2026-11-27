@@ -68,7 +68,7 @@ public class MonthGrid extends LinearLayout {
         LocalDate today = LocalDate.now();
         LocalDate day = month.atDay(1).with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
         int weeks = (int)(ChronoUnit.DAYS.between(day, month.atEndOfMonth()) / DAYS_IN_WEEK) + 1;
-        HashMap<LocalDate, ArrayList<Event>> eventsByDay = Event.groupEventsByDay(events, day, day.plusDays(weeks * DAYS_IN_WEEK - 1));
+        HashMap<LocalDate, ArrayList<Event>> eventsByDay = Event.groupEventsByDay(events, day, day.plusDays((long)weeks * DAYS_IN_WEEK - 1));
         for(int week = 0; week < WEEKS; week++) {
             getChildAt(week + 1).setVisibility(week < weeks ? VISIBLE : GONE);
             if(week >= weeks) continue;
