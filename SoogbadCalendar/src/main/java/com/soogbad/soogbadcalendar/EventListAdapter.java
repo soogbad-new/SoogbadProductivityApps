@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.soogbad.sharedmodule.core.Item;
@@ -29,7 +30,9 @@ public class EventListAdapter extends ItemListAdapter {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-        ((TextView)holder.itemView.findViewById(R.id.eventTimeTextView)).setText(((Event)items.get(position)).Options.Time.format(DateTimeFormatter.ofPattern("HH:mm")));
+        Event event = (Event)items.get(position);
+        ((TextView)holder.itemView.findViewById(R.id.eventTimeTextView)).setText(event.Options.Time.format(DateTimeFormatter.ofPattern("HH:mm")));
+        //holder.itemView.setBackgroundColor(event.Options.EventColor.color);
     }
 
     @SuppressLint("NotifyDataSetChanged")
