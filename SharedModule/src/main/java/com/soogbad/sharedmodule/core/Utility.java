@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.widget.Toast;
@@ -52,8 +53,11 @@ public class Utility {
     }
 
     public static void hideKeyboard(DialogFragment dialogFragment) {
-        WindowInsetsController controller = dialogFragment.requireDialog().getWindow().getInsetsController();
-        if(controller != null) controller.hide(WindowInsets.Type.ime());
+        Window window = dialogFragment.requireDialog().getWindow();
+        if(window == null) return;
+        WindowInsetsController controller = window.getInsetsController();
+        if(controller == null) return;
+        controller.hide(WindowInsets.Type.ime());
     }
 
     public static <T extends Item<?>> String generateUniqueUUID(ArrayList<T> items) {
