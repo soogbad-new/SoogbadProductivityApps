@@ -3,7 +3,6 @@ package com.soogbad.soogbadcalendar;
 import android.content.Context;
 import android.icu.util.Calendar;
 import android.view.View;
-import android.view.WindowInsets;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -83,22 +82,22 @@ public class EventOptionsDialog extends ItemOptionsDialog<Event.Options> {
         MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select Date")
                 .setCalendarConstraints(new CalendarConstraints.Builder().setFirstDayOfWeek(Calendar.SUNDAY).build()).setSelection(selection).build();
         datePicker.addOnPositiveButtonClickListener(selectionMs -> {
-            datePicker.requireDialog().getWindow().getInsetsController().hide(WindowInsets.Type.ime());
+            Utility.hideKeyboard(datePicker);
             selectedDate = Instant.ofEpochMilli(selectionMs).atZone(ZoneOffset.UTC).toLocalDate();
             datePickerButton.setText(selectedDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
         });
-        datePicker.addOnNegativeButtonClickListener(view -> datePicker.requireDialog().getWindow().getInsetsController().hide(WindowInsets.Type.ime()));
+        datePicker.addOnNegativeButtonClickListener(view -> Utility.hideKeyboard(datePicker));
         datePicker.show(((FragmentActivity)Utility.getActivity(context)).getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
     }
     private void showMaterialTimePicker() {
         MaterialTimePicker timePicker = new MaterialTimePicker.Builder().setTitleText("Select Time")
                 .setTimeFormat(TimeFormat.CLOCK_24H).setHour(selectedTime.getHour()).setMinute(selectedTime.getMinute()).build();
         timePicker.addOnPositiveButtonClickListener(view -> {
-            timePicker.requireDialog().getWindow().getInsetsController().hide(WindowInsets.Type.ime());
+            Utility.hideKeyboard(timePicker);
             selectedTime = LocalTime.of(timePicker.getHour(), timePicker.getMinute());
             timePickerButton.setText(selectedTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)));
         });
-        timePicker.addOnNegativeButtonClickListener(view -> timePicker.requireDialog().getWindow().getInsetsController().hide(WindowInsets.Type.ime()));
+        timePicker.addOnNegativeButtonClickListener(view -> Utility.hideKeyboard(timePicker));
         timePicker.show(((FragmentActivity)Utility.getActivity(context)).getSupportFragmentManager(), "MATERIAL_TIME_PICKER");
     }
 

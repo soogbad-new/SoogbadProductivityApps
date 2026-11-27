@@ -9,10 +9,13 @@ import android.graphics.Rect;
 import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
+import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -46,6 +49,11 @@ public class Utility {
         activity.setContentView(activityID);
         activity.setSupportActionBar(activity.findViewById(toolbarID));
         WindowCompat.setDecorFitsSystemWindows(activity.getWindow(), false);
+    }
+
+    public static void hideKeyboard(DialogFragment dialogFragment) {
+        WindowInsetsController controller = dialogFragment.requireDialog().getWindow().getInsetsController();
+        if(controller != null) controller.hide(WindowInsets.Type.ime());
     }
 
     public static <T extends Item<?>> String generateUniqueUUID(ArrayList<T> items) {
