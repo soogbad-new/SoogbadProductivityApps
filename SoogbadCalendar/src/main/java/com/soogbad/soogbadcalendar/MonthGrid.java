@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.material.card.MaterialCardView;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -91,9 +93,9 @@ public class MonthGrid extends LinearLayout {
         if(dayEvents == null) return;
         int visibleEvents = dayEvents.size() > maxVisibleEvents ? maxVisibleEvents - 1 : dayEvents.size();
         for(int i = 0; i < visibleEvents; i++) {
-            TextView eventTitlePreview = (TextView)LayoutInflater.from(context).inflate(R.layout.event_title_preview, eventsContainer, false);
-            eventTitlePreview.setText(dayEvents.get(i).Title);
-            eventTitlePreview.setBackgroundTintList(ColorStateList.valueOf(dayEvents.get(i).Options.EventColor.color));
+            MaterialCardView eventTitlePreview = (MaterialCardView)LayoutInflater.from(context).inflate(R.layout.event_title_preview, eventsContainer, false);
+            ((TextView)eventTitlePreview.findViewById(R.id.eventTitlePreviewText)).setText(dayEvents.get(i).Title);
+            eventTitlePreview.setCardBackgroundColor(ColorStateList.valueOf(dayEvents.get(i).Options.EventColor.color));
             eventsContainer.addView(eventTitlePreview);
         }
         if(dayEvents.size() > visibleEvents) {
