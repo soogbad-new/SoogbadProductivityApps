@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingTop="24dp"
     android:paddingHorizontal="24dp">
@@ -32,9 +33,11 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/timePickerButton"
         style="?attr/materialButtonOutlinedStyle"
-        android:layout_width="match_parent"
+        android:layout_width="192dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorAccent"
+        android:backgroundTint="@color/darkBlue"
+        app:strokeColor="@color/semiTransparentWhite"
+        android:textColor="@color/white"
         android:layout_gravity="center_horizontal" />
 
 </LinearLayout>
