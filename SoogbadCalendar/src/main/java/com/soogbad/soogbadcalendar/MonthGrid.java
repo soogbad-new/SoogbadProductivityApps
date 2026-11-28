@@ -94,7 +94,7 @@ public class MonthGrid extends LinearLayout {
         int visibleEvents = dayEvents.size() > maxVisibleEvents ? maxVisibleEvents - 1 : dayEvents.size();
         for(int i = 0; i < visibleEvents; i++) {
             MaterialCardView eventTitlePreview = (MaterialCardView)LayoutInflater.from(context).inflate(R.layout.event_title_preview, eventsContainer, false);
-            ((TextView)eventTitlePreview.findViewById(R.id.eventTitlePreviewText)).setText(dayEvents.get(i).Title);
+            ((TextView)eventTitlePreview.findViewById(R.id.eventTitlePreviewText)).setText(CustomHyphenator.markBreakPoints(dayEvents.get(i).Title));
             eventTitlePreview.setCardBackgroundColor(ColorStateList.valueOf(dayEvents.get(i).Options.EventColor.color));
             eventsContainer.addView(eventTitlePreview);
         }
